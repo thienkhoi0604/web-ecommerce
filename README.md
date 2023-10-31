@@ -54,4 +54,4 @@ link:
 
 ## 7. Report weekly
 
-link:
+link: (not necessary, just yourself)
