@@ -6,8 +6,8 @@ This is project in university
 
 ## 1. Rule git
 
-**- Branch dev is main branch for developer**\
-**- Create new branch before code a feature**\
+**- Branch main is main branch for developer**\
+**- Create new branch before code a new feature (issue)**\
 **- Avoid commit code with general commit messages**\
 Ex.\
 -> avoid: fix bug, add view, change api,......\
