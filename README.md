@@ -25,13 +25,13 @@ coding...\
 git commit -m "handle responsive in desktop screens"\
 git commit -m "fix conflict and do something more..."\
 git push\
---------------------------------------\
+--------------------------------------
 
 ## 2. Rule flow work
 
 **- Report weekly (often on Saturday)\
 **- Commit code and push remote every day (just for case: maybe your laptop have problems)\
-\*\*- Main contact: FACEBOOK. If there are any questions, you should send here and tag (should pin).\
+\*\*- Main contact: FACEBOOK. If there are any questions, you should send here and tag (should pin).
 
 ## 3. FE
 
