@@ -14,15 +14,15 @@ Ex.
 
 Example flow git handler:
 -----------GIT FLOW-------------
-git checkout dev
-git pull
-git checkout -b responsive-dashboard
+- git checkout dev
+- git pull
+- git checkout -b responsive-dashboard
 
-coding...
+- coding...
 
-git commit -m "handle responsive in desktop screens"
-git commit -m "fix conflict and do something more..."
-git push
+- git commit -m "handle responsive in desktop screens"
+- git commit -m "fix conflict and do something more..."
+- git push
 --------------------------------------
 
 ## 2. Rule flow work
