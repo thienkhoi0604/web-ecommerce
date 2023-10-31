@@ -2,7 +2,7 @@
 
 This is project in university
 
-(This is just temporary)\
+(This is just temporary)
 
 ## 1. Rule git
 
