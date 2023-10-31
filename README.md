@@ -24,7 +24,7 @@ coding...\
 \
 git commit -m "handle responsive in desktop screens"\
 git commit -m "fix conflict and do something more..."\
-git push\
+git push
 --------------------------------------
 
 ## 2. Rule flow work
