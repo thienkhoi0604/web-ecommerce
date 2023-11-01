@@ -55,3 +55,7 @@ link:
 ## 7. Report weekly
 
 link: (not necessary, just yourself)
+
+## 8. Tasks
+
+link: https://trello.com/b/zuBNe330/web-ecommerce
