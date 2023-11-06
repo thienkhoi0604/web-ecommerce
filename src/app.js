@@ -1,4 +1,4 @@
-require("dotenv");
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -9,10 +9,16 @@ const { engine } = require("express-handlebars");
 const { errorHandler } = require("./middlewares/errors/error-handler");
 const { errorLogger } = require("./middlewares/errors/error-logger");
 const { errorNotFound } = require("./middlewares/errors/error-not-found");
+const { db } = require("./configs");
+const routes = require("./routes");
+const { LAYOUT } = require("./constants");
 
 const app = express();
 
 const PORT = process.env.PORT || 8080;
+
+//connect to db
+db.connect();
 
 //Config
 app.use(cors());
@@ -24,13 +30,23 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.engine(
   "hbs",
   engine({
+    defaultLayout: "client",
     layoutsDir: __dirname + "/views/layouts",
     //new configuration parameter
     extname: "hbs",
+    partialsDir: __dirname + "/views/layouts/partials",
   })
 );
 app.set("view engine", "hbs");
 app.set("views", "./src/views");
+
+app.use((req, res, next) => {
+  const { originalUrl } = req;
+  const layout = originalUrl.match(/^\/admin/) ? LAYOUT.ADMIN : LAYOUT.CLIENT;
+  res.locals.layout = layout;
+  next();
+})
+
 
 //Middlewares
 // parse requests of content-type - application/json
@@ -38,12 +54,9 @@ app.use(bodyParser.json());
 
 //Route
 // app.use("/api", require("./routes"));
-app.get("/", (req, res) => {
-  res.render("home");
-});
 
-//Route for test
-app.use("/test", (req, res) => res.send("Hello world"));
+routes(app);
+
 app.all("*", (req, res, next) => {
   const err = new Error(`Route ${req.originalUrl} not found`);
   err.statusCode = 404;
