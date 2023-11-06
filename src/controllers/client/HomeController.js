@@ -3,7 +3,7 @@ const { LAYOUT } = require("../../constants");
 
 const HomeController = {
     index(req, res, next) {
-        res.render("client/home", Response(res))
+        res.render("client/home", Response({ res }))
     }
 }
 
