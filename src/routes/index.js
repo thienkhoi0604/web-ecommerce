@@ -1,6 +1,11 @@
-const express = require("express");
-const fs = require("fs");
+const AdminRouter = require("./admin");
+const LoginRouter = require("./auth");
+const ClientRouter = require("./client");
 
-const router = express.Router();
+const routes = (app) => {
+    app.use("/login", LoginRouter)
+    app.use("/admin", AdminRouter)
+    app.use("/", ClientRouter)
+}
 
-module.exports = router;
+module.exports = routes;
