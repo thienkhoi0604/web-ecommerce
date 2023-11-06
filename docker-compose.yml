@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  web-ecommerce:
+      env_file:
+      - .env.example
+      image: web-ecommerce
+      container_name: web-ecommerce
+      build:
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - "${PORT}:${PORT}"
+      volumes:
+        - /opt/web-ecommerce/logs:/logs
+      networks:
+        - web-ecommerce
+
+networks:
+  web-ecommerce:
+    driver: bridge
+
