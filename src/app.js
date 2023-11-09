@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const { engine } = require("express-handlebars");
 
@@ -50,7 +51,9 @@ app.use((req, res, next) => {
 
 //Middlewares
 // parse requests of content-type - application/json
+app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 
 //Route
 // app.use("/api", require("./routes"));
