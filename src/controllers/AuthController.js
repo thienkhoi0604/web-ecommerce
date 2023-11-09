@@ -1,8 +1,11 @@
 const { Response } = require("../commons");
 
 const AuthController = {
-    index(req, res, next) {
+    login(req, res, next) {
         res.render("login", Response({ res, data: { layout: false } }))
+    },
+    registor(req, res, next) {
+        res.render("register", Response({ res, data: { layout: false } }))
     }
 }
 
