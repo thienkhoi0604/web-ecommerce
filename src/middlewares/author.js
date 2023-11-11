@@ -8,8 +8,8 @@ const author = (...userRoles) => {
             if (!decode || Object.keys(decode)?.length <= 0) {
                 return res.redirect("/login");
             } else {
-                const { id } = decode;
-                const user = await UserModel.find({ id });
+                const { _id } = decode;
+                const user = await UserModel.find({ _id });
                 const haspPemission = userRoles.some(role => role == user.type);
                 if (haspPemission) {
                     next();
