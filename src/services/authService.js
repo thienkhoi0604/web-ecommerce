@@ -10,7 +10,7 @@ const authService = {
                 return {
                     error: {
                         code: RESPONSE_CODE.ERROR,
-                        message: "User not found."
+                        message: "Invalid credentials."
                     }
                 };
             }
@@ -26,7 +26,7 @@ const authService = {
                 return {
                     error: {
                         code: RESPONSE_CODE.ERROR,
-                        message: "Password not match."
+                        message: "Invalid credentials."
                     }
                 };
             }
@@ -42,6 +42,17 @@ const authService = {
     },
     async doRegister(user) {
         try {
+            const alreadyUser = await UserModel.exists({ email: user.email });
+            if (!!alreadyUser) {
+                return {
+                    error: {
+                        code: RESPONSE_CODE.SUCCESS,
+                        message: "Email already exist."
+                    },
+                    user: userModel
+                };
+            }
+
             const userModel = new UserModel(user);
             return {
                 error: {
