@@ -5,8 +5,8 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new FacebookStrategy({
-    clientID: '880502456787836',
-    clientSecret: '1c0ce7d3ab9bb1ba8f377a0af2700a25',
+    clientID: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     callbackURL: 'http://localhost:8080/auth/facebook/callback',
     profileFields: ['id', 'displayName'],
 }, async (accessToken, refreshToken, profile, done) => {
@@ -28,8 +28,8 @@ passport.use(new FacebookStrategy({
 }));
 
 passport.use(new GoogleStrategy({
-    clientID: '190671601363-871pkcv7hcslp3u5885mnk7lejnotp40.apps.googleusercontent.com',
-    clientSecret: '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',
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: 'http://localhost:8080/auth/google/callback',
 }, async (token, tokenSecret, profile, done) => {
     const user = {
