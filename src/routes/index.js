@@ -3,7 +3,7 @@ const AuthRouter = require("./auth");
 const ClientRouter = require("./client");
 
 const routes = (app) => {
-    app.use("/", AuthRouter)
+    app.use("/auth", AuthRouter)
     app.use("/admin", AdminRouter)
     app.use("/", ClientRouter)
 }
