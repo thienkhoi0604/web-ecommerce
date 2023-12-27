@@ -69,14 +69,38 @@ const AuthController = {
         }
     },
     loginWithFb: passport.authenticate('facebook'),
-    doLoginWithFb: passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/auth/login' }),
+    async doLoginWithFb(req, res, next) {
+        await passport.authenticate('facebook', (err, user, info) => {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/'); }
+            const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            res.cookie("auth", auth);
+            if (user.type == USER_ROLE.ADMIN) {
+                return res.redirect("/admin");
+            } else {
+                return res.redirect("/");
+            }
+        })(req, res, next)
+    },
     loginWithGg: passport.authenticate('google', {
         scope: [
             'profile',
             'email'
         ],
     }),
-    doLoginWithGg: passport.authenticate('google', { successRedirect: '/', failureRedirect: '/auth/login' }),
+    async doLoginWithGg(req, res, next) {
+        await passport.authenticate('google', (err, user, info) => {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/'); }
+            const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            res.cookie("auth", auth);
+            if (user.type == USER_ROLE.ADMIN) {
+                return res.redirect("/admin");
+            } else {
+                return res.redirect("/");
+            }
+        })(req, res, next)
+    }
 }
 
 module.exports = AuthController;

@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { BcryptUtil } = require('../utils');
 const { UserModel } = require('../models');
+const { Types } = require('mongoose');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
@@ -15,11 +16,9 @@ passport.use(new FacebookStrategy({
         fullname: profile.displayName,
         email: profile.id,
         password: null,
-        source: 'facebook',
-        accessToken,
-        refreshToken,
+        source: 'facebook'
     };
-    const existedUser = await UserModel.findById(user.id);
+    const existedUser = await UserModel.findOne({ id: user.id });
     if (existedUser !== null) {
         return done(null, existedUser);
     }
@@ -37,11 +36,9 @@ passport.use(new GoogleStrategy({
         fullname: profile.displayName,
         email: profile.id,
         password: null,
-        source: 'facebook',
-        accessToken: token,
-        refreshToken: tokenSecret,
+        source: 'google',
     };
-    const existedUser = await UserModel.findById(user.id);
+    const existedUser = await UserModel.findOne({ id: user.id });
     if (existedUser !== null) {
         return done(null, existedUser);
     }
@@ -53,9 +50,9 @@ passport.serializeUser((user, done) => {
     done(null, user.email);
 });
 
-passport.deserializeUser(async (usename, done) => {
+passport.deserializeUser(async (email, done) => {
     try {
-        const user = await UserModel.getByemail(usename);
+        const user = await UserModel.findOne({ email });
         if (user === null) {
             return done(null, false);
         }
