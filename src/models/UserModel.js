@@ -2,12 +2,11 @@ const { Schema, default: mongoose } = require("mongoose");
 const { BcryptUtil } = require("../utils");
 
 const UserModel = new Schema({
-    id: Schema.ObjectId,
-    firstname: {
-        type: String,
-        require: true
+    _id: Schema.ObjectId,
+    id: {
+        type: String
     },
-    lastname: {
+    fullname: {
         type: String,
         require: true
     },
@@ -27,6 +26,9 @@ const UserModel = new Schema({
     type: {
         type: Number,
         require: true
+    },
+    source: {
+        type: String
     }
 }, {
     timestamps: true
