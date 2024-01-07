@@ -3,13 +3,7 @@ const { USER_ROLE } = require('../constants');
 
 const RegisterValidate = {
     user: Joi.object({
-        firstname: Joi.string()
-            .alphanum()
-            .min(1)
-            .max(30)
-            .required(),
-
-        lastname: Joi.string()
+        fullname: Joi.string()
             .alphanum()
             .min(1)
             .max(30)

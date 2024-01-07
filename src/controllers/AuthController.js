@@ -3,10 +3,15 @@ const { Response } = require("../commons");
 const { RESPONSE_CODE, USER_ROLE } = require("../constants");
 const { authService } = require("../services");
 const { RegisterValidate, LoginValidate } = require("../utils");
+const passport = require('passport');
 
 const AuthController = {
     login(req, res, next) {
-        return res.render("login", Response({ res, data: { layout: false } }))
+        try {
+            return res.render("login", Response({ res, data: { layout: false } }))
+        } catch (error) {
+            next(error);
+        }
     },
     async doLogin(req, res, next) {
         try {
@@ -29,7 +34,11 @@ const AuthController = {
         }
     },
     register(req, res, next) {
-        return res.render("register", Response({ res, data: { layout: false } }))
+        try {
+            return res.render("register", Response({ res, data: { layout: false } }))
+        } catch (error) {
+            next(error);
+        }
     },
     async doRegister(req, res, next) {
         try {
@@ -50,6 +59,47 @@ const AuthController = {
             console.error(e);
             return res.render("register", Response({ res, data: { layout: false, error: e.details } }))
         }
+    },
+    async doLogout(req, res, next) {
+        try {
+            res.cookie("auth", null);
+            res.redirect('/auth/login');
+        } catch (error) {
+            next(error);
+        }
+    },
+    loginWithFb: passport.authenticate('facebook'),
+    async doLoginWithFb(req, res, next) {
+        await passport.authenticate('facebook', (err, user, info) => {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/'); }
+            const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            res.cookie("auth", auth);
+            if (user.type == USER_ROLE.ADMIN) {
+                return res.redirect("/admin");
+            } else {
+                return res.redirect("/");
+            }
+        })(req, res, next)
+    },
+    loginWithGg: passport.authenticate('google', {
+        scope: [
+            'profile',
+            'email'
+        ],
+    }),
+    async doLoginWithGg(req, res, next) {
+        await passport.authenticate('google', (err, user, info) => {
+            if (err) { return next(err); }
+            if (!user) { return res.redirect('/'); }
+            const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+            res.cookie("auth", auth);
+            if (user.type == USER_ROLE.ADMIN) {
+                return res.redirect("/admin");
+            } else {
+                return res.redirect("/");
+            }
+        })(req, res, next)
     }
 }
 
