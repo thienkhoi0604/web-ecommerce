@@ -6,6 +6,10 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const { engine } = require("express-handlebars");
 
+const http = require('http');
+const https = require("https");
+const fs = require("fs");
+
 //import user define
 const { errorHandler } = require("./middlewares/errors/error-handler");
 const { errorLogger } = require("./middlewares/errors/error-logger");
@@ -17,6 +21,7 @@ const { LAYOUT } = require("./constants");
 const app = express();
 
 const PORT = process.env.PORT || 8080;
+const HTTPS_PORT = process.env.HTTPS_PORT || 8081;
 
 //connect to db
 db.connect();
@@ -70,6 +75,18 @@ app.all("*", (req, res, next) => {
 // global error handler
 app.use(errorNotFound, errorLogger, errorHandler);
 
-app.listen(PORT, (req, res) => console.log(`App listening on port ${PORT}`));
+// app.listen(PORT, (req, res) => console.log(`App listening on port ${PORT}`));
+
+http.createServer(app).listen(PORT, () => {
+  console.log(`HTTPS server started on port ${PORT}`);
+});
+
+const options = {
+  key: fs.readFileSync("./config/key.pem"),
+  cert: fs.readFileSync("./config/cert.pem"),
+};
+https.createServer(options, app).listen(HTTPS_PORT, () => {
+  console.log(`HTTPS server started on port ${HTTPS_PORT}`);
+});
 
 module.exports = { app };
