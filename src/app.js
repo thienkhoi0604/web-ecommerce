@@ -10,7 +10,7 @@ const { engine } = require("express-handlebars");
 const { errorHandler } = require("./middlewares/errors/error-handler");
 const { errorLogger } = require("./middlewares/errors/error-logger");
 const { errorNotFound } = require("./middlewares/errors/error-not-found");
-const { db } = require("./configs");
+const { db, passport} = require("./configs");
 const routes = require("./routes");
 const { LAYOUT } = require("./constants");
 
@@ -54,6 +54,7 @@ app.use((req, res, next) => {
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
 
 //Route
 // app.use("/api", require("./routes"));

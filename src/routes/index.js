@@ -6,7 +6,7 @@ const ProductRouter = require("./products")
 const DetailRouter = require("./detail")
 
 const routes = (app) => {
-    app.use("/", AuthRouter)
+    app.use("/auth", AuthRouter)
     app.use("/admin", AdminRouter)
     app.use("/", ClientRouter)
     app.use("/", CartRouter)
