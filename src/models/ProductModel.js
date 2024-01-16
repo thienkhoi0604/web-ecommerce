@@ -1,7 +1,7 @@
 const { Schema, default: mongoose } = require("mongoose")
 
 const productModel = new Schema({
-    _productId: Schema.ObjectId,
+    _id: Schema.ObjectId,
     productId: {
         type: String
     },
@@ -36,10 +36,12 @@ const productModel = new Schema({
         type: String
     },
     deletedAt: {
-        type: String
+        type: Date,
+        default: Date.now()
     },
     isDeleted: {
-        type: String
+        type: Boolean,
+        default: false
     },
 }, {
     collection: 'products',
