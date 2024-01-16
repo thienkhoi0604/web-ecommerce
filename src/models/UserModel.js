@@ -40,10 +40,12 @@ const UserModel = new Schema({
         type: String
     },
     deletedAt: {
-        type: String
+        type: Date,
+        default: Date.now()
     },
     isDeleted: {
-        type: String
+        type: Boolean,
+        default: false
     },
 }, {
     timestamps: true

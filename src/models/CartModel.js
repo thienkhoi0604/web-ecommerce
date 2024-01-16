@@ -1,6 +1,7 @@
 const { Schema, default: mongoose } = require("mongoose")
 
 const cartModel = new Schema({
+    _id: Schema.ObjectId,
     userId: {
         type: String
     },
@@ -23,10 +24,12 @@ const cartModel = new Schema({
         type: String
     },
     deletedAt: {
-        type: String
+        type: Date,
+        default: Date.now()
     },
     isDeleted: {
-        type: String
+        type: boolean,
+        default: false
     },
 }, {
     collection: 'carts',
