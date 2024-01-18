@@ -14,7 +14,7 @@ const fs = require("fs");
 const { errorHandler } = require("./middlewares/errors/error-handler");
 const { errorLogger } = require("./middlewares/errors/error-logger");
 const { errorNotFound } = require("./middlewares/errors/error-not-found");
-const { db, passport} = require("./configs");
+const { db, passport } = require("./configs");
 const routes = require("./routes");
 const { LAYOUT } = require("./constants");
 
@@ -31,6 +31,7 @@ app.use(cors());
 
 //Static Folder
 app.use("/public", express.static(path.join(__dirname, "public")));
+app.use("/public", express.static(path.join(__dirname + "/../", "public")));
 
 //Sets our app to use the handlebars engine
 app.engine(
