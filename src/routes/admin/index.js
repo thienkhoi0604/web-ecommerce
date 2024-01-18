@@ -6,5 +6,6 @@ const { USER_ROLE } = require("../../constants");
 const AdminRouter = Router();
 
 AdminRouter.use("/", author(USER_ROLE.ADMIN), HomeRouter);
+AdminRouter.use("/admin", HomeRouter);
 
 module.exports = AdminRouter;
