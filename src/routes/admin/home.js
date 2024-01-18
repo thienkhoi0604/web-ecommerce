@@ -5,4 +5,8 @@ var HomeRouter = Router();
 
 HomeRouter.get("/", HomeController.index);
 
+HomeRouter.get('/admin', (req, res) => {
+    res.render('admin');
+});
+
 module.exports = HomeRouter;
