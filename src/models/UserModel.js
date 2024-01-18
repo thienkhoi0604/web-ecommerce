@@ -29,7 +29,24 @@ const UserModel = new Schema({
     },
     source: {
         type: String
-    }
+    },
+    createdBy: {
+        type: String
+    },
+    updatedBy: {
+        type: String
+    },
+    deletedBy: {
+        type: String
+    },
+    deletedAt: {
+        type: Date,
+        default: Date.now()
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
 }, {
     timestamps: true
 });
