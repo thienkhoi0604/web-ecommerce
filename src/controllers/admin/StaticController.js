@@ -1,10 +1,10 @@
 const { Response } = require("../../commons");
 const { LAYOUT } = require("../../constants");
 
-const HomeController = {
+const StaticController = {
     index(req, res, next) {
-        res.render("admin/home", Response({ res, data: {  } }))
+        res.render("admin/statics", Response({ res, data: {} }))
     }
 }
 
-module.exports = HomeController;
+module.exports = StaticController;

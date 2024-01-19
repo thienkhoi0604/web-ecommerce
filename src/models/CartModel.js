@@ -1,39 +1,41 @@
-const { Schema, default: mongoose } = require("mongoose")
+const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-const cartModel = new Schema({
+const CartModel = new Schema(
+  {
     _id: Schema.ObjectId,
     userId: {
-        type: String
+      type: mongoose.ObjectId,
+      ref: 'user',
     },
-    cartId: {
-        type: String
-    },
-    status: {
-        type: String, default: 'active'
-    },
-    products: {
-        type: Array
-    },
+    products: [
+      {
+        type: mongoose.ObjectId,
+        ref: 'products',
+      },
+    ],
     createdBy: {
-        type: String
+      type: String,
+      required: true,
     },
     updatedBy: {
-        type: String
+      type: String,
     },
     deletedBy: {
-        type: String
+      type: String,
     },
     deletedAt: {
-        type: Date,
-        default: Date.now()
+      type: Date,
     },
     isDeleted: {
         type: Boolean,
         default: false
     },
-}, {
+  },
+  {
     collection: 'carts',
-    timestamps: true
-})
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model("carts", cartModel)
+module.exports = mongoose.model('carts', CartModel);
