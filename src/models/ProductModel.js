@@ -1,51 +1,101 @@
-const { Schema, default: mongoose } = require("mongoose")
+const { Schema, default: mongoose } = require('mongoose');
 
-const productModel = new Schema({
+const ProductModel = new Schema(
+  {
     _id: Schema.ObjectId,
-    productId: {
-        type: String
-    },
     name: {
-        type: String
-    },
-    review: {
-        type: String
+      type: String,
+      required: [true, 'Please enter your product name!'],
     },
     description: {
-        type: String
+      type: String,
+      required: [true, 'Please enter your product description!'],
     },
-    sizes: {
-        type: Number
+    category: {
+      type: String,
+      required: [true, 'Please enter your product category!'],
     },
-    colors: {
-        type: String
+    tags: {
+      type: String,
     },
-    quantity: {
-        type: Number
+    originalPrice: {
+      type: Number,
     },
-    specs: {
-        type: Array, default: []
+    discountPrice: {
+      type: Number,
+      required: [true, 'Please enter your product price!'],
+    },
+    stock: {
+      type: Number,
+      required: [true, 'Please enter your product stock!'],
+    },
+    images: [
+      {
+        public_id: {
+          type: String,
+          required: true,
+        },
+        url: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    reviews: [
+      {
+        user: {
+          type: Object,
+        },
+        rating: {
+          type: Number,
+        },
+        comment: {
+          type: String,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
+    ratings: {
+      type: Number,
+    },
+    shopId: {
+      type: mongoose.ObjectId,
+      ref: 'shops',
+      required: true,
+    },
+    shop: {
+      type: Object,
+      required: true,
+    },
+    sold_out: {
+      type: Number,
+      default: 0,
     },
     createdBy: {
-        type: String
+      type: String,
+      required: true,
     },
     updatedBy: {
-        type: String
+      type: String,
     },
     deletedBy: {
-        type: String
+      type: String,
     },
     deletedAt: {
-        type: Date,
-        default: Date.now()
+      type: Date,
     },
     isDeleted: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
-}, {
+  },
+  {
     collection: 'products',
-    timestamps: true
-})
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model("products", productModel)
+module.exports = mongoose.model('products', ProductModel);
