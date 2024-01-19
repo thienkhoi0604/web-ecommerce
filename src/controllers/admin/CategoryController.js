@@ -1,10 +1,10 @@
 const { Response } = require("../../commons");
 const { LAYOUT } = require("../../constants");
 
-const HomeController = {
+const CategoryController = {
     index(req, res, next) {
-        res.render("admin/home", Response({ res, data: {  } }))
+        res.render("admin/categries", Response({ res, data: {} }))
     }
 }
 
-module.exports = HomeController;
+module.exports = CategoryController;
