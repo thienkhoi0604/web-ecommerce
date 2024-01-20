@@ -8,8 +8,9 @@ const CategoryController = {
             UserModel.find({ role: USER_ROLE.ADMIN })
                 .sort({ updatedAt: -1, createdAt: -1 })
                 .lean(),
+            CategoryModel.find().lean()
         ]);
-        res.render("admin/categories", Response({ res, data: { users: results[0] } }))
+        res.render("admin/categories", Response({ res, data: { users: results[0], categories: results[1] } }))
     },
     async add(req, res, next) {
         try {
@@ -81,6 +82,12 @@ const CategoryController = {
             })
             delete req.query.updatedBy;
         }
+        if (!!req.query.deletedBy) {
+            query.$or.push({
+                deletedBy: req.query.deletedBy
+            })
+            delete req.query.deletedBy;
+        }
         for (let key in req.query) {
             if (!!req.query[key]) {
                 query.$or.push({
@@ -107,6 +114,8 @@ const CategoryController = {
     async get(req, res, next) {
         const { id } = req.params;
         const category = await CategoryModel.findById(id)
+            .populate("parentObj")
+            .populate("childObj")
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")
@@ -125,9 +134,11 @@ const CategoryController = {
                 }
                 return acc;
             }, {});
+            updateCategory.parentId = body.parentId === undefined ? undefined : body.parentId;
+            updateCategory.childId = body.childId === undefined ? undefined : body.childId;
             updateCategory.updatedBy = _user?._id;
             const { id } = body;
-            const updatedCategory = await UserModel.findByIdAndUpdate(id, updateCategory, { new: false }).lean();
+            const updatedCategory = await CategoryModel.findByIdAndUpdate(id, updateCategory, { new: false }).lean();
             res.json({
                 data: updatedCategory,
                 errorCode: RESPONSE_CODE.SUCCESS,
@@ -148,7 +159,7 @@ const CategoryController = {
             ids = [ids];
         }
         try {
-            const resonse = await CategoryModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?._id }).lean();
+            const resonse = await CategoryModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete categories successfully!"

@@ -10,8 +10,26 @@
             <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
         </div>
         <div class="form-group col-6">
-            <label for="description">Desciption</label>
+            <label for="description">Description</label>
             <input type="text" name="description" class="form-control" id="description" placeholder="Enter description">
+        </div>
+        <div class="form-group col-6">
+            <label for="parrentId">Parrent category</label>
+            <select id="parrentId" name="parrentId" class="form-select">
+                <option selected value="">Not set</option>
+                {{#each categories}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group col-6">
+            <label for="childId">Children category</label>
+            <select id="childId" name="childId" class="form-select">
+                <option selected value="">Not set</option>
+                {{#each categories}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
         </div>
         <div class="form-group col-6">
             <label for="isDeleted">Is deleted</label>
@@ -41,6 +59,15 @@
         <div class="form-group col-6">
             <label for="Updated by">Updated by</label>
             <select id="updatedBy" name="updatedBy" class="form-select">
+                <option selected value="">Not set</option>
+                {{#each users}}
+                <option value="{{this._id}}">{{this.fullname}}-{{this.email}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group col-6">
+            <label for="Deleted by">Deleted by</label>
+            <select id="deletedBy" name="deletedBy" class="form-select">
                 <option selected value="">Not set</option>
                 {{#each users}}
                 <option value="{{this._id}}">{{this.fullname}}-{{this.email}}</option>
@@ -82,7 +109,7 @@
                     <tr>
                         <th><input class="checkAll" type="checkbox"></th>
                         <th>Name</th>
-                        <th>Desciption</th>
+                        <th>Description</th>
                         <th>Deleted</th>
                         <th>Created at</th>
                         <th>Updated at</th>
@@ -109,6 +136,24 @@
                     <label for="name">Name</label>
                     <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
                 </div>
+                <div class="form-group col-6">
+                    <label for="parentId">Parent category</label>
+                    <select id="parentId" name="parentId" class="form-select">
+                        <option selected value="">Not set</option>
+                        {{#each categories}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group col-6">
+                    <label for="childId">Children category</label>
+                    <select id="childId" name="childId" class="form-select">
+                        <option selected value="">Not set</option>
+                        {{#each categories}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
                 <div class="form-group col-12">
                     <label for="description">Description</label>
                     <textarea type="text" name="description" class="form-control" id="description" rows="4"
@@ -131,7 +176,15 @@
             <div class="modal-body row">
                 <div class="form-group col-6">
                     <label for="name">Name</label>
-                    <input type="text" disabled name="name" class="form-control" id="name" placeholder="Enter name">
+                    <input type="text" disabled name="name" class="form-control" id="name">
+                </div>
+                <div class="form-group col-6">
+                    <label for="parentId">Parent category</label>
+                    <input type="text" disabled name="parentId" class="form-control" id="parentId">
+                </div>
+                <div class="form-group col-6">
+                    <label for="childId">Children category</label>
+                    <input type="text" disabled name="childId" class="form-control" id="childId">
                 </div>
                 <div class="form-group col-12">
                     <label for="description">Description</label>
@@ -139,7 +192,7 @@
                         placeholder="Enter description"></textarea>
                 </div>
                 <div class="form-group col-6">
-                    <label for="password">Is deleted</label>
+                    <label for="isDeleted">Is deleted</label>
                     <select disabled id="isDeleted" name="isDeleted" class="form-select">
                         <option value="false">False</option>
                         <option value="true">True</option>
@@ -183,13 +236,31 @@
                     <label for="name">Name</label>
                     <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
                 </div>
+                <div class="form-group col-6">
+                    <label for="parentId">Parent category</label>
+                    <select id="parentId" name="parentId" class="form-select">
+                        <option selected value="">Not set</option>
+                        {{#each categories}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group col-6">
+                    <label for="childId">Children category</label>
+                    <select id="childId" name="childId" class="form-select">
+                        <option selected value="">Not set</option>
+                        {{#each categories}}
+                        <option value="{{this._id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
                 <div class="form-group col-12">
                     <label for="description">Description</label>
                     <textarea type="text" name="description" class="form-control" id="description" rows="4"
                         placeholder="Enter description"></textarea>
                 </div>
                 <div class="form-group col-6">
-                    <label for="password">Is deleted</label>
+                    <label for="isDeleted">Is deleted</label>
                     <select id="isDeleted" name="isDeleted" class="form-select">
                         <option value="false">False</option>
                         <option value="true">True</option>
@@ -298,13 +369,14 @@
     }
     const updateTable = (categories) => {
         const tbody = $("tbody.results");
+        $(".checkAll").prop('checked', false);
         tbody.empty();
         categories.forEach(user => {
             tbody.append(`
                 <tr>
                     <td><input class="checkItem" value="${user._id}" type="checkbox"></td>
                     <td>${user.name}</td>
-                    <td>${user.desciption || ""}</td>
+                    <td>${user.description || ""}</td>
                     <td>${user.isDeleted}</td>
                     <td>${!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : ""}</td>
                     <td>${!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : ""}</td>
@@ -407,22 +479,24 @@
         });
         const searchAction = async function () {
             const name = $("#search #name").val();
-            const desciption = $("#search #desciption").val();
+            const description = $("#search #description").val();
             const isDeleted = $("#search #isDeleted").val();
             const createdAt = $("#search #createdAt").val();
             const updatedAt = $("#search #updatedAt").val();
             const createdBy = $("#search #createdBy").val();
             const updatedBy = $("#search #updatedBy").val();
+            const deletedBy = $("#search #deletedBy").val();
             const perPage = $("#perPage").val() || 10;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
                 name,
-                desciption,
+                description,
                 isDeleted,
                 createdAt,
                 updatedAt,
                 createdBy,
                 updatedBy,
+                deletedBy,
                 limit: perPage,
                 page: currentPage
             };
@@ -441,9 +515,13 @@
         $(".btn-add-save").click(async function () {
             const name = $("#add #name").val();
             const description = $("#add #description").val();
+            const parentId = $("#add #parentId").val();
+            const childId = $("#add #childId").val();
             const body = {
                 name,
                 description,
+                parentId: parentId ? parentId : undefined,
+                childId: childId ? childId : undefined
             };
             const res = await fetch("/admin/categories", {
                 method: "POST",
@@ -453,7 +531,6 @@
                 body: JSON.stringify(body)
             }).then(res => res.json());
             clearInputs("add");
-
             if (res.errorCode == 0) {
                 $("#add").modal("hide");
                 const pagination = await search();
@@ -478,6 +555,8 @@
             const category = await fetch(`/admin/categories/search/${id}`).then(res => res.json());
             $("#view #name").val(category.name);
             $("#view #description").val(category.description);
+            $("#view #parentId").val(category?.parentObj?.name || "");
+            $("#view #childId").val(category?.childObj?.name || "");
             $("#view #isDeleted").val(`${category.isDeleted}`);
             $("#view #createdAt").val(!!category.createdAt ? moment(category.createdAt).format('DD/MM/YY HH:mm') : "");
             $("#view #updatedAt").val(!!category.updatedAt ? moment(category.updatedAt).format('DD/MM/YY HH:mm') : "");
@@ -500,6 +579,18 @@
             const category = await fetch(`/admin/categories/search/${id}`).then(res => res.json());
             $("#update #name").val(category.name);
             $("#update #description").val(category.description);
+            $("#update #parentId").val(category.parentId || "");
+            $("#update #parentId option").toArray().forEach(item => {
+                if (item.value == category._id) {
+                    item.classList.add("d-none");
+                }
+            });
+            $("#update #childId").val(category.childId || "");
+            $("#update #childId option").toArray().forEach(item => {
+                if (item.value == category._id) {
+                    item.classList.add("d-none");
+                }
+            });
             $("#update #isDeleted").val(`${category.isDeleted}`);
             $("#update #createdAt").val(!!category.createdAt ? moment(category.createdAt).format('DD/MM/YY HH:mm') : "");
             $("#update #updatedAt").val(!!category.updatedAt ? moment(category.updatedAt).format('DD/MM/YY HH:mm') : "");
@@ -515,11 +606,15 @@
             const checkedItems = $(".checkItem:checked").toArray();
             const id = checkedItems[0].value;
             const name = $("#update #name").val();
-            const desciption = $("#update #desciption").val();
+            const parentId = $("#update #parentId").val();
+            const childId = $("#update #childId").val();
+            const description = $("#update #description").val();
             const isDeleted = $("#update #isDeleted").val();
             const body = {
                 id,
                 name,
+                parentId: parentId ? parentId : null,
+                childId: childId ? childId : null,
                 description,
                 isDeleted
             };

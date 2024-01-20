@@ -60,6 +60,15 @@
                 {{/each}}
             </select>
         </div>
+        <div class="form-group col-6">
+            <label for="Deleted by">Deleted by</label>
+            <select id="deletedBy" name="deletedBy" class="form-select">
+                <option selected value="">Not set</option>
+                {{#each users}}
+                <option value="{{this._id}}">{{this.fullname}}-{{this.email}}</option>
+                {{/each}}
+            </select>
+        </div>
     </div>
     <div class=" mb-1 mt-2">
         <button type="button" class="btn btn-primary btn-search">Search</button>
@@ -476,6 +485,7 @@
             const updatedAt = $("#search #updatedAt").val();
             const createdBy = $("#search #createdBy").val();
             const updatedBy = $("#search #updatedBy").val();
+            const deltedBy = $("#search #deletedBy").val();
             const perPage = $("#perPage").val() || 10;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
@@ -488,6 +498,7 @@
                 updatedAt,
                 createdBy,
                 updatedBy,
+                deltedBy,
                 limit: perPage,
                 page: currentPage
             };
