@@ -1,4 +1,4 @@
-const Response = ({ res, data }) => {
+const Response = ({ res, data = {} }) => {
     const { layout } = res.locals;
     return {
         layout,

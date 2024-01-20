@@ -1,26 +1,27 @@
+const moment = require("moment");
 const { Response } = require("../../commons");
-const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
-const { UserModel, CategoryModel } = require("../../models");
+const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
+const UserModel = require("../../models/UserModel");
 
-const CategoryController = {
+const UserController = {
     async index(req, res, next) {
         const results = await Promise.all([
             UserModel.find({ role: USER_ROLE.ADMIN })
                 .sort({ updatedAt: -1, createdAt: -1 })
                 .lean(),
         ]);
-        res.render("admin/categories", Response({ res, data: { users: results[0] } }))
+        res.render("admin/users", Response({ res, data: { users: results[0] } }))
     },
     async add(req, res, next) {
         try {
             const _user = req._user;
             const body = req.body;
             body.createdBy = _user?._id;
-            const category = await CategoryModel.create(body);
+            const user = await UserModel.create(body);
             res.json({
-                data: category.toObject(),
+                data: user.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Add categories successfully!"
+                message: "Add user successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -92,8 +93,8 @@ const CategoryController = {
             delete query.$or;
         }
         const results = await Promise.all([
-            CategoryModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
-            CategoryModel.find(query).countDocuments().lean()
+            UserModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
+            UserModel.find(query).countDocuments().lean()
         ]);
         const pagination = {
             page,
@@ -106,32 +107,35 @@ const CategoryController = {
     },
     async get(req, res, next) {
         const { id } = req.params;
-        const category = await CategoryModel.findById(id)
+        const user = await UserModel.findById(id)
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")
             .lean();
-        res.json(category);
+        res.json(user);
     },
     async update(req, res, next) {
         try {
             const _user = req._user;
             const body = req.body;
-            const updateFields = ["name", "description", "isDeleted"];
-            const updateCategory = updateFields.reduce((acc, field) => {
+            const updateFields = ["fullname", "phone", "role", "isDeleted"];
+            const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 if (value) {
                     acc[field] = value;
                 }
                 return acc;
             }, {});
-            updateCategory.updatedBy = _user?._id;
+            if (!!body.password) {
+                updateUser.password = body.password;
+            }
+            updateUser.updatedBy = _user?._id;
             const { id } = body;
-            const updatedCategory = await UserModel.findByIdAndUpdate(id, updateCategory, { new: false }).lean();
+            const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
             res.json({
-                data: updatedCategory,
+                data: updatedUser,
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Update category successfully!"
+                message: "Update user successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -148,10 +152,10 @@ const CategoryController = {
             ids = [ids];
         }
         try {
-            const resonse = await CategoryModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?._id }).lean();
+            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Delete categories successfully!"
+                message: "Delete users successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -163,4 +167,4 @@ const CategoryController = {
     }
 }
 
-module.exports = CategoryController;
+module.exports = UserController;

@@ -14,9 +14,10 @@ const authService = {
                     }
                 };
             }
-            const match = BcryptUtil.compare(user.password, userModel.password);
+            const match = userModel.comparePassword(user.password);
             if (match) {
                 return {
+                    user: userModel.toObject(),
                     error: {
                         code: RESPONSE_CODE.SUCCESS,
                         message: "Successfully."
@@ -49,17 +50,16 @@ const authService = {
                         code: RESPONSE_CODE.SUCCESS,
                         message: "Email already exist."
                     },
-                    user: userModel
                 };
             }
 
             const userModel = new UserModel(user);
             return {
+                user: userModel.toObject(),
                 error: {
                     code: RESPONSE_CODE.SUCCESS,
                     message: "Successfully."
                 },
-                user: userModel
             };
         } catch (e) {
             console.log(e);
