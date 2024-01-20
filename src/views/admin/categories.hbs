@@ -1,30 +1,17 @@
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Manager Users</h1>
+    <h1 class="mt-4">Manager Categories</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
-        <li class="breadcrumb-item active">Users</li>
+        <li class="breadcrumb-item active">Categories</li>
     </ol>
     <div id="search" class="row">
         <div class="form-group col-6">
-            <label for="name">Fullname</label>
-            <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Enter fullname">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
         </div>
         <div class="form-group col-6">
-            <label for="phone">Phone</label>
-            <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone">
-        </div>
-        <div class="form-group col-6">
-            <label for="email">Email</label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
-        </div>
-        <div class="form-group col-6">
-            <label for="role">Role</label>
-            <select id="role" name="role" class="form-select">
-                <option selected value="">All</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                <option value="shop-owner">Shop owner</option>
-            </select>
+            <label for="description">Desciption</label>
+            <input type="text" name="description" class="form-control" id="description" placeholder="Enter description">
         </div>
         <div class="form-group col-6">
             <label for="isDeleted">Is deleted</label>
@@ -73,7 +60,7 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Users
+            Categories
         </div>
         <div class="card-body">
             <div class="input-group" style="width: 200px;">
@@ -94,10 +81,8 @@
                 <thead>
                     <tr>
                         <th><input class="checkAll" type="checkbox"></th>
-                        <th>Fullname</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Role</th>
+                        <th>Name</th>
+                        <th>Desciption</th>
                         <th>Deleted</th>
                         <th>Created at</th>
                         <th>Updated at</th>
@@ -117,33 +102,17 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">ADD USES</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">ADD CATEGORY</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-6">
-                    <label for="name">Fullname</label>
-                    <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Enter fullname">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
                 </div>
-                <div class="form-group col-6">
-                    <label for="phone">Phone</label>
-                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone">
-                </div>
-                <div class="form-group col-6">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter email">
-                </div>
-                <div class="form-group col-6">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="form-select">
-                        <option selected value="user">User</option>
-                        <option value="admin">Admin</option>
-                        <option value="shop-owner">Shop owner</option>
-                    </select>
-                </div>
-                <div class="form-group col-6">
-                    <label for="password">Password</label>
-                    <input type="text" value="123456" name="password" class="form-control" id="password"
-                        placeholder="Enter password">
+                <div class="form-group col-12">
+                    <label for="description">Description</label>
+                    <textarea type="text" name="description" class="form-control" id="description" rows="4"
+                        placeholder="Enter description"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -157,29 +126,17 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">VIEW USER</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">VIEW CATEGORY</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-6">
-                    <label for="name">Fullname</label>
-                    <input type="text" disabled name="fullname" class="form-control" id="fullname"
-                        placeholder="Enter fullname">
+                    <label for="name">Name</label>
+                    <input type="text" disabled name="name" class="form-control" id="name" placeholder="Enter name">
                 </div>
-                <div class="form-group col-6">
-                    <label for="phone">Phone</label>
-                    <input type="text" disabled name="phone" class="form-control" id="phone" placeholder="Enter phone">
-                </div>
-                <div class="form-group col-6">
-                    <label for="email">Email</label>
-                    <input type="email" disabled name="email" class="form-control" id="email" placeholder="Enter email">
-                </div>
-                <div class="form-group col-6">
-                    <label for="role">Role</label>
-                    <select id="role" disabled name="role" class="form-select">
-                        <option selected value="user">User</option>
-                        <option value="admin">Admin</option>
-                        <option value="shop-owner">Shop owner</option>
-                    </select>
+                <div class="form-group col-12">
+                    <label for="description">Description</label>
+                    <textarea type="text" disabled name="description" class="form-control" id="description" rows="4"
+                        placeholder="Enter description"></textarea>
                 </div>
                 <div class="form-group col-6">
                     <label for="password">Is deleted</label>
@@ -219,34 +176,17 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">EDIT USER</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">EDIT CATEGORY</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-6">
-                    <label for="name">Fullname</label>
-                    <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Enter fullname">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
                 </div>
-                <div class="form-group col-6">
-                    <label for="phone">Phone</label>
-                    <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone">
-                </div>
-                <div class="form-group col-6">
-                    <label for="email">Email</label>
-                    <input type="email" disabled name="email" class="form-control" id="email" placeholder="Enter email">
-                </div>
-                <div class="form-group col-6">
-                    <label for="role">Role</label>
-                    <select id="role" name="role" class="form-select">
-                        <option selected value="user">User</option>
-                        <option value="admin">Admin</option>
-                        <option value="shop-owner">Shop owner</option>
-                    </select>
-                </div>
-                <div class="form-group col-6">
-                    <label for="password">Password</label>
-                    <input type="text" name="password" class="form-control" id="password" placeholder="Enter password">
-                    <small id="passwordHelp" class="form-text text-muted">Type it if you want to hardly reset
-                        password</small>
+                <div class="form-group col-12">
+                    <label for="description">Description</label>
+                    <textarea type="text" name="description" class="form-control" id="description" rows="4"
+                        placeholder="Enter description"></textarea>
                 </div>
                 <div class="form-group col-6">
                     <label for="password">Is deleted</label>
@@ -287,10 +227,10 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">DELETE USERS</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">DELETE CATEGORY</h5>
             </div>
             <div class="modal-body row">
-                <p>Are you sure to delete these users? This action cannot be undone.</p>
+                <p>Are you sure to delete these categories? This action cannot be undone.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-delete-cancel" data-dismiss="modal">Cancel</button>
@@ -303,7 +243,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">IMPORT USERS</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">IMPORT CATEGORIES</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-6">
@@ -324,11 +264,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">EXPORT USERS</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">EXPORT CATEGORIES</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-12">
-                    You want to export all users or only users in current page?
+                    You want to export all categories or only categories in current page?
                 </div>
                 <div class="form-group col-6">
                     <label for="type">Type</label>
@@ -353,20 +293,18 @@
                 params += `${key}=${query[key]}&`;
             }
         }
-        const pagination = await fetch(`/admin/users/search?${params}`).then(res => res.json());
+        const pagination = await fetch(`/admin/categories/search?${params}`).then(res => res.json());
         return pagination;
     }
-    const updateTable = (users) => {
+    const updateTable = (categories) => {
         const tbody = $("tbody.results");
         tbody.empty();
-        users.forEach(user => {
+        categories.forEach(user => {
             tbody.append(`
                 <tr>
                     <td><input class="checkItem" value="${user._id}" type="checkbox"></td>
-                    <td>${user.fullname}</td>
-                    <td>${user.phone || ""}</td>
-                    <td>${user.email}</td>
-                    <td>${user.role}</td>
+                    <td>${user.name}</td>
+                    <td>${user.desciption || ""}</td>
                     <td>${user.isDeleted}</td>
                     <td>${!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : ""}</td>
                     <td>${!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : ""}</td>
@@ -397,6 +335,7 @@
     }
     const clearInputs = (parrentId) => {
         $(`#${parrentId} input`).val("");
+        $(`#${parrentId} textarea`).val("");
         $(`#${parrentId} select`).val("");
     }
 
@@ -467,10 +406,8 @@
             searchAction();
         });
         const searchAction = async function () {
-            const fullname = $("#search #fullname").val();
-            const phone = $("#search #phone").val();
-            const email = $("#search #email").val();
-            const role = $("#search #role").val();
+            const name = $("#search #name").val();
+            const desciption = $("#search #desciption").val();
             const isDeleted = $("#search #isDeleted").val();
             const createdAt = $("#search #createdAt").val();
             const updatedAt = $("#search #updatedAt").val();
@@ -479,10 +416,8 @@
             const perPage = $("#perPage").val() || 10;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
-                fullname,
-                phone,
-                email,
-                role,
+                name,
+                desciption,
                 isDeleted,
                 createdAt,
                 updatedAt,
@@ -504,21 +439,13 @@
             $("#add").modal("hide");
         });
         $(".btn-add-save").click(async function () {
-            const fullname = $("#add #fullname").val();
-            const phone = $("#add #phone").val();
-            const email = $("#add #email").val();
-            const role = $("#add #role").val();
-            const password = $("#add #password").val();
+            const name = $("#add #name").val();
+            const description = $("#add #description").val();
             const body = {
-                fullname,
-                phone,
-                email,
-                role,
-                password
+                name,
+                description,
             };
-            $("#add #password").val("123456");
-            $("#add #role").val("user");
-            const res = await fetch("/admin/users", {
+            const res = await fetch("/admin/categories", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -526,6 +453,7 @@
                 body: JSON.stringify(body)
             }).then(res => res.json());
             clearInputs("add");
+
             if (res.errorCode == 0) {
                 $("#add").modal("hide");
                 const pagination = await search();
@@ -547,17 +475,15 @@
                 return;
             }
             const id = checkedItems[0].value;
-            const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
-            $("#view #fullname").val(user.fullname);
-            $("#view #phone").val(user.phone);
-            $("#view #email").val(user.email);
-            $("#view #role").val(user.role);
-            $("#view #isDeleted").val(`${user.isDeleted}`);
-            $("#view #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
-            $("#view #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
-            $("#view #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
+            const category = await fetch(`/admin/categories/search/${id}`).then(res => res.json());
+            $("#view #name").val(category.name);
+            $("#view #description").val(category.description);
+            $("#view #isDeleted").val(`${category.isDeleted}`);
+            $("#view #createdAt").val(!!category.createdAt ? moment(category.createdAt).format('DD/MM/YY HH:mm') : "");
+            $("#view #updatedAt").val(!!category.updatedAt ? moment(category.updatedAt).format('DD/MM/YY HH:mm') : "");
+            $("#view #createdBy").val(!!category.createdByObj ? `${category.createdByObj?.fullname}-${category.createdByObj?.email}` : "");
+            $("#view #updatedBy").val(!!category.updatedByObj ? `${category.updatedByObj?.fullname}-${category.updatedByObj?.email}` : "");
+            $("#view #deletedBy").val(!!category.deletedByObj ? `${category.deletedByObj?.fullname}-${category.deletedByObj?.email}` : "");
             $("#view").modal("show");
         });
         $(".btn-update").click(async function () {
@@ -571,17 +497,15 @@
                 return;
             }
             const id = checkedItems[0].value;
-            const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
-            $("#update #fullname").val(user.fullname);
-            $("#update #phone").val(user.phone);
-            $("#update #email").val(user.email);
-            $("#update #role").val(user.role);
-            $("#update #isDeleted").val(`${user.isDeleted}`);
-            $("#update #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
-            $("#update #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
-            $("#update #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
+            const category = await fetch(`/admin/categories/search/${id}`).then(res => res.json());
+            $("#update #name").val(category.name);
+            $("#update #description").val(category.description);
+            $("#update #isDeleted").val(`${category.isDeleted}`);
+            $("#update #createdAt").val(!!category.createdAt ? moment(category.createdAt).format('DD/MM/YY HH:mm') : "");
+            $("#update #updatedAt").val(!!category.updatedAt ? moment(category.updatedAt).format('DD/MM/YY HH:mm') : "");
+            $("#update #createdBy").val(!!category.createdByObj ? `${category.createdByObj?.fullname}-${category.createdByObj?.email}` : "");
+            $("#update #updatedBy").val(!!category.updatedByObj ? `${category.updatedByObj?.fullname}-${category.updatedByObj?.email}` : "");
+            $("#update #deletedBy").val(!!category.deletedByObj ? `${category.deletedByObj?.fullname}-${category.deletedByObj?.email}` : "");
             $("#update").modal("show");
         });
         $(".btn-update-cancel").click(function () {
@@ -590,20 +514,16 @@
         $(".btn-update-save").click(async function () {
             const checkedItems = $(".checkItem:checked").toArray();
             const id = checkedItems[0].value;
-            const fullname = $("#update #fullname").val();
-            const phone = $("#update #phone").val();
-            const role = $("#update #role").val();
-            const password = $("#update #password").val();
+            const name = $("#update #name").val();
+            const desciption = $("#update #desciption").val();
             const isDeleted = $("#update #isDeleted").val();
             const body = {
                 id,
-                fullname,
-                phone,
-                role,
-                password,
+                name,
+                description,
                 isDeleted
             };
-            const res = await fetch(`/admin/users`, {
+            const res = await fetch(`/admin/categories`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -638,7 +558,7 @@
             const body = {
                 ids
             };
-            const res = await fetch(`/admin/users`, {
+            const res = await fetch(`/admin/categories`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"

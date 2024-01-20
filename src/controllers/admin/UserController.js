@@ -16,10 +16,10 @@ const UserController = {
         try {
             const _user = req._user;
             const body = req.body;
+            body.createdBy = _user?._id;
             const user = await UserModel.create(body);
-            user.createdBy = _user?.id;
             res.json({
-                data: user,
+                data: user.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Add user successfully!"
             });
@@ -94,7 +94,7 @@ const UserController = {
         }
         const results = await Promise.all([
             UserModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
-            UserModel.find(query).countDocuments()
+            UserModel.find(query).countDocuments().lean()
         ]);
         const pagination = {
             page,
@@ -152,10 +152,10 @@ const UserController = {
             ids = [ids];
         }
         try {
-            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?.id }).lean();
+            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Delete user successfully!"
+                message: "Delete users successfully!"
             });
         } catch (e) {
             console.log(e);
