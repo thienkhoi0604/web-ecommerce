@@ -127,9 +127,7 @@ const UserController = {
             const updateFields = ["fullname", "phone", "role", "isDeleted"];
             const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
-                if (value) {
-                    acc[field] = value;
-                }
+                acc[field] = value;
                 return acc;
             }, {});
             if (!!body.password) {

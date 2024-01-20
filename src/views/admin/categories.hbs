@@ -41,11 +41,11 @@
         </div>
         <div class="form-group col-6">
             <label for="createdAt">Created at</label>
-            <input type="createdAt" name="createdAt" class="form-control" id="createdAt" placeholder="Enter createdAt">
+            <input type="text" name="createdAt" class="form-control" id="createdAt" placeholder="Enter created at">
         </div>
         <div class="form-group col-6">
             <label for="updatedAt">Updated at</label>
-            <input type="updatedAt" name="updatedAt" class="form-control" id="updatedAt" placeholder="Enter updatedAt">
+            <input type="text" name="updatedAt" class="form-control" id="updatedAt" placeholder="Enter updated at">
         </div>
         <div class="form-group col-6">
             <label for="createdBy">Created by</label>
@@ -388,21 +388,21 @@
         const paginationTag = $(".pagination");
         paginationTag.empty();
         if (page > 1) {
-            paginationTag.append(`<li class="page-item page-preview "><a class="page-link" href="#">Previous</a></li>`);
+            paginationTag.append(`<li class="page-item page-preview "><div class="page-link">Previous</div></li>`);
         } else {
-            paginationTag.append(`<li class="page-item page-preview disabled"><a class="page-link" href="#">Previous</a></li>`);
+            paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
         }
         for (let i = 1; i <= totalPage; i++) {
             if (i == page) {
-                paginationTag.append(`<li class="page-item page-item-number active"><a class="page-link" href="#">${i}</a></li>`);
+                paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
             } else {
-                paginationTag.append(`<li class="page-item page-item-number"><a class="page-link" href="#">${i}</a></li>`);
+                paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
             }
         }
         if (page < totalPage) {
-            paginationTag.append(`<li class="page-item page-next"><a class="page-link" href="#">Next</a></li>`);
+            paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
         } else {
-            paginationTag.append(`<li class="page-item page-next disabled"><a class="page-link" href="#">Next</a></li>`);
+            paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
         }
     }
     const clearInputs = (parrentId) => {
@@ -455,6 +455,7 @@
         $(".perPageItem").click(async function () {
             const perPage = $(this).text();
             $("#perPage").val(perPage);
+            searchAction();
         });
         $("#perPage").on("input", async function () {
             const perPage = $(this).val();
@@ -520,8 +521,8 @@
             const body = {
                 name,
                 description,
-                parentId: parentId ? parentId : undefined,
-                childId: childId ? childId : undefined
+                parentId: parentId == "" ? null : parentId,
+                childId: parentId == "" ? null : childId
             };
             const res = await fetch("/admin/categories", {
                 method: "POST",
@@ -613,8 +614,8 @@
             const body = {
                 id,
                 name,
-                parentId: parentId ? parentId : null,
-                childId: childId ? childId : null,
+                parentId: parentId == "" ? null : parentId,
+                childId: childId == "" ? null : childId,
                 description,
                 isDeleted
             };

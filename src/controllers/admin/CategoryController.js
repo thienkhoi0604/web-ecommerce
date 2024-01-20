@@ -8,7 +8,7 @@ const CategoryController = {
             UserModel.find({ role: USER_ROLE.ADMIN })
                 .sort({ updatedAt: -1, createdAt: -1 })
                 .lean(),
-            CategoryModel.find().lean()
+            CategoryModel.find({}).lean()
         ]);
         res.render("admin/categories", Response({ res, data: { users: results[0], categories: results[1] } }))
     },
@@ -126,16 +126,12 @@ const CategoryController = {
         try {
             const _user = req._user;
             const body = req.body;
-            const updateFields = ["name", "description", "isDeleted"];
+            const updateFields = ["name", "description", "isDeleted", "parentId", "childId"];
             const updateCategory = updateFields.reduce((acc, field) => {
                 const value = body[field];
-                if (value) {
-                    acc[field] = value;
-                }
+                acc[field] = value;
                 return acc;
             }, {});
-            updateCategory.parentId = body.parentId === undefined ? undefined : body.parentId;
-            updateCategory.childId = body.childId === undefined ? undefined : body.childId;
             updateCategory.updatedBy = _user?._id;
             const { id } = body;
             const updatedCategory = await CategoryModel.findByIdAndUpdate(id, updateCategory, { new: false }).lean();

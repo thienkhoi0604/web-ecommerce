@@ -7,6 +7,9 @@ const UserModel = new Schema(
       type: mongoose.ObjectId,
       auto: true,
     },
+    id: {
+      type: String,
+    },
     fullname: {
       type: String,
       required: [true, 'Please enter your fullname!'],
