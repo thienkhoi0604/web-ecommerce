@@ -17,6 +17,7 @@ const { errorNotFound } = require("./middlewares/errors/error-not-found");
 const { db, passport } = require("./configs");
 const routes = require("./routes");
 const { LAYOUT } = require("./constants");
+const { Helpers } = require("./helpers");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.engine(
     //new configuration parameter
     extname: "hbs",
     partialsDir: __dirname + "/views/layouts/partials",
+    helpers: Helpers
   })
 );
 app.set("view engine", "hbs");
