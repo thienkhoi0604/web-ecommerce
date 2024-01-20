@@ -1,25 +1,41 @@
-module.exports = function CartModel(oldCart) {
-    this.items = oldCart.items || {};
-    this.totalQuantity = oldCart.totalQuantity || 0;
-    this.totalPrice = oldCart.totalPrice || 0;
+const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-    this.add = function (item, id) {
-        var storedItem = this.items[id];
-        if (!storedItem) {
-            storedItem = this.items[id] = { item: item, quantity: 0, price: 0 };
-        }
-        storedItem.quantity++;
-        storedItem.price = storedItem.item.price * storedItem.quantity;
-        // Có code của product thì đổi storedItem.item.price
-        this.totalQuantity++;
-        this.totalPrice += storedItem.item.price;
-    };
+const CartModel = new Schema(
+  {
+    _id: Schema.ObjectId,
+    userId: {
+      type: mongoose.ObjectId,
+      ref: 'user',
+    },
+    products: [
+      {
+        type: mongoose.ObjectId,
+        ref: 'products',
+      },
+    ],
+    createdBy: {
+      type: String,
+      required: true,
+    },
+    updatedBy: {
+      type: String,
+    },
+    deletedBy: {
+      type: String,
+    },
+    deletedAt: {
+      type: Date,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+  },
+  {
+    collection: 'carts',
+    timestamps: true,
+  }
+);
 
-    this.generateArray = function () {
-        var arr = [];
-        for (var id in this.items) {
-            arr.push(this.items[id]);
-        }
-        return arr;
-    }
-}
+module.exports = mongoose.model('carts', CartModel);

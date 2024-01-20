@@ -78,22 +78,13 @@
 
                         <div class="card bg-glass">
                             <div class="card-body px-4 py-5 px-md-5">
-                                <form method="POST" accept="/register">
+                                <form method="POST" accept="auth/register">
                                     <!-- 2 column grid layout with text inputs for the first and last names -->
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
-                                            <div class="form-outline">
-                                                <input type="text" name="firstname" id="form3Example1"
-                                                    class="form-control" />
-                                                <label class="form-label" for="form3Example1">First name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-4">
-                                            <div class="form-outline">
-                                                <input type="text" name="lastname" id="form3Example2"
-                                                    class="form-control" />
-                                                <label class="form-label" for="form3Example2">Last name</label>
-                                            </div>
+                                            <input type="text" required name="fullname" id="form3Example2"
+                                                class="form-control" />
+                                            <label class="form-label" for="form3Example2">Email address</label>
                                         </div>
                                     </div>
                                     <!-- Email input -->
@@ -104,29 +95,30 @@
 
                                     <!-- Email input -->
                                     <div class="form-outline mb-4">
-                                        <input type="email" name="email" id="form3Example3" class="form-control" />
+                                        <input type="email" required name="email" id="form3Example3"
+                                            class="form-control" />
                                         <label class="form-label" for="form3Example3">Email address</label>
                                     </div>
 
                                     <!-- Password input -->
                                     <div class="form-outline mb-4">
-                                        <input type="password" name="password" id="form3Example4"
+                                        <input type="password" required name="password" id="password"
                                             class="form-control" />
-                                        <label class="form-label" for="form3Example4">Password</label>
+                                        <label class="form-label" for="password">Password</label>
                                     </div>
 
                                     <!-- Password input -->
                                     <div class="form-outline mb-4">
-                                        <input type="password" name="repeatPassword" id="form3Example6"
+                                        <input type="password" name="repeatPassword" id="repeatPassword"
                                             class="form-control" />
-                                        <label class="form-label" for="form3Example6">Retype</label>
+                                        <label class="form-label" for="repeatPassword">Repeat password</label>
                                     </div>
 
                                     <!-- Checkbox -->
                                     <div class="form-check d-flex justify-content-center mb-4">
                                         <label class="form-check-label" for="form2Example33">
                                             <p class="small fw-bold mt-2 pt-1 mb-0"> You aready has a account to login?
-                                                <a href="/login" class="link-danger">Login</a>
+                                                <a href="auth/login" class="link-danger">Login</a>
                                             </p>
                                         </label>
                                     </div>

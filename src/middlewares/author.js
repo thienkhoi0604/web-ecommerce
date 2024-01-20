@@ -6,7 +6,7 @@ const author = (...userRoles) => {
         const token = req.cookies.auth || req.headers.auth;
         jwt.verify(token, process.env.SECRET_KEY, async (error, decode) => {
             if (!decode || Object.keys(decode)?.length <= 0) {
-                return res.redirect("/login");
+                return res.redirect("/auth/login");
             } else {
                 const { _id } = decode;
                 const user = await UserModel.find({ _id });
@@ -16,7 +16,7 @@ const author = (...userRoles) => {
                 } else {
                     //may be call api to add auth to header
                     if (!!req.cookies.auth) {
-                        return res.redirect("/login");
+                        return res.redirect("/auth/login");
                     } else {
                         return res.json({
                             error: {
