@@ -40,12 +40,6 @@ const UserController = {
             $or: [
             ]
         }
-        if (!!req.query.isDeleted) {
-            query.$or.push({
-                isDeleted: req.query.isDeleted
-            })
-            delete req.query.isDeleted;
-        }
         if (!!req.query.createdAt) {
             const dates = req.query.createdAt.split("-");
             const fromeDate = moment(dates[0], "DD/MM/YYYY").startOf("day").toDate();
@@ -70,29 +64,13 @@ const UserController = {
             })
             delete req.query.updatedAt;
         }
-        if (!!req.query.createdBy) {
-            query.$or.push({
-                createdBy: req.query.createdBy
-            })
-            delete req.query.createdBy;
-        }
-        if (!!req.query.updatedBy) {
-            query.$or.push({
-                updatedBy: req.query.updatedBy
-            })
-            delete req.query.updatedBy;
-        }
-        if (!!req.query.deletedBy) {
-            query.$or.push({
-                deletedBy: req.query.deletedBy
-            })
-            delete req.query.deletedBy;
-        }
+        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "role"];
         for (let key in req.query) {
-            if (!!req.query[key]) {
-                query.$or.push({
-                    [key]: new RegExp(req.query[key], "i")
-                })
+            const value = req.query[key];
+            if (equalFields.includes(key) && !!value) {
+                query.$or.push({ [key]: value })
+            } else if (!!value) {
+                query.$or.push({ [key]: new RegExp(value, "i") })
             }
         }
         if (query.$or.length <= 0) {

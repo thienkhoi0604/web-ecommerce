@@ -519,6 +519,10 @@
     </div>
 </div>
 <script>
+    const USDollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
     const search = async (query = {}) => {
         let params = "";
         for (let key in query) {
@@ -537,8 +541,8 @@
                 <tr>
                     <td><input class="checkItem" value="${user._id}" type="checkbox"></td>
                     <td>${user.name}</td>
-                    <td>${user.originalPrice || ""}</td>
-                    <td>${user.discountPrice || ""}</td>
+                    <td>${USDollar.format(user.originalPrice) || ""}</td>
+                    <td>${USDollar.format(user.discountPrice) || ""}</td>
                     <td>${user.stock || ""}</td>
                     <td>${user.soldOut || ""}</td>
                     <td>${user.isDeleted}</td>
@@ -569,9 +573,9 @@
             paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
         }
     }
-    const clearInputs = (parrentId) => {
-        $(`#${parrentId} input`).val("");
-        $(`#${parrentId} select`).val("");
+    const clearInputs = (parentId) => {
+        $(`#${parentId} input`).val("");
+        $(`#${parentId} select`).val("");
     }
 
     $(document).ready(async function () {
@@ -714,8 +718,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("add");
             if (res.errorCode == 0) {
+                clearInputs("add");
                 $("#add").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;
@@ -819,8 +823,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("update");
             if (res.errorCode == 0) {
+                clearInputs("update");
                 $("#update").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;

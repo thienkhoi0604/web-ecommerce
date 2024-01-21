@@ -14,8 +14,8 @@
             <input type="text" name="description" class="form-control" id="description" placeholder="Enter description">
         </div>
         <div class="form-group col-6">
-            <label for="parrentId">Parrent category</label>
-            <select id="parrentId" name="parrentId" class="form-select">
+            <label for="parentId">Parent category</label>
+            <select id="parentId" name="parentId" class="form-select">
                 <option selected value="">Not set</option>
                 {{#each categories}}
                 <option value="{{this._id}}">{{this.name}}</option>
@@ -186,11 +186,6 @@
                     <label for="childId">Children category</label>
                     <input type="text" disabled name="childId" class="form-control" id="childId">
                 </div>
-                <div class="form-group col-12">
-                    <label for="description">Description</label>
-                    <textarea type="text" disabled name="description" class="form-control" id="description" rows="4"
-                        placeholder="Enter description"></textarea>
-                </div>
                 <div class="form-group col-6">
                     <label for="isDeleted">Is deleted</label>
                     <select disabled id="isDeleted" name="isDeleted" class="form-select">
@@ -217,6 +212,11 @@
                 <div class="form-group col-6">
                     <label for="deletedBy">Deleted by</label>
                     <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
+                </div>
+                <div class="form-group col-12">
+                    <label for="description">Description</label>
+                    <textarea type="text" disabled name="description" class="form-control" id="description" rows="4"
+                        placeholder="Enter description"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -254,11 +254,6 @@
                         {{/each}}
                     </select>
                 </div>
-                <div class="form-group col-12">
-                    <label for="description">Description</label>
-                    <textarea type="text" name="description" class="form-control" id="description" rows="4"
-                        placeholder="Enter description"></textarea>
-                </div>
                 <div class="form-group col-6">
                     <label for="isDeleted">Is deleted</label>
                     <select id="isDeleted" name="isDeleted" class="form-select">
@@ -285,6 +280,11 @@
                 <div class="form-group col-6">
                     <label for="deletedBy">Deleted by</label>
                     <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
+                </div>
+                <div class="form-group col-12">
+                    <label for="description">Description</label>
+                    <textarea type="text" name="description" class="form-control" id="description" rows="4"
+                        placeholder="Enter description"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -405,10 +405,10 @@
             paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
         }
     }
-    const clearInputs = (parrentId) => {
-        $(`#${parrentId} input`).val("");
-        $(`#${parrentId} textarea`).val("");
-        $(`#${parrentId} select`).val("");
+    const clearInputs = (parentId) => {
+        $(`#${parentId} input`).val("");
+        $(`#${parentId} textarea`).val("");
+        $(`#${parentId} select`).val("");
     }
 
     $(document).ready(async function () {
@@ -481,6 +481,8 @@
         const searchAction = async function () {
             const name = $("#search #name").val();
             const description = $("#search #description").val();
+            const parentId = $("#search #parentId").val();
+            const childId = $("#search #childId").val();
             const isDeleted = $("#search #isDeleted").val();
             const createdAt = $("#search #createdAt").val();
             const updatedAt = $("#search #updatedAt").val();
@@ -492,6 +494,8 @@
             const query = {
                 name,
                 description,
+                parentId,
+                childId,
                 isDeleted,
                 createdAt,
                 updatedAt,
@@ -522,7 +526,7 @@
                 name,
                 description,
                 parentId: parentId == "" ? null : parentId,
-                childId: parentId == "" ? null : childId
+                childId: childId == "" ? null : childId
             };
             const res = await fetch("/admin/categories", {
                 method: "POST",
@@ -531,8 +535,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("add");
             if (res.errorCode == 0) {
+                clearInputs("add");
                 $("#add").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;
@@ -626,8 +630,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("update");
             if (res.errorCode == 0) {
+                clearInputs("update");
                 $("#update").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;

@@ -42,12 +42,6 @@ const ProductController = {
             $or: [
             ]
         }
-        if (!!req.query.isDeleted) {
-            query.$or.push({
-                isDeleted: req.query.isDeleted
-            })
-            delete req.query.isDeleted;
-        }
         if (!!req.query.createdAt) {
             const dates = req.query.createdAt.split("-");
             const fromeDate = moment(dates[0], "DD/MM/YYYY").startOf("day").toDate();
@@ -72,35 +66,16 @@ const ProductController = {
             })
             delete req.query.updatedAt;
         }
-        if (!!req.query.createdBy) {
-            query.$or.push({
-                createdBy: req.query.createdBy
-            })
-            delete req.query.createdBy;
-        }
-        if (!!req.query.updatedBy) {
-            query.$or.push({
-                updatedBy: req.query.updatedBy
-            })
-            delete req.query.updatedBy;
-        }
-        if (!!req.query.deletedBy) {
-            query.$or.push({
-                deletedBy: req.query.deletedBy
-            })
-            delete req.query.deletedBy;
-        }
-        if (!!req.query.categoryId) {
-            query.$or.push({
-                categoryId: req.query.categoryId
-            })
-            delete req.query.categoryId;
-        }
+        const numberFields = ["originalPrice", "discountPrice", "stock", "ratings", "soldOut"];
+        const equalFields = ["isDeleted", "categoryId", "createdBy", "updatedBy", "deletedBy"];
         for (let key in req.query) {
-            if (!!req.query[key]) {
-                query.$or.push({
-                    [key]: new RegExp(req.query[key], "i")
-                })
+            const value = req.query[key];
+            if (numberFields.includes(key) && !isNaN(value)) {
+                query.$or.push({ [key]: value })
+            } else if (equalFields.includes(key) && !!value) {
+                query.$or.push({ [key]: value })
+            } else if (!!value) {
+                query.$or.push({ [key]: new RegExp(req.query[key], "i") })
             }
         }
         if (query.$or.length <= 0) {
@@ -142,7 +117,8 @@ const ProductController = {
                 "tags",
                 "stock",
                 "ratings",
-                "soldOut"
+                "soldOut",
+                "isDeleted"
             ];
             const updateProduct = updateFields.reduce((acc, field) => {
                 const value = body[field];
