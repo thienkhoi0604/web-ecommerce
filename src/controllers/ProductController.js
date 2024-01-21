@@ -38,7 +38,7 @@ const ProductController = {
         } catch (error) {
             next(error);
         }
-    }
+    },
 }
 
 module.exports = ProductController;
