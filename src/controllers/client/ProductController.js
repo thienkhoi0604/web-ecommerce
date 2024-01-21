@@ -5,7 +5,7 @@ const ProductController = {
     async getAllProducts(req, res, next) {
         try {
             const products = await Product.find().lean();
-            res.render('products', { layout: false, products });
+            res.render('client/products', { layout: false, products });
         } catch (error) {
             next(error);
         }
@@ -14,7 +14,7 @@ const ProductController = {
         try {
             const category = req.params.category;
             const products = await Product.find({ category: category }).lean();
-            res.render('products', { layout: false, products, category });
+            res.render('client/products', { layout: false, products, category });
         } catch (error) {
             next(error);
         }
@@ -34,7 +34,7 @@ const ProductController = {
                 ],
             }).lean();
 
-            res.render('products', { layout: false, products, searchTerm });
+            res.render('client/products', { layout: false, products, searchTerm });
         } catch (error) {
             next(error);
         }
@@ -43,7 +43,7 @@ const ProductController = {
         try {
             const productId = req.params._id;
             const product = await Product.findById(productId).lean();
-            res.render('detail', { layout: false, product });
+            res.render('client/detail', { layout: false, product });
         } catch (error) {
             next(error);
         }

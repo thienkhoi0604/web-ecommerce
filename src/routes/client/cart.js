@@ -5,7 +5,7 @@ const CartRouter = Router();
 
 //CartRouter.get('/cart', CartController.viewCart);
 CartRouter.get('/cart', (req, res) => {
-  res.render('cart', { layout: false });
+  res.render('client/cart', { layout: false });
 });
 CartRouter.get('/add-to-cart/:id', function (req, res, next) {
   var productId = req.params.id;
