@@ -40,6 +40,7 @@ const AuthController = {
     },
     async doRegister(req, res, next) {
         try {
+            const user = req.body;
             const data = await authService.doRegister(user);
             if (data.error.code == RESPONSE_CODE.SUCCESS) {
                 const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
