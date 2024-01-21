@@ -15,6 +15,15 @@ const HomeController = {
         } catch (error) {
             next(error);
         }
+    },
+    async getProductDetail(req, res, next) {
+        try {
+            const productId = req.params._id;
+            const product = await Product.findById(productId).lean();
+            res.render('detail', { layout: false, product });
+        } catch (error) {
+            next(error);
+        }
     }
 }
 
