@@ -36,11 +36,11 @@
         </div>
         <div class="form-group col-6">
             <label for="createdAt">Created at</label>
-            <input type="createdAt" name="createdAt" class="form-control" id="createdAt" placeholder="Enter createdAt">
+            <input type="text" name="createdAt" class="form-control" id="createdAt" placeholder="Enter created at">
         </div>
         <div class="form-group col-6">
             <label for="updatedAt">Updated at</label>
-            <input type="updatedAt" name="updatedAt" class="form-control" id="updatedAt" placeholder="Enter updatedAt">
+            <input type="text" name="updatedAt" class="form-control" id="updatedAt" placeholder="Enter updated at">
         </div>
         <div class="form-group col-6">
             <label for="createdBy">Created by</label>
@@ -54,6 +54,15 @@
         <div class="form-group col-6">
             <label for="Updated by">Updated by</label>
             <select id="updatedBy" name="updatedBy" class="form-select">
+                <option selected value="">Not set</option>
+                {{#each users}}
+                <option value="{{this._id}}">{{this.fullname}}-{{this.email}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group col-6">
+            <label for="Deleted by">Deleted by</label>
+            <select id="deletedBy" name="deletedBy" class="form-select">
                 <option selected value="">Not set</option>
                 {{#each users}}
                 <option value="{{this._id}}">{{this.fullname}}-{{this.email}}</option>
@@ -117,7 +126,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">ADD USES</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">ADD USE</h5>
             </div>
             <div class="modal-body row">
                 <div class="form-group col-6">
@@ -378,21 +387,21 @@
         const paginationTag = $(".pagination");
         paginationTag.empty();
         if (page > 1) {
-            paginationTag.append(`<li class="page-item page-preview "><a class="page-link" href="#">Previous</a></li>`);
+            paginationTag.append(`<li class="page-item page-preview "><div class="page-link">Previous</div></li>`);
         } else {
-            paginationTag.append(`<li class="page-item page-preview disabled"><a class="page-link" href="#">Previous</a></li>`);
+            paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
         }
         for (let i = 1; i <= totalPage; i++) {
             if (i == page) {
-                paginationTag.append(`<li class="page-item page-item-number active"><a class="page-link" href="#">${i}</a></li>`);
+                paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
             } else {
-                paginationTag.append(`<li class="page-item page-item-number"><a class="page-link" href="#">${i}</a></li>`);
+                paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
             }
         }
         if (page < totalPage) {
-            paginationTag.append(`<li class="page-item page-next"><a class="page-link" href="#">Next</a></li>`);
+            paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
         } else {
-            paginationTag.append(`<li class="page-item page-next disabled"><a class="page-link" href="#">Next</a></li>`);
+            paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
         }
     }
     const clearInputs = (parrentId) => {
@@ -444,6 +453,7 @@
         $(".perPageItem").click(async function () {
             const perPage = $(this).text();
             $("#perPage").val(perPage);
+            searchAction();
         });
         $("#perPage").on("input", async function () {
             const perPage = $(this).val();
@@ -476,6 +486,7 @@
             const updatedAt = $("#search #updatedAt").val();
             const createdBy = $("#search #createdBy").val();
             const updatedBy = $("#search #updatedBy").val();
+            const deltedBy = $("#search #deletedBy").val();
             const perPage = $("#perPage").val() || 10;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
@@ -488,6 +499,7 @@
                 updatedAt,
                 createdBy,
                 updatedBy,
+                deltedBy,
                 limit: perPage,
                 page: currentPage
             };

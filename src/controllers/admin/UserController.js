@@ -82,6 +82,12 @@ const UserController = {
             })
             delete req.query.updatedBy;
         }
+        if (!!req.query.deletedBy) {
+            query.$or.push({
+                deletedBy: req.query.deletedBy
+            })
+            delete req.query.deletedBy;
+        }
         for (let key in req.query) {
             if (!!req.query[key]) {
                 query.$or.push({
@@ -121,9 +127,7 @@ const UserController = {
             const updateFields = ["fullname", "phone", "role", "isDeleted"];
             const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
-                if (value) {
-                    acc[field] = value;
-                }
+                acc[field] = value;
                 return acc;
             }, {});
             if (!!body.password) {
@@ -152,7 +156,7 @@ const UserController = {
             ids = [ids];
         }
         try {
-            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deleteBy: _user?._id }).lean();
+            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete users successfully!"
