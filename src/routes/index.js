@@ -15,7 +15,6 @@ const routes = (app) => {
     app.use("/", CartRouter)
     app.use("/", ProductRouter)
     app.use("/", DetailRouter)
-    app.use("/", TestRouter)
 }
 
 module.exports = routes;

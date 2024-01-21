@@ -21,6 +21,14 @@ const ProductModel = new Schema(
     tags: {
       type: String,
     },
+    sizes: {
+      type: String,
+      required: [true, 'Please enter your product size!'],
+    },
+    colors: {
+      type: String,
+      required: [true, 'Please enter your product color!'],
+    },
     originalPrice: {
       type: Number,
       required: [true, 'Please enter your product price!'],
@@ -48,6 +56,10 @@ const ProductModel = new Schema(
       {
         user: {
           type: Object,
+        },
+        images: {
+          type: String,
+          required: true,
         },
         rating: {
           type: Number,

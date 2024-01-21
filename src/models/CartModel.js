@@ -28,8 +28,8 @@ const CartModel = new Schema(
       type: Date,
     },
     isDeleted: {
-      type: Boolean,
-      default: false,
+        type: Boolean,
+        default: false
     },
   },
   {
