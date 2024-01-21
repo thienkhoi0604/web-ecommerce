@@ -79,15 +79,14 @@
                         <div class="card bg-glass">
                             <div class="card-body px-4 py-5 px-md-5">
                                 <form method="POST" accept="auth/register">
-                                    <!-- 2 column grid layout with text inputs for the first and last names -->
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4">
-                                            <input type="text" required name="fullname" id="form3Example2"
+                                    <!-- Fullname input -->
+                                    <div class="form-outline mb-4">
+                                        <input type="text" required name="fullname" id="form3Example2"
                                                 class="form-control" />
-                                            <label class="form-label" for="form3Example2">Email address</label>
-                                        </div>
+                                        <label class="form-label" for="form3Example2">Fullname</label>
                                     </div>
-                                    <!-- Email input -->
+
+                                    <!-- Phone input -->
                                     <div class="form-outline mb-4">
                                         <input type="tel" name="phone" id="form3Example4" class="form-control" />
                                         <label class="form-label" for="form3Example4">Phone number</label>
@@ -107,7 +106,7 @@
                                         <label class="form-label" for="password">Password</label>
                                     </div>
 
-                                    <!-- Password input -->
+                                    <!-- Confirm Password input -->
                                     <div class="form-outline mb-4">
                                         <input type="password" name="repeatPassword" id="repeatPassword"
                                             class="form-control" />
