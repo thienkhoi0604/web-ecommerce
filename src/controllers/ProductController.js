@@ -10,11 +10,34 @@ const ProductController = {
             next(error);
         }
     },
-    getProductsByCategory(req, res) {
-
+    async getProductsByCategory(req, res, next) {
+        try {
+            const category = req.params.category;
+            const products = await Product.find({ category: category }).lean();
+            res.render('products', { layout: false, products, category });
+        } catch (error) {
+            next(error);
+        }
     },
-    searchProducts(req, res) {
+    async searchProducts(req, res, next) {
+        try {
+            const searchTerm = req.query.q;
+            if (!searchTerm) {
+                return res.redirect('/products');
+            }
 
+            const regex = new RegExp(searchTerm, 'i');
+
+            const products = await Product.find({
+                $or: [
+                    { name: { $regex: regex } },
+                ],
+            }).lean();
+
+            res.render('products', { layout: false, products, searchTerm });
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

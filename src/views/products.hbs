@@ -42,7 +42,7 @@
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
             <h1 class="font-weight-semi-bold text-uppercase mb-3">Our Shop</h1>
             <div class="d-inline-flex">
-                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0"><a href="/">Home</a></p>
                 <p class="m-0 px-2">-</p>
                 <p class="m-0">Shop</p>
             </div>
@@ -193,13 +193,13 @@
                 <div class="row pb-3">
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
-                            <form action="">
+                            <form action="/products/search" method="GET">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search by name">
+                                    <input type="text" class="form-control" placeholder="Search by name" name="q">
                                     <div class="input-group-append">
-                                        <span class="input-group-text bg-transparent text-primary">
+                                        <button class="input-group-text bg-transparent text-primary" type="submit">
                                             <i class="fa fa-search"></i>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -227,8 +227,8 @@
                             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                                 <h6 class="text-truncate mb-3">{{this.name}}</h6>
                                 <div class="d-flex justify-content-center">
-                                    <h6>{{this.discountPrice}}$</h6>
-                                    <h6 class="text-muted ml-2"><del>{{this.originalPrice}}$</del></h6>
+                                    <h6>${{this.discountPrice}}</h6>
+                                    <h6 class="text-muted ml-2"><del>${{this.originalPrice}}</del></h6>
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
