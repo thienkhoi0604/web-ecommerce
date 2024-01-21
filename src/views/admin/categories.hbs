@@ -522,7 +522,7 @@
                 name,
                 description,
                 parentId: parentId == "" ? null : parentId,
-                childId: parentId == "" ? null : childId
+                childId: childId == "" ? null : childId
             };
             const res = await fetch("/admin/categories", {
                 method: "POST",
