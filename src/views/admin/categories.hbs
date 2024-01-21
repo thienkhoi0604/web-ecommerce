@@ -14,8 +14,8 @@
             <input type="text" name="description" class="form-control" id="description" placeholder="Enter description">
         </div>
         <div class="form-group col-6">
-            <label for="parrentId">Parrent category</label>
-            <select id="parrentId" name="parrentId" class="form-select">
+            <label for="parentId">Parent category</label>
+            <select id="parentId" name="parentId" class="form-select">
                 <option selected value="">Not set</option>
                 {{#each categories}}
                 <option value="{{this._id}}">{{this.name}}</option>
@@ -405,10 +405,10 @@
             paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
         }
     }
-    const clearInputs = (parrentId) => {
-        $(`#${parrentId} input`).val("");
-        $(`#${parrentId} textarea`).val("");
-        $(`#${parrentId} select`).val("");
+    const clearInputs = (parentId) => {
+        $(`#${parentId} input`).val("");
+        $(`#${parentId} textarea`).val("");
+        $(`#${parentId} select`).val("");
     }
 
     $(document).ready(async function () {
@@ -481,6 +481,8 @@
         const searchAction = async function () {
             const name = $("#search #name").val();
             const description = $("#search #description").val();
+            const parentId = $("#search #parentId").val();
+            const childId = $("#search #childId").val();
             const isDeleted = $("#search #isDeleted").val();
             const createdAt = $("#search #createdAt").val();
             const updatedAt = $("#search #updatedAt").val();
@@ -492,6 +494,8 @@
             const query = {
                 name,
                 description,
+                parentId,
+                childId,
                 isDeleted,
                 createdAt,
                 updatedAt,
@@ -531,8 +535,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("add");
             if (res.errorCode == 0) {
+                clearInputs("add");
                 $("#add").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;
@@ -626,8 +630,8 @@
                 },
                 body: JSON.stringify(body)
             }).then(res => res.json());
-            clearInputs("update");
             if (res.errorCode == 0) {
+                clearInputs("update");
                 $("#update").modal("hide");
                 const pagination = await search();
                 const { totalPage = 0, page = 1, data = [] } = pagination;
