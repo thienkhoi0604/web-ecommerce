@@ -1,29 +1,27 @@
+const moment = require("moment");
 const { Response } = require("../../commons");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
-const { UserModel, ProductModel, CategoryModel } = require("../../models");
+const UserModel = require("../../models/UserModel");
 
-const ProductController = {
+const UserController = {
     async index(req, res, next) {
         const results = await Promise.all([
             UserModel.find({ role: USER_ROLE.ADMIN })
                 .sort({ updatedAt: -1, createdAt: -1 })
                 .lean(),
-            CategoryModel.find({})
-                .sort({ updatedAt: -1, createdAt: -1 })
-                .lean()
         ]);
-        res.render("admin/products", Response({ res, data: { users: results[0], categories: results[1] } }))
+        res.render("admin/users", Response({ res, data: { users: results[0] } }))
     },
     async add(req, res, next) {
         try {
             const _user = req._user;
             const body = req.body;
             body.createdBy = _user?._id;
-            const product = await ProductModel.create(body);
+            const user = await UserModel.create(body);
             res.json({
-                data: product.toObject(),
+                data: user.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Add product successfully!"
+                message: "Add user successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -90,12 +88,6 @@ const ProductController = {
             })
             delete req.query.deletedBy;
         }
-        if (!!req.query.categoryId) {
-            query.$or.push({
-                categoryId: req.query.categoryId
-            })
-            delete req.query.categoryId;
-        }
         for (let key in req.query) {
             if (!!req.query[key]) {
                 query.$or.push({
@@ -107,8 +99,8 @@ const ProductController = {
             delete query.$or;
         }
         const results = await Promise.all([
-            ProductModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
-            ProductModel.find(query).countDocuments().lean()
+            UserModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
+            UserModel.find(query).countDocuments().lean()
         ]);
         const pagination = {
             page,
@@ -121,41 +113,33 @@ const ProductController = {
     },
     async get(req, res, next) {
         const { id } = req.params;
-        const product = await ProductModel.findById(id)
+        const user = await UserModel.findById(id)
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")
-            .populate("categoryObj")
             .lean();
-        res.json(product);
+        res.json(user);
     },
     async update(req, res, next) {
         try {
             const _user = req._user;
             const body = req.body;
-            const updateFields = [
-                "name",
-                "description",
-                "categoryId",
-                "originalPrice",
-                "discountPrice",
-                "tags",
-                "stock",
-                "ratings",
-                "soldOut"
-            ];
-            const updateProduct = updateFields.reduce((acc, field) => {
+            const updateFields = ["fullname", "phone", "role", "isDeleted"];
+            const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 acc[field] = value;
                 return acc;
             }, {});
-            updateProduct.updatedBy = _user?._id;
+            if (!!body.password) {
+                updateUser.password = body.password;
+            }
+            updateUser.updatedBy = _user?._id;
             const { id } = body;
-            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateProduct, { new: false }).lean();
+            const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
             res.json({
-                data: updatedProduct,
+                data: updatedUser,
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Update product successfully!"
+                message: "Update user successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -172,10 +156,10 @@ const ProductController = {
             ids = [ids];
         }
         try {
-            const resonse = await ProductModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Delete products successfully!"
+                message: "Delete users successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -187,4 +171,4 @@ const ProductController = {
     }
 }
 
-module.exports = ProductController;
+module.exports = UserController;

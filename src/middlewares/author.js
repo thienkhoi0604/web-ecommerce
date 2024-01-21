@@ -1,3 +1,4 @@
+const moment = require("moment");
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/UserModel');
 const { RESPONSE_CODE } = require('../constants');
@@ -8,10 +9,16 @@ const author = (...userRoles) => {
             if (!decode || Object.keys(decode)?.length <= 0) {
                 return res.redirect("/auth/login");
             } else {
-                const { _id } = decode;
-                const user = await UserModel.find({ _id });
-                const haspPemission = userRoles.some(role => role == user.type);
+                const { _id, exp, iat } = decode;
+                const expired = moment.unix(exp).isAfter(moment());
+                if (!expired) {
+                    return res.redirect("/auth/login");
+                }
+                const user = await UserModel.findById({ _id });
+                req._user = user.toObject();
+                const haspPemission = userRoles.some(role => role == user.role);
                 if (haspPemission) {
+                    res.cookie("auth", jwt.sign(req._user, process.env.SECRET_KEY, { expiresIn: 60 * 60 }));
                     next();
                 } else {
                     //may be call api to add auth to header

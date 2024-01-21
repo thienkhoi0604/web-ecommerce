@@ -22,7 +22,7 @@ passport.use(new FacebookStrategy({
     if (existedUser !== null) {
         return done(null, existedUser);
     }
-    const newUser = await new UserModel(user).save();
+    const newUser = await UserModel.create(user);
     return done(null, newUser);
 }));
 
@@ -42,7 +42,7 @@ passport.use(new GoogleStrategy({
     if (existedUser !== null) {
         return done(null, existedUser);
     }
-    const newUser = await new UserModel(user).save();
+    const newUser = await UserModel.create(user);
     return done(null, newUser);
 }));
 

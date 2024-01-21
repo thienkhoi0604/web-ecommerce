@@ -4,6 +4,7 @@ const ErrorController = require("./ErrorController")
 const HomeController = require("./HomeController")
 const ProductController = require("./ProductController")
 const StaticController = require("./StaticController")
+const UserController = require("./UserController")
 
 module.exports = {
     ProductController,
@@ -11,5 +12,6 @@ module.exports = {
     HomeController,
     CartController,
     StaticController,
-    ErrorController
+    ErrorController,
+    UserController
 }

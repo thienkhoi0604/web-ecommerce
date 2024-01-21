@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { Response } = require("../commons");
 const { RESPONSE_CODE, USER_ROLE } = require("../constants");
 const { authService } = require("../services");
-const { RegisterValidate, LoginValidate } = require("../utils");
 const passport = require('passport');
 
 const AuthController = {
@@ -15,13 +14,12 @@ const AuthController = {
     },
     async doLogin(req, res, next) {
         try {
-            const user = await LoginValidate.user.validateAsync(req.body);
+            const user = req.body;
             const data = await authService.doLogin(user);
             if (data.error.code == RESPONSE_CODE.SUCCESS) {
-                const userObject = data.user.toObject();
-                const auth = jwt.sign(userObject, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+                const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
-                if (userObject.type == USER_ROLE.ADMIN) {
+                if (data.user.role == USER_ROLE.ADMIN) {
                     return res.redirect("/admin");
                 } else {
                     return res.redirect("/");
@@ -42,13 +40,11 @@ const AuthController = {
     },
     async doRegister(req, res, next) {
         try {
-            const user = await RegisterValidate.user.validateAsync(req.body);
             const data = await authService.doRegister(user);
             if (data.error.code == RESPONSE_CODE.SUCCESS) {
-                const userObject = data.user.toObject();
-                const auth = jwt.sign(userObject, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
+                const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
-                if (userObject.type == USER_ROLE.ADMIN) {
+                if (data.user.role == USER_ROLE.ADMIN) {
                     return res.redirect("/admin");
                 } else {
                     return res.redirect("/");
@@ -75,7 +71,7 @@ const AuthController = {
             if (!user) { return res.redirect('/'); }
             const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
             res.cookie("auth", auth);
-            if (user.type == USER_ROLE.ADMIN) {
+            if (user.role == USER_ROLE.ADMIN) {
                 return res.redirect("/admin");
             } else {
                 return res.redirect("/");
@@ -94,7 +90,7 @@ const AuthController = {
             if (!user) { return res.redirect('/'); }
             const auth = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
             res.cookie("auth", auth);
-            if (user.type == USER_ROLE.ADMIN) {
+            if (user.role == USER_ROLE.ADMIN) {
                 return res.redirect("/admin");
             } else {
                 return res.redirect("/");

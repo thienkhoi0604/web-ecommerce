@@ -2,7 +2,10 @@ const { Schema, default: mongoose } = require('mongoose');
 
 const ProductModel = new Schema(
   {
-    _id: Schema.ObjectId,
+    _id: {
+      type: mongoose.ObjectId,
+      auto: true,
+    },
     name: {
       type: String,
       required: [true, 'Please enter your product name!'],
@@ -11,8 +14,8 @@ const ProductModel = new Schema(
       type: String,
       required: [true, 'Please enter your product description!'],
     },
-    category: {
-      type: String,
+    categoryId: {
+      type: Schema.ObjectId,
       required: [true, 'Please enter your product category!'],
     },
     tags: {
@@ -20,10 +23,10 @@ const ProductModel = new Schema(
     },
     originalPrice: {
       type: Number,
+      required: [true, 'Please enter your product price!'],
     },
     discountPrice: {
       type: Number,
-      required: [true, 'Please enter your product price!'],
     },
     stock: {
       type: Number,
@@ -61,28 +64,19 @@ const ProductModel = new Schema(
     ratings: {
       type: Number,
     },
-    shopId: {
-      type: mongoose.ObjectId,
-      ref: 'shops',
-      required: true,
-    },
-    shop: {
-      type: Object,
-      required: true,
-    },
-    sold_out: {
+    soldOut: {
       type: Number,
       default: 0,
     },
     createdBy: {
-      type: String,
+      type: Schema.ObjectId,
       required: true,
     },
     updatedBy: {
-      type: String,
+      type: Schema.ObjectId,
     },
     deletedBy: {
-      type: String,
+      type: Schema.ObjectId,
     },
     deletedAt: {
       type: Date,
@@ -97,5 +91,30 @@ const ProductModel = new Schema(
     timestamps: true,
   }
 );
+
+ProductModel.virtual("createdByObj", {
+  ref: "users",
+  localField: "createdBy",
+  foreignField: "_id",
+  justOne: true
+});
+ProductModel.virtual("updatedByObj", {
+  ref: "users",
+  localField: "updatedBy",
+  foreignField: "_id",
+  justOne: true
+});
+ProductModel.virtual("deletedByObj", {
+  ref: "users",
+  localField: "deletedBy",
+  foreignField: "_id",
+  justOne: true
+});
+ProductModel.virtual("categoryObj", {
+  ref: "categories",
+  localField: "categoryId",
+  foreignField: "_id",
+  justOne: true
+});
 
 module.exports = mongoose.model('products', ProductModel);
