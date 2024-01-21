@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const { engine } = require("express-handlebars");
+const cloudinary = require("cloudinary");
 
 const http = require('http');
 const https = require("https");
@@ -26,6 +27,13 @@ const HTTPS_PORT = process.env.HTTPS_PORT || 8081;
 
 //connect to db
 db.connect();
+
+//cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 //Config
 app.use(cors());
