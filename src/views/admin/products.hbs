@@ -519,6 +519,10 @@
     </div>
 </div>
 <script>
+    const USDollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
     const search = async (query = {}) => {
         let params = "";
         for (let key in query) {
@@ -537,8 +541,8 @@
                 <tr>
                     <td><input class="checkItem" value="${user._id}" type="checkbox"></td>
                     <td>${user.name}</td>
-                    <td>${user.originalPrice || ""}</td>
-                    <td>${user.discountPrice || ""}</td>
+                    <td>${USDollar.format(user.originalPrice) || ""}</td>
+                    <td>${USDollar.format(user.discountPrice) || ""}</td>
                     <td>${user.stock || ""}</td>
                     <td>${user.soldOut || ""}</td>
                     <td>${user.isDeleted}</td>

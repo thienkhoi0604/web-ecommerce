@@ -142,7 +142,8 @@ const ProductController = {
                 "tags",
                 "stock",
                 "ratings",
-                "soldOut"
+                "soldOut",
+                "isDeleted"
             ];
             const updateProduct = updateFields.reduce((acc, field) => {
                 const value = body[field];
