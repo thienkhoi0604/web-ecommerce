@@ -16,8 +16,8 @@ const routes = require("./routes");
 
 const app = express();
 
-const PORT = process.env.PORT || 8080;
-const HTTPS_PORT = process.env.HTTPS_PORT || 8081;
+const PORT = process.env.PORT || 8880;
+const HTTPS_PORT = process.env.HTTPS_PORT || 8881;
 
 //connect to db
 db.connect();
@@ -47,7 +47,7 @@ app.use(errorNotFound, errorLogger, errorHandler);
 // app.listen(PORT, (req, res) => console.log(`App listening on port ${PORT}`));
 
 http.createServer(app).listen(PORT, () => {
-  console.log(`HTTPS server started on port ${PORT}`);
+  console.log(`HTTP server payment started on port ${PORT}`);
 });
 
 const options = {
@@ -55,7 +55,7 @@ const options = {
   cert: fs.readFileSync("./config/cert.pem"),
 };
 https.createServer(options, app).listen(HTTPS_PORT, () => {
-  console.log(`HTTPS server started on port ${HTTPS_PORT}`);
+  console.log(`HTTPS server payment started on port ${HTTPS_PORT}`);
 });
 
 module.exports = { app };

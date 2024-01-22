@@ -89,7 +89,7 @@ app.use(errorNotFound, errorLogger, errorHandler);
 // app.listen(PORT, (req, res) => console.log(`App listening on port ${PORT}`));
 
 http.createServer(app).listen(PORT, () => {
-  console.log(`HTTPS server started on port ${PORT}`);
+  console.log(`HTTP server started on port ${PORT}`);
 });
 
 const options = {
