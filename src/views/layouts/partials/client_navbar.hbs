@@ -33,8 +33,12 @@
                         <a href="/products" class="nav-item nav-link">Products</a>
                     </div>
                     <div class="navbar-nav ml-auto py-0">
+                        {{#if loggedIn}}
+                        <a href="/auth/logout" class="nav-item nav-link">Logout</a>
+                        {{else}}
                         <a href="/auth/login" class="nav-item nav-link">Login</a>
                         <a href="/auth/register" class="nav-item nav-link">Register</a>
+                        {{/if}}
                     </div>
                 </div>
             </nav>
