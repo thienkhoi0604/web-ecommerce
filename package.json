@@ -4,7 +4,7 @@
   "description": "This is final project for Web developer (university 21_3)",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./src/app.js",
+    "start": "concurrently \"nodemon --ignore others ./src/app.js\" \"cd ./others/web-payment && nodemon ./src/app.js\"",
     "test": "jest ./src/app.test.js"
   },
   "repository": {

@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  web-payment:
+      env_file:
+      - .env.example
+      image: web-payment
+      container_name: web-payment
+      build:
+        dockerfile: Dockerfile
+      restart: always
+      ports:
+        - "${PORT}:${PORT}"
+      volumes:
+        - /opt/web-payment/logs:/logs
+      networks:
+        - web-payment
+
+networks:
+  web-payment:
+    driver: bridge
+
