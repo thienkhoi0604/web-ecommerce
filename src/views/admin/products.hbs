@@ -646,42 +646,49 @@
             searchAction();
         });
         const searchAction = async function () {
-            const name = $("#search #name").val();
-            const description = $("#search #description").val();
-            const categoryId = $("#search #categoryId").val();
-            const originalPrice = $("#search #originalPrice").val();
-            const discountPrice = $("#search #discountPrice").val();
-            const tags = $("#search #tags").val();
-            const stock = $("#search #stock").val();
-            const ratings = $("#search #ratings").val();
-            const soldOut = $("#search #soldOut").val();
-            const isDeleted = $("#search #isDeleted").val();
-            const createdAt = $("#search #createdAt").val();
-            const updatedAt = $("#search #updatedAt").val();
-            const deltedBy = $("#search #deletedBy").val();
-            const perPage = $("#perPage").val() || 10;
-            const currentPage = $(".pagination .active").text() || 1;
-            const query = {
-                name,
-                description,
-                categoryId,
-                originalPrice,
-                discountPrice,
-                tags,
-                stock,
-                ratings,
-                soldOut,
-                isDeleted,
-                createdAt,
-                updatedAt,
-                deltedBy,
-                limit: perPage,
-                page: currentPage
-            };
-            const pagination = await search(query);
-            const { totalPage = 0, page = 1, data = [] } = pagination;
-            updateTable(data);
-            updatePagination(totalPage, page);
+            try {
+                $("#main-loading").addClass("show");
+                const name = $("#search #name").val();
+                const description = $("#search #description").val();
+                const categoryId = $("#search #categoryId").val();
+                const originalPrice = $("#search #originalPrice").val();
+                const discountPrice = $("#search #discountPrice").val();
+                const tags = $("#search #tags").val();
+                const stock = $("#search #stock").val();
+                const ratings = $("#search #ratings").val();
+                const soldOut = $("#search #soldOut").val();
+                const isDeleted = $("#search #isDeleted").val();
+                const createdAt = $("#search #createdAt").val();
+                const updatedAt = $("#search #updatedAt").val();
+                const deltedBy = $("#search #deletedBy").val();
+                const perPage = $("#perPage").val() || 10;
+                const currentPage = $(".pagination .active").text() || 1;
+                const query = {
+                    name,
+                    description,
+                    categoryId,
+                    originalPrice,
+                    discountPrice,
+                    tags,
+                    stock,
+                    ratings,
+                    soldOut,
+                    isDeleted,
+                    createdAt,
+                    updatedAt,
+                    deltedBy,
+                    limit: perPage,
+                    page: currentPage
+                };
+                const pagination = await search(query);
+                const { totalPage = 0, page = 1, data = [] } = pagination;
+                updateTable(data);
+                updatePagination(totalPage, page);
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
         };
         $(".btn-search").click(searchAction);
         $(".btn-add").click(function () {
@@ -691,147 +698,176 @@
             $("#add").modal("hide");
         });
         $(".btn-add-save").click(async function () {
-            const name = $("#add #name").val();
-            const description = $("#add #description").val();
-            const categoryId = $("#add #categoryId").val();
-            const originalPrice = $("#add #originalPrice").val();
-            const discountPrice = $("#add #discountPrice").val();
-            const tags = $("#add #tags").val();
-            const stock = $("#add #stock").val();
-            const ratings = $("#add #ratings").val();
-            const soldOut = $("#add #soldOut").val();
-            const body = {
-                name,
-                description,
-                categoryId: categoryId == "" ? null : categoryId,
-                originalPrice,
-                discountPrice,
-                tags,
-                stock,
-                ratings,
-                soldOut,
-            };
-            const res = await fetch("/admin/products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                clearInputs("add");
-                $("#add").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+
+            try {
+                $("#main-loading").addClass("show");
+                const name = $("#add #name").val();
+                const description = $("#add #description").val();
+                const categoryId = $("#add #categoryId").val();
+                const originalPrice = $("#add #originalPrice").val();
+                const discountPrice = $("#add #discountPrice").val();
+                const tags = $("#add #tags").val();
+                const stock = $("#add #stock").val();
+                const ratings = $("#add #ratings").val();
+                const soldOut = $("#add #soldOut").val();
+                const body = {
+                    name,
+                    description,
+                    categoryId: categoryId == "" ? null : categoryId,
+                    originalPrice,
+                    discountPrice,
+                    tags,
+                    stock,
+                    ratings,
+                    soldOut,
+                };
+                const res = await fetch("/admin/products", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    clearInputs("add");
+                    $("#add").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-view").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            if (checkedItems.length == 0) {
-                alert("Please choose at least one item");
-                return;
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                if (checkedItems.length == 0) {
+                    alert("Please choose at least one item");
+                    return;
+                }
+                if (checkedItems.length > 1) {
+                    alert("Please choose only one item");
+                    return;
+                }
+                const id = checkedItems[0].value;
+                const product = await fetch(`/admin/products/search/${id}`).then(res => res.json());
+                $("#view #name").val(product.name);
+                $("#view #description").val(product.description);
+                $("#view #categoryId").val(product.categoryObj?.name || "");
+                $("#view #originalPrice").val(product.originalPrice);
+                $("#view #discountPrice").val(product.discountPrice);
+                $("#view #tags").val(product.tags);
+                $("#view #stock").val(product.stock);
+                $("#view #ratings").val(product.ratings);
+                $("#view #soldOut").val(product.soldOut);
+                $("#view #isDeleted").val(`${product.isDeleted}`);
+                $("#view #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #createdBy").val(!!product.createdByObj ? `${product.createdByObj?.fullname}-${product.createdByObj?.email}` : "");
+                $("#view #updatedBy").val(!!product.updatedByObj ? `${product.updatedByObj?.fullname}-${product.updatedByObj?.email}` : "");
+                $("#view #deletedBy").val(!!product.deletedByObj ? `${product.deletedByObj?.fullname}-${product.deletedByObj?.email}` : "");
+                $("#view").modal("show");
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
-            if (checkedItems.length > 1) {
-                alert("Please choose only one item");
-                return;
-            }
-            const id = checkedItems[0].value;
-            const product = await fetch(`/admin/products/search/${id}`).then(res => res.json());
-            $("#view #name").val(product.name);
-            $("#view #description").val(product.description);
-            $("#view #categoryId").val(product.categoryObj?.name || "");
-            $("#view #originalPrice").val(product.originalPrice);
-            $("#view #discountPrice").val(product.discountPrice);
-            $("#view #tags").val(product.tags);
-            $("#view #stock").val(product.stock);
-            $("#view #ratings").val(product.ratings);
-            $("#view #soldOut").val(product.soldOut);
-            $("#view #isDeleted").val(`${product.isDeleted}`);
-            $("#view #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #createdBy").val(!!product.createdByObj ? `${product.createdByObj?.fullname}-${product.createdByObj?.email}` : "");
-            $("#view #updatedBy").val(!!product.updatedByObj ? `${product.updatedByObj?.fullname}-${product.updatedByObj?.email}` : "");
-            $("#view #deletedBy").val(!!product.deletedByObj ? `${product.deletedByObj?.fullname}-${product.deletedByObj?.email}` : "");
-            $("#view").modal("show");
         });
         $(".btn-update").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            if (checkedItems.length == 0) {
-                alert("Please choose at least one item");
-                return;
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                if (checkedItems.length == 0) {
+                    alert("Please choose at least one item");
+                    return;
+                }
+                if (checkedItems.length > 1) {
+                    alert("Please choose only one item");
+                    return;
+                }
+                const id = checkedItems[0].value;
+                const product = await fetch(`/admin/products/search/${id}`).then(res => res.json());
+                $("#update #name").val(product.name);
+                $("#update #description").val(product.description);
+                $("#update #categoryId").val(product.categoryId);
+                $("#update #originalPrice").val(product.originalPrice);
+                $("#update #discountPrice").val(product.discountPrice);
+                $("#update #tags").val(product.tags);
+                $("#update #stock").val(product.stock);
+                $("#update #ratings").val(product.ratings);
+                $("#update #soldOut").val(product.soldOut);
+                $("#update #isDeleted").val(`${product.isDeleted}`);
+                $("#update #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
+                $("#update #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
+                $("#update #createdBy").val(!!product.createdByObj ? `${product.createdByObj?.fullname}-${product.createdByObj?.email}` : "");
+                $("#update #updatedBy").val(!!product.updatedByObj ? `${product.updatedByObj?.fullname}-${product.updatedByObj?.email}` : "");
+                $("#update #deletedBy").val(!!product.deletedByObj ? `${product.deletedByObj?.fullname}-${product.deletedByObj?.email}` : "");
+                $("#update").modal("show");
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
-            if (checkedItems.length > 1) {
-                alert("Please choose only one item");
-                return;
-            }
-            const id = checkedItems[0].value;
-            const product = await fetch(`/admin/products/search/${id}`).then(res => res.json());
-            $("#update #name").val(product.name);
-            $("#update #description").val(product.description);
-            $("#update #categoryId").val(product.categoryId);
-            $("#update #originalPrice").val(product.originalPrice);
-            $("#update #discountPrice").val(product.discountPrice);
-            $("#update #tags").val(product.tags);
-            $("#update #stock").val(product.stock);
-            $("#update #ratings").val(product.ratings);
-            $("#update #soldOut").val(product.soldOut);
-            $("#update #isDeleted").val(`${product.isDeleted}`);
-            $("#update #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #createdBy").val(!!product.createdByObj ? `${product.createdByObj?.fullname}-${product.createdByObj?.email}` : "");
-            $("#update #updatedBy").val(!!product.updatedByObj ? `${product.updatedByObj?.fullname}-${product.updatedByObj?.email}` : "");
-            $("#update #deletedBy").val(!!product.deletedByObj ? `${product.deletedByObj?.fullname}-${product.deletedByObj?.email}` : "");
-            $("#update").modal("show");
         });
         $(".btn-update-cancel").click(function () {
             $("#update").modal("hide");
         });
         $(".btn-update-save").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            const id = checkedItems[0].value;
-            const name = $("#update #name").val();
-            const description = $("#update #description").val();
-            const categoryId = $("#update #categoryId").val();
-            const originalPrice = $("#update #originalPrice").val();
-            const discountPrice = $("#update #discountPrice").val();
-            const tags = $("#update #tags").val();
-            const stock = $("#update #stock").val();
-            const ratings = $("#update #ratings").val();
-            const soldOut = $("#update #soldOut").val();
-            const isDeleted = $("#update #isDeleted").val();
-            const body = {
-                id,
-                name,
-                description,
-                categoryId: categoryId == "" ? null : categoryId,
-                originalPrice,
-                discountPrice,
-                tags,
-                stock,
-                ratings,
-                soldOut,
-                isDeleted
-            };
-            const res = await fetch(`/admin/products`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                clearInputs("update");
-                $("#update").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                const id = checkedItems[0].value;
+                const name = $("#update #name").val();
+                const description = $("#update #description").val();
+                const categoryId = $("#update #categoryId").val();
+                const originalPrice = $("#update #originalPrice").val();
+                const discountPrice = $("#update #discountPrice").val();
+                const tags = $("#update #tags").val();
+                const stock = $("#update #stock").val();
+                const ratings = $("#update #ratings").val();
+                const soldOut = $("#update #soldOut").val();
+                const isDeleted = $("#update #isDeleted").val();
+                const body = {
+                    id,
+                    name,
+                    description,
+                    categoryId: categoryId == "" ? null : categoryId,
+                    originalPrice,
+                    discountPrice,
+                    tags,
+                    stock,
+                    ratings,
+                    soldOut,
+                    isDeleted
+                };
+                const res = await fetch(`/admin/products`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    clearInputs("update");
+                    $("#update").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-delete").click(function () {
@@ -846,26 +882,33 @@
             $("#delete").modal("hide");
         });
         $(".btn-delete-save").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            const ids = checkedItems.map(item => item.value);
-            const body = {
-                ids
-            };
-            const res = await fetch(`/admin/products`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                $("#delete").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                const ids = checkedItems.map(item => item.value);
+                const body = {
+                    ids
+                };
+                const res = await fetch(`/admin/products`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    $("#delete").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-import").click(function () {
