@@ -473,36 +473,43 @@
             searchAction();
         });
         const searchAction = async function () {
-            const fullname = $("#search #fullname").val();
-            const phone = $("#search #phone").val();
-            const email = $("#search #email").val();
-            const role = $("#search #role").val();
-            const isDeleted = $("#search #isDeleted").val();
-            const createdAt = $("#search #createdAt").val();
-            const updatedAt = $("#search #updatedAt").val();
-            const createdBy = $("#search #createdBy").val();
-            const updatedBy = $("#search #updatedBy").val();
-            const deltedBy = $("#search #deletedBy").val();
-            const perPage = $("#perPage").val() || 10;
-            const currentPage = $(".pagination .active").text() || 1;
-            const query = {
-                fullname,
-                phone,
-                email,
-                role,
-                isDeleted,
-                createdAt,
-                updatedAt,
-                createdBy,
-                updatedBy,
-                deltedBy,
-                limit: perPage,
-                page: currentPage
-            };
-            const pagination = await search(query);
-            const { totalPage = 0, page = 1, data = [] } = pagination;
-            updateTable(data);
-            updatePagination(totalPage, page);
+            try {
+                $("#main-loading").addClass("show");
+                const fullname = $("#search #fullname").val();
+                const phone = $("#search #phone").val();
+                const email = $("#search #email").val();
+                const role = $("#search #role").val();
+                const isDeleted = $("#search #isDeleted").val();
+                const createdAt = $("#search #createdAt").val();
+                const updatedAt = $("#search #updatedAt").val();
+                const createdBy = $("#search #createdBy").val();
+                const updatedBy = $("#search #updatedBy").val();
+                const deltedBy = $("#search #deletedBy").val();
+                const perPage = $("#perPage").val() || 10;
+                const currentPage = $(".pagination .active").text() || 1;
+                const query = {
+                    fullname,
+                    phone,
+                    email,
+                    role,
+                    isDeleted,
+                    createdAt,
+                    updatedAt,
+                    createdBy,
+                    updatedBy,
+                    deltedBy,
+                    limit: perPage,
+                    page: currentPage
+                };
+                const pagination = await search(query);
+                const { totalPage = 0, page = 1, data = [] } = pagination;
+                updateTable(data);
+                updatePagination(totalPage, page);
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
         };
         $(".btn-search").click(searchAction);
         $(".btn-add").click(function () {
@@ -512,121 +519,148 @@
             $("#add").modal("hide");
         });
         $(".btn-add-save").click(async function () {
-            const fullname = $("#add #fullname").val();
-            const phone = $("#add #phone").val();
-            const email = $("#add #email").val();
-            const role = $("#add #role").val();
-            const password = $("#add #password").val();
-            const body = {
-                fullname,
-                phone,
-                email,
-                role,
-                password
-            };
-            $("#add #password").val("123456");
-            $("#add #role").val("user");
-            const res = await fetch("/admin/users", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                clearInputs("add");
-                $("#add").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+            try {
+                $("#main-loading").addClass("show");
+                const fullname = $("#add #fullname").val();
+                const phone = $("#add #phone").val();
+                const email = $("#add #email").val();
+                const role = $("#add #role").val();
+                const password = $("#add #password").val();
+                const body = {
+                    fullname,
+                    phone,
+                    email,
+                    role,
+                    password
+                };
+                $("#add #password").val("123456");
+                $("#add #role").val("user");
+                const res = await fetch("/admin/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    clearInputs("add");
+                    $("#add").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-view").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            if (checkedItems.length == 0) {
-                alert("Please choose at least one item");
-                return;
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                if (checkedItems.length == 0) {
+                    alert("Please choose at least one item");
+                    return;
+                }
+                if (checkedItems.length > 1) {
+                    alert("Please choose only one item");
+                    return;
+                }
+                const id = checkedItems[0].value;
+                const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
+                $("#view #fullname").val(user.fullname);
+                $("#view #phone").val(user.phone);
+                $("#view #email").val(user.email);
+                $("#view #role").val(user.role);
+                $("#view #isDeleted").val(`${user.isDeleted}`);
+                $("#view #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
+                $("#view #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
+                $("#view #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
+                $("#view").modal("show");
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
-            if (checkedItems.length > 1) {
-                alert("Please choose only one item");
-                return;
-            }
-            const id = checkedItems[0].value;
-            const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
-            $("#view #fullname").val(user.fullname);
-            $("#view #phone").val(user.phone);
-            $("#view #email").val(user.email);
-            $("#view #role").val(user.role);
-            $("#view #isDeleted").val(`${user.isDeleted}`);
-            $("#view #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#view #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
-            $("#view #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
-            $("#view #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
-            $("#view").modal("show");
         });
         $(".btn-update").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            if (checkedItems.length == 0) {
-                alert("Please choose at least one item");
-                return;
+            try {
+                const checkedItems = $(".checkItem:checked").toArray();
+                if (checkedItems.length == 0) {
+                    alert("Please choose at least one item");
+                    return;
+                }
+                if (checkedItems.length > 1) {
+                    alert("Please choose only one item");
+                    return;
+                }
+                const id = checkedItems[0].value;
+                const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
+                $("#update #fullname").val(user.fullname);
+                $("#update #phone").val(user.phone);
+                $("#update #email").val(user.email);
+                $("#update #role").val(user.role);
+                $("#update #isDeleted").val(`${user.isDeleted}`);
+                $("#update #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
+                $("#update #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
+                $("#update #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
+                $("#update #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
+                $("#update #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
+                $("#update").modal("show");
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
-            if (checkedItems.length > 1) {
-                alert("Please choose only one item");
-                return;
-            }
-            const id = checkedItems[0].value;
-            const user = await fetch(`/admin/users/search/${id}`).then(res => res.json());
-            $("#update #fullname").val(user.fullname);
-            $("#update #phone").val(user.phone);
-            $("#update #email").val(user.email);
-            $("#update #role").val(user.role);
-            $("#update #isDeleted").val(`${user.isDeleted}`);
-            $("#update #createdAt").val(!!user.createdAt ? moment(user.createdAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #updatedAt").val(!!user.updatedAt ? moment(user.updatedAt).format('DD/MM/YY HH:mm') : "");
-            $("#update #createdBy").val(!!user.createdByObj ? `${user.createdByObj?.fullname}-${user.createdByObj?.email}` : "");
-            $("#update #updatedBy").val(!!user.updatedByObj ? `${user.updatedByObj?.fullname}-${user.updatedByObj?.email}` : "");
-            $("#update #deletedBy").val(!!user.deletedByObj ? `${user.deletedByObj?.fullname}-${user.deletedByObj?.email}` : "");
-            $("#update").modal("show");
         });
         $(".btn-update-cancel").click(function () {
             $("#update").modal("hide");
         });
         $(".btn-update-save").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            const id = checkedItems[0].value;
-            const fullname = $("#update #fullname").val();
-            const phone = $("#update #phone").val();
-            const role = $("#update #role").val();
-            const password = $("#update #password").val();
-            const isDeleted = $("#update #isDeleted").val();
-            const body = {
-                id,
-                fullname,
-                phone,
-                role,
-                password,
-                isDeleted
-            };
-            const res = await fetch(`/admin/users`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                clearInputs("update");
-                $("#update").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                const id = checkedItems[0].value;
+                const fullname = $("#update #fullname").val();
+                const phone = $("#update #phone").val();
+                const role = $("#update #role").val();
+                const password = $("#update #password").val();
+                const isDeleted = $("#update #isDeleted").val();
+                const body = {
+                    id,
+                    fullname,
+                    phone,
+                    role,
+                    password,
+                    isDeleted
+                };
+                const res = await fetch(`/admin/users`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    clearInputs("update");
+                    $("#update").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-delete").click(function () {
@@ -641,26 +675,32 @@
             $("#delete").modal("hide");
         });
         $(".btn-delete-save").click(async function () {
-            const checkedItems = $(".checkItem:checked").toArray();
-            const ids = checkedItems.map(item => item.value);
-            const body = {
-                ids
-            };
-            const res = await fetch(`/admin/users`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            }).then(res => res.json());
-            if (res.errorCode == 0) {
-                $("#delete").modal("hide");
-                const pagination = await search();
-                const { totalPage = 0, page = 1, data = [] } = pagination;
-                updateTable(data);
-                updatePagination(totalPage, page);
-            } else {
-                alert(res.message);
+            try {
+                const checkedItems = $(".checkItem:checked").toArray();
+                const ids = checkedItems.map(item => item.value);
+                const body = {
+                    ids
+                };
+                const res = await fetch(`/admin/users`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    $("#delete").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
         $(".btn-import").click(function () {

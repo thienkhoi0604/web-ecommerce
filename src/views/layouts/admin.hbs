@@ -22,8 +22,36 @@
             pointer-events: none;
             cursor: default;
         }
+
+        #main-loading {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+
+        #main-loading .spinner-border {
+            width: 50px;
+            height: 50px;
+        }
+
+        #main-loading.show {
+            display: flex;
+        }
     </style>
 </head>
+
+<div id="main-loading">
+    <div class="spinner-border text-light" role="status">
+        <span class="sr-only"></span>
+    </div>
+</div>
 
 <body class="sb-nav-fixed">
     {{> admin_header }}
