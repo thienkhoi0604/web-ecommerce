@@ -19,6 +19,7 @@ const { db, passport } = require("./configs");
 const routes = require("./routes");
 const { LAYOUT } = require("./constants");
 const { Helpers } = require("./helpers");
+const { checkAuthentication } = require("./middlewares");
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
+app.use(checkAuthentication);
 
 //Route
 // app.use("/api", require("./routes"));
