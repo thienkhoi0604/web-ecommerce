@@ -59,7 +59,7 @@ const AuthController = {
     },
     async doLogout(req, res, next) {
         try {
-            res.cookie("auth", null);
+            res.clearCookie("auth");
             res.redirect('/auth/login');
         } catch (error) {
             next(error);

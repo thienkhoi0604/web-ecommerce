@@ -4,27 +4,14 @@ const Product = require("../../models/ProductModel")
 
 const HomeController = {
     async index(req, res, next) {
-        try {
-            // Lấy danh sách tất cả sản phẩm
-            const products = await Product.find().lean();
-
-            // Lấy danh sách 4 sản phẩm mới nhất
-            const latestProducts = await Product.find().sort({ updateAt: -1 }).limit(4).lean();
-
-            res.render("client/home", Response({ res, data: { products, latestProducts } }));
-        } catch (error) {
-            next(error);
-        }
+        res.render("client/home", Response({ res, data: { home: true } }));
     },
-    async getProductDetail(req, res, next) {
-        try {
-            const productId = req.params._id;
-            const product = await Product.findById(productId).lean();
-            res.render('detail', { layout: false, product });
-        } catch (error) {
-            next(error);
-        }
-    }
+    async aboutUs(req, res, next) {
+        res.render("client/about-us", Response({ res, data: {} }));
+    },
+    async contact(req, res, next) {
+        res.render("client/contact", Response({ res, data: {} }));
+    },
 }
 
 module.exports = HomeController;

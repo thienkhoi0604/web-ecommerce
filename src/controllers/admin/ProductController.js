@@ -16,7 +16,7 @@ const ProductController = {
     },
     async add(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
             body.createdBy = _user?._id;
             const product = await ProductModel.create(body);
@@ -106,7 +106,7 @@ const ProductController = {
     },
     async update(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
             const updateFields = [
                 "name",
@@ -142,7 +142,7 @@ const ProductController = {
         }
     },
     async delete(req, res, next) {
-        const _user = req._user;
+        const _user = req.locals._user;
         let { ids } = req.body;
         if (typeof ids === "string") {
             ids = [ids];

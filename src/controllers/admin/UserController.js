@@ -14,7 +14,7 @@ const UserController = {
     },
     async add(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
             body.createdBy = _user?._id;
             const user = await UserModel.create(body);
@@ -100,7 +100,7 @@ const UserController = {
     },
     async update(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
             const updateFields = ["fullname", "phone", "role", "isDeleted"];
             const updateUser = updateFields.reduce((acc, field) => {
@@ -128,7 +128,7 @@ const UserController = {
         }
     },
     async delete(req, res, next) {
-        const _user = req._user;
+        const _user = req.locals._user;
         let { ids } = req.body;
         if (typeof ids === "string") {
             ids = [ids];

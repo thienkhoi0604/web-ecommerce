@@ -19,6 +19,7 @@ const { db, passport } = require("./configs");
 const routes = require("./routes");
 const { LAYOUT } = require("./constants");
 const { Helpers } = require("./helpers");
+const { common } = require("./middlewares");
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.use(passport.initialize());
 //Route
 // app.use("/api", require("./routes"));
 
+app.use(common);
 routes(app);
 
 app.all("*", (req, res, next) => {

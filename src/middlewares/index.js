@@ -1,6 +1,7 @@
 const author = require("./author")
-const checkAuthentication = require("./checkAuthentication")
+const common = require("./common")
 
 module.exports = {
-    author, checkAuthentication
+    author,
+    common
 }
