@@ -64,7 +64,7 @@ const CategoryController = {
             })
             delete req.query.updatedAt;
         }
-        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "parentId", "childId"];
+        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "parentId"];
         for (let key in req.query) {
             const value = req.query[key];
             if (equalFields.includes(key) && !!value) {
@@ -106,7 +106,7 @@ const CategoryController = {
         try {
             const _user = req.locals._user;
             const body = req.body;
-            const updateFields = ["name", "description", "isDeleted", "parentId", "childId"];
+            const updateFields = ["name", "description", "isDeleted", "parentId"];
             const updateCategory = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 acc[field] = value;
