@@ -14,6 +14,9 @@ const categoryService = {
                     from: "categories",
                     localField: "_id",
                     foreignField: "parentId",
+                    pipeline: [
+                        { $match: { isDeleted: false } },
+                    ],
                     as: "childObjs"
                 }
             }
