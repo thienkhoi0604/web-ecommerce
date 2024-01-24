@@ -17,9 +17,6 @@ const CategoryModel = new Schema(
         parentId: {
             type: Schema.ObjectId,
         },
-        childId: {
-            type: Schema.ObjectId,
-        },
         createdBy: {
             type: Schema.ObjectId,
         },
@@ -64,12 +61,6 @@ CategoryModel.virtual("deletedByObj", {
 CategoryModel.virtual("parentObj", {
     ref: "categories",
     localField: "parentId",
-    foreignField: "_id",
-    justOne: true
-});
-CategoryModel.virtual("childObj", {
-    ref: "categories",
-    localField: "childId",
     foreignField: "_id",
     justOne: true
 });

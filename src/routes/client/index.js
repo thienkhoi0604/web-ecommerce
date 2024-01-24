@@ -1,14 +1,16 @@
 const { Router } = require("express");
 const HomeRouter = require("./home");
 const CartRouter = require("./cart")
-const ProductRouter = require("./products")
-const DetailRouter = require("./detail")
+const ProductRouter = require("./product");
+const ProfileRouter = require("./profile");
+const CheckoutRouter = require("./checkout");
 
 const ClientRouter = Router();
 
 ClientRouter.use("/", HomeRouter);
-ClientRouter.use("/", CartRouter);
-ClientRouter.use("/", ProductRouter);
-ClientRouter.use("/", DetailRouter);
+ClientRouter.use("/cart", CartRouter);
+ClientRouter.use("/profile", ProfileRouter);
+ClientRouter.use("/checkout", CheckoutRouter);
+ClientRouter.use("/products", ProductRouter);
 
 module.exports = ClientRouter;

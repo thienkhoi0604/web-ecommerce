@@ -1,7 +1,6 @@
 const Response = ({ res, data = {} }) => {
-    const { layout } = res.locals;
     return {
-        layout,
+        ...res.locals,
         ...data,
     }
 }

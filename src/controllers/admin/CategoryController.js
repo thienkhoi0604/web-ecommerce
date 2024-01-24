@@ -14,7 +14,7 @@ const CategoryController = {
     },
     async add(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
             body.createdBy = _user?._id;
             const category = await CategoryModel.create(body);
@@ -64,7 +64,7 @@ const CategoryController = {
             })
             delete req.query.updatedAt;
         }
-        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "parentId", "childId"];
+        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "parentId"];
         for (let key in req.query) {
             const value = req.query[key];
             if (equalFields.includes(key) && !!value) {
@@ -104,9 +104,9 @@ const CategoryController = {
     },
     async update(req, res, next) {
         try {
-            const _user = req._user;
+            const _user = req.locals._user;
             const body = req.body;
-            const updateFields = ["name", "description", "isDeleted", "parentId", "childId"];
+            const updateFields = ["name", "description", "isDeleted", "parentId"];
             const updateCategory = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 acc[field] = value;
@@ -129,7 +129,7 @@ const CategoryController = {
         }
     },
     async delete(req, res, next) {
-        const _user = req._user;
+        const _user = req.locals._user;
         let { ids } = req.body;
         if (typeof ids === "string") {
             ids = [ids];
