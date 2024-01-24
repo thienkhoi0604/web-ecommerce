@@ -19,9 +19,9 @@ const CartController = {
             const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
             if(cartExist._id) {
                 cartExist.number += 1;
-                const cart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
-                    data: cart.toObject(),
+                    data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
                     message: "Add product to cart successfully!"
                 });
