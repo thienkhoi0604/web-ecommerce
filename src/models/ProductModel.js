@@ -23,11 +23,9 @@ const ProductModel = new Schema(
     },
     sizes: {
       type: String,
-      required: [true, 'Please enter your product size!'],
     },
     colors: {
       type: String,
-      required: [true, 'Please enter your product color!'],
     },
     originalPrice: {
       type: Number,

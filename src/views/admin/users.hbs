@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
     <h1 class="mt-4">Manager Users</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
         <li class="breadcrumb-item active">Users</li>
     </ol>
     <div id="search" class="row">
@@ -68,20 +68,23 @@
                 {{/each}}
             </select>
         </div>
+
+        <div class='col-6'>
+            <button type="button" class="btn btn-primary btn-search">Search</button>
+        </div>
     </div>
-    <div class=" mb-1 mt-2">
-        <button type="button" class="btn btn-primary btn-search">Search</button>
-        <button type="button" class="btn btn-primary btn-add">Add</button>
-        <button type="button" class="btn btn-primary btn-view">View</button>
-        <button type="button" class="btn btn-primary btn-update">Update</button>
-        <button type="button" class="btn btn-primary btn-delete">Delete</button>
-        <button type="button" class="btn btn-primary btn-import">Import</button>
-        <button type="button" class="btn btn-primary btn-export">Export</button>
-    </div>
-    <div class="card mb-4">
+    
+    <div class="card mb-4 mt-3">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             Users
+
+            <div class=" mb-1 mt-2">
+                <button type="button" class="btn btn-primary btn-add">Add</button>
+                <button type="button" class="btn btn-primary btn-view">View</button>
+                <button type="button" class="btn btn-primary btn-update">Update</button>
+                <button type="button" class="btn btn-primary btn-delete">Delete</button>
+            </div>
         </div>
         <div class="card-body">
             <div class="input-group" style="width: 200px;">

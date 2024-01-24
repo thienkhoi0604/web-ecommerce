@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
     <h1 class="mt-4">Manager Products</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
         <li class="breadcrumb-item active">Products</li>
     </ol>
     <div id="search" class="row">
@@ -32,6 +32,18 @@
             <input type="number" min="0" name="discountPrice" class="form-control" id="discountPrice"
                 placeholder="Enter discountPrice">
         </div>
+
+        <div class="form-group col-6">
+            <label for="size">Size</label>
+            <input type="text" name="size" class="form-control" id="size"
+                placeholder="Enter size">
+        </div>
+        <div class="form-group col-6">
+            <label for="color">Color</label>
+            <input type="text"  name="color" class="form-control" id="color"
+                placeholder="Enter color">
+        </div>
+
         <div class="form-group col-6">
             <label for="tags">Tags</label>
             <input type="text" name="tags" class="form-control" id="tags" placeholder="Enter tags">
@@ -91,20 +103,24 @@
                 {{/each}}
             </select>
         </div>
+
+        <div class='col-6' style='margin-top: 32px'>
+            <button type="button" class="btn btn-primary btn-search">Search</button>
+        </div>
     </div>
-    <div class=" mb-1 mt-2">
-        <button type="button" class="btn btn-primary btn-search">Search</button>
-        <button type="button" class="btn btn-primary btn-add">Add</button>
-        <button type="button" class="btn btn-primary btn-view">View</button>
-        <button type="button" class="btn btn-primary btn-update">Update</button>
-        <button type="button" class="btn btn-primary btn-delete">Delete</button>
-        <button type="button" class="btn btn-primary btn-import">Import</button>
-        <button type="button" class="btn btn-primary btn-export">Export</button>
-    </div>
+    
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             Products
+            <div class=" mb-1 mt-2">
+                <button type="button" class="btn btn-primary btn-add">Add</button>
+                <button type="button" class="btn btn-primary btn-view">View</button>
+                <button type="button" class="btn btn-primary btn-update">Update</button>
+                <button type="button" class="btn btn-primary btn-delete">Delete</button>
+                <button type="button" class="btn btn-primary btn-import">Import</button>
+                <button type="button" class="btn btn-primary btn-export">Export</button>
+            </div>
         </div>
         <div class="card-body">
             <div class="input-group" style="width: 200px;">
@@ -191,6 +207,17 @@
                                 <input type="number" min="0" name="discountPrice" class="form-control"
                                     id="discountPrice" placeholder="Enter discount price">
                             </div>
+
+                            <div class="form-group col-6">
+                                <label for="size">Size</label>
+                                <input type="text" name="size" class="form-control" id="size"
+                                    placeholder="Enter size">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="color">Color</label>
+                                <input type="text"  name="color" class="form-control" id="color"
+                                    placeholder="Enter color">
+                            </div>
                             <div class="form-group col-6">
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" class="form-control" id="tags" placeholder="Enter tags">
@@ -222,7 +249,10 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="add-nav-3" role="tabpanel" aria-labelledby="add-nav-3-tab">
-                        //Insert images here
+                        <label for="name">File</label>
+                        <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/heic"
+                            name="file" class="form-control" id="image">
                     </div>
                 </div>
             </div>
@@ -275,6 +305,18 @@
                                 <input type="number" min="0" disabled name="discountPrice" class="form-control"
                                     id="discountPrice">
                             </div>
+
+                            <div class="form-group col-6">
+                                <label for="size">Size</label>
+                                <input type="text" name="size" disabled class="form-control" id="size"
+                                    placeholder="Enter size">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="color">Color</label>
+                                <input type="text"  name="color" disabled class="form-control" id="color"
+                                    placeholder="Enter color">
+                            </div>
+
                             <div class="form-group col-6">
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" disabled class="form-control" id="tags">
@@ -386,6 +428,18 @@
                                 <input type="number" min="0" name="discountPrice" class="form-control"
                                     id="discountPrice" placeholder="Enter discount price">
                             </div>
+
+                            <div class="form-group col-6">
+                                <label for="size">Size</label>
+                                <input type="text" name="size" class="form-control" id="size"
+                                    placeholder="Enter size">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="color">Color</label>
+                                <input type="text"  name="color" class="form-control" id="color"
+                                    placeholder="Enter color">
+                            </div>
+
                             <div class="form-group col-6">
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" class="form-control" id="tags" placeholder="Enter tags">
@@ -445,7 +499,10 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="update-nav-3" role="tabpanel" aria-labelledby="update-nav-3-tab">
-                        //Insert images here
+                        <label for="name">File</label>
+                        <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/heic"
+                            name="file" class="form-control" id="image">
                     </div>
                 </div>
             </div>
@@ -706,6 +763,8 @@
                 const categoryId = $("#add #categoryId").val();
                 const originalPrice = $("#add #originalPrice").val();
                 const discountPrice = $("#add #discountPrice").val();
+                const size = $("#add #size").val();
+                const color = $("#add #color").val();
                 const tags = $("#add #tags").val();
                 const stock = $("#add #stock").val();
                 const ratings = $("#add #ratings").val();
@@ -716,6 +775,8 @@
                     categoryId: categoryId == "" ? null : categoryId,
                     originalPrice,
                     discountPrice,
+                    size,
+                    color,
                     tags,
                     stock,
                     ratings,
@@ -780,6 +841,9 @@
                 $("#main-loading").removeClass("show");
             }
         });
+        $(".btn-view-cancel").click(function () {
+            $("#view").modal("hide");
+        });
         $(".btn-update").click(async function () {
             try {
                 $("#main-loading").addClass("show");
@@ -829,6 +893,8 @@
                 const categoryId = $("#update #categoryId").val();
                 const originalPrice = $("#update #originalPrice").val();
                 const discountPrice = $("#update #discountPrice").val();
+                const size = $("#add #size").val();
+                const color = $("#add #color").val();
                 const tags = $("#update #tags").val();
                 const stock = $("#update #stock").val();
                 const ratings = $("#update #ratings").val();
