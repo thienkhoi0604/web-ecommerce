@@ -4,9 +4,9 @@ const { CartController } = require('../../controllers/client');
 const CartRouter = Router();
 
 CartRouter.get('/', CartController.index);
-CartRouter.get('/id', CartController.getAllByUser);
+CartRouter.get('/all', CartController.getAllByUser);
 CartRouter.post('/', CartController.add);
-CartRouter.put('/', CartController.update);
+CartRouter.put('/quantity/add', CartController.updateQuantityAdd);
 CartRouter.delete('/', CartController.delete);
 
 module.exports = CartRouter;

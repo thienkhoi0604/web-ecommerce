@@ -16,7 +16,7 @@
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
         <div class="col-lg-8 table-responsive mb-5">
-            <table class="table table-bordered text-center mb-0">
+            <table class="table table-bordered mb-0">
                 <thead class="bg-secondary text-dark">
                     <tr>
                         <th>Products</th>
@@ -26,11 +26,11 @@
                         <th>Remove</th>
                     </tr>
                 </thead>
-                <tbody class="align-middle">
+                <tbody class="align-left">
                     {{#each products}}
                     <tr>
                         <td class="align-middle"><img src={{this.images.url}} alt=""
-                                style="width: 50px;">{{this.name}}</td>
+                                style="width: 50px; margin-right: 10px">{{this.name}}</td>
                         <td class="align-middle">{{this.discountPrice}}</td>
                         <td class="align-middle">
                             <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -39,8 +39,8 @@
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
-                                <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                                    value="1">
+                                <input id={{this._id}} type="text" class="form-control form-control-sm bg-secondary text-center quantity-product"
+                                    value={{this.quantity}}>
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-primary btn-plus">
                                         <i class="fa fa-plus"></i>
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="align-middle">null</td>
+                        <td class="align-middle">{{this.total}}</td>
                         <td class="align-middle"><button class="btn btn-sm btn-primary"><i
                                     class="fa fa-times"></i></button></td>
                     </tr>
@@ -91,3 +91,29 @@
     </div>
 </div>
 <!-- Cart End -->
+
+<script>
+    $(document).ready(async function () {
+        $(".quantity-product").blur(async function () {
+            try {
+                console.log("blur");
+                const productId = this.id;
+
+                {{!-- const res = await fetch("/cart/quantity/add", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    
+                } else {
+                    alert(res.message);
+                } --}}
+            } catch (error) {
+
+            }
+        })
+    })
+</script>
