@@ -5,7 +5,6 @@ const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const CartController = {
     async index(req, res, next) {
         try {
-
             const _user = req.locals._user;
             const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
     
@@ -23,7 +22,8 @@ const CartController = {
                 const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
                 return {
                     ...product.toObject(),
-                    quantity: cart?.number
+                    quantity: cart?.number,
+                    total: cart?.number * product.discountPrice,
                 }
             })
 
@@ -71,8 +71,33 @@ const CartController = {
     async getAllByUser(req, res, next) {
 
     },
-    async update(req, res, next) {
+    async updateQuantityAdd(req, res, next) {
+        try {
+            const _user = req.locals._user;
+            const { productId } = req.body;
 
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            if(cartExist._id) {
+                cartExist.number += 1;
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                return res.json({
+                    data: updatedCart,
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Add product to cart successfully!"
+                });
+            }
+
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: "Add product to cart fail!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
     },
     async delete(req, res, next) {
 
