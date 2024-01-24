@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 
 const OrderModel = new Schema(
   {
-    _id: Schema.ObjectId,
+    _id: {
+      type: Schema.ObjectId,
+      auto: true,
+    },
     userId: {
       type: mongoose.ObjectId,
       ref: 'user',

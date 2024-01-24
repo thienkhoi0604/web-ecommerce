@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 
 const CartModel = new Schema(
   {
-    _id: Schema.ObjectId,
+    _id: {
+      type: Schema.ObjectId,
+      auto: true,
+    },
     userId: {
       type: mongoose.ObjectId,
       ref: 'user',
@@ -37,5 +40,24 @@ const CartModel = new Schema(
     timestamps: true,
   }
 );
+
+CartModel.virtual("createdByObj", {
+  ref: "users",
+  localField: "createdBy",
+  foreignField: "_id",
+  justOne: true
+});
+CartModel.virtual("updatedByObj", {
+  ref: "users",
+  localField: "updatedBy",
+  foreignField: "_id",
+  justOne: true
+});
+CartModel.virtual("deletedByObj", {
+  ref: "users",
+  localField: "deletedBy",
+  foreignField: "_id",
+  justOne: true
+});
 
 module.exports = mongoose.model('carts', CartModel);
