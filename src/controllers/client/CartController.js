@@ -1,19 +1,35 @@
+const { Response } = require("../../commons");
 const { CartModel, ProductModel } = require("../../models");
 const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
 
 const CartController = {
     async index(req, res, next) {
-        res.render('client/cart');
+        const _user = req.locals._user;
+        const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
+        carts.forEach((element) => {
+            console.log(element);
+        });
+        res.render('client/cart', Response({ res, data: { carts } }));
     },
     async add(req, res, next) {
         try {
             const _user = req.locals._user;
             const { productId } = req.body;
 
-            let params = {};
-            params.products = []
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            if(cartExist._id) {
+                cartExist.number += 1;
+                const cart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                return res.json({
+                    data: cart.toObject(),
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Add product to cart successfully!"
+                });
+            }
+
+            let params = {};          
             const product = await ProductModel.findById({ _id: productId });
-            params.products.push(product?._id);
+            params.productId = product?._id;
             params.createdBy = _user?._id;
 
             const cart = await CartModel.create(params);
@@ -30,7 +46,7 @@ const CartController = {
             });
         }
     },
-    async get(req, res, next) {
+    async getAllByUser(req, res, next) {
 
     },
     async update(req, res, next) {

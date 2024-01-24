@@ -53,7 +53,7 @@
                     <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0"><i
                             class="fas fa-eye text-primary mr-1"></i>View
                         Detail</a>
-                    <button id='btn-add-cart' class="btn btn-sm text-dark p-0" aria-details='{{this._id}}'>
+                    <button id={{this._id}} class="btn btn-sm text-dark p-0 btn-add-cart" aria-details='{{this._id}}'>
                         <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
                 </div>
             </div>
@@ -86,9 +86,9 @@
 
 <script>
     $(document).ready(async function () {
-        $("#btn-add-cart").click(async function () {
+        $(".btn-add-cart").click(async function () {
             try {
-            const productId = $("#btn-add-cart").attr('aria-details');
+            const productId = this.id;
 
             const res = await fetch("/cart", {
                     method: "POST",

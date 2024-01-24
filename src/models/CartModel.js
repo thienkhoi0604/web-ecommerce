@@ -11,12 +11,14 @@ const CartModel = new Schema(
       type: mongoose.ObjectId,
       ref: 'user',
     },
-    products: [
-      {
+    productId: {
         type: mongoose.ObjectId,
         ref: 'products',
-      },
-    ],
+    },
+    number: {
+      type: Number,
+      default: 1,
+    },
     createdBy: {
       type: String,
       required: true,
