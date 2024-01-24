@@ -21,10 +21,10 @@ const ProductModel = new Schema(
     tags: {
       type: String,
     },
-    sizes: {
+    size: {
       type: String,
     },
-    colors: {
+    color: {
       type: String,
     },
     originalPrice: {

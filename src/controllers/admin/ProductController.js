@@ -1,6 +1,8 @@
 const { Response } = require("../../commons");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const { UserModel, ProductModel, CategoryModel } = require("../../models");
+const { cloudinary } = require('../../configs/coudinary');
+
 
 const ProductController = {
     async index(req, res, next) {
@@ -16,16 +18,39 @@ const ProductController = {
     },
     async image(req, res, next) {
         try {
-            const _user = req.locals._user;
-            const body = req.body;
-            body.createdBy = _user?._id;
-            console.log(body);
-            // const product = await ProductModel.create(body);
-            res.json({
-                data: product.toObject(),
-                errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Add product successfully!"
-            });
+            if (!req.file) {
+                res.status(400).json({
+                  msg: "No files were uploaded. Try uploading an image",
+                });
+                return;
+              }
+            
+              const uploadFile = req.file;
+            
+              const result = await cloudinary.uploader.upload(uploadFile.path, {
+                public_id: uploadFile.name,
+                resource_type: "auto",
+                folder: "ecommerce",
+                use_filename: true,
+                unique_filename: false,
+              });
+            
+              if (result.url) {
+                res.json({
+                    data: {
+                        public_id: result.public_id,
+                        url: result.url
+                    },
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Add image successfully!"
+                });
+              } else {
+                res.json({
+                    errorCode: RESPONSE_CODE.ERROR,
+                    message: "Add image failed!"
+                });
+              }
+            
         } catch (e) {
             console.log(e);
             res.json({
@@ -134,6 +159,9 @@ const ProductController = {
                 "categoryId",
                 "originalPrice",
                 "discountPrice",
+                "size",
+                "color",
+                "images",
                 "tags",
                 "stock",
                 "ratings",

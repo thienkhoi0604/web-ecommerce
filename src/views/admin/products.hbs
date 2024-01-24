@@ -52,10 +52,7 @@
             <label for="stock">Stock</label>
             <input type="number" min="0" name="stock" class="form-control" id="stock" placeholder="Enter stock">
         </div>
-        <div class="form-group col-6">
-            <label for="ratings">Ratings</label>
-            <input type="number" min="0" name="ratings" class="form-control" id="ratings" placeholder="Enter ratings">
-        </div>
+
         <div class="form-group col-6">
             <label for="soldOut">Sold out</label>
             <input type="number" min="0" name="soldOut" class="form-control" id="soldOut" placeholder="Enter sold out">
@@ -104,12 +101,12 @@
             </select>
         </div>
 
-        <div class='col-6' style='margin-top: 32px'>
+        <div class='col-6'>
             <button type="button" class="btn btn-primary btn-search">Search</button>
         </div>
     </div>
     
-    <div class="card mb-4">
+    <div class="card mb-4 mt-3">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             Products
@@ -227,11 +224,7 @@
                                 <input type="number" min="0" name="stock" class="form-control" id="stock"
                                     placeholder="Enter stock">
                             </div>
-                            <div class="form-group col-6">
-                                <label for="ratings">Ratings</label>
-                                <input type="number" min="0" name="ratings" class="form-control" id="ratings"
-                                    placeholder="Enter ratings">
-                            </div>
+
                             <div class="form-group col-6">
                                 <label for="soldOut">Sold out</label>
                                 <input type="number" min="0" name="soldOut" class="form-control" id="soldOut"
@@ -325,10 +318,7 @@
                                 <label for="stock">Stock</label>
                                 <input type="number" min="0" disabled name="stock" class="form-control" id="stock">
                             </div>
-                            <div class="form-group col-6">
-                                <label for="ratings">Ratings</label>
-                                <input type="number" min="0" disabled name="ratings" class="form-control" id="ratings">
-                            </div>
+
                             <div class="form-group col-6">
                                 <label for="soldOut">Sold out</label>
                                 <input type="number" min="0" disabled name="soldOut" class="form-control" id="soldOut">
@@ -370,13 +360,12 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="view-nav-3" role="tabpanel" aria-labelledby="view-nav-3-tab">
-                        //Insert images here
+                        <img id='image' class="img-thumbnail" />
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-view-cancel" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary btn-view-save">Save</button>
             </div>
         </div>
     </div>
@@ -449,11 +438,7 @@
                                 <input type="number" min="0" name="stock" class="form-control" id="stock"
                                     placeholder="Enter stock">
                             </div>
-                            <div class="form-group col-6">
-                                <label for="ratings">Ratings</label>
-                                <input type="number" min="0" name="ratings" class="form-control" id="ratings"
-                                    placeholder="Enter ratings">
-                            </div>
+
                             <div class="form-group col-6">
                                 <label for="soldOut">Sold out</label>
                                 <input type="number" min="0" name="soldOut" class="form-control" id="soldOut"
@@ -710,6 +695,8 @@
                 const categoryId = $("#search #categoryId").val();
                 const originalPrice = $("#search #originalPrice").val();
                 const discountPrice = $("#search #discountPrice").val();
+                const size = $("#search #size").val();
+                const color = $("#search #color").val();
                 const tags = $("#search #tags").val();
                 const stock = $("#search #stock").val();
                 const ratings = $("#search #ratings").val();
@@ -726,6 +713,8 @@
                     categoryId,
                     originalPrice,
                     discountPrice,
+                    size,
+                    color,
                     tags,
                     stock,
                     ratings,
@@ -769,6 +758,15 @@
                 const stock = $("#add #stock").val();
                 const ratings = $("#add #ratings").val();
                 const soldOut = $("#add #soldOut").val();
+
+                const image = $("#add #image")[0].files[0];
+                const form = new FormData();
+                form.append("image", image);
+                const responseImage = await fetch("/admin/products/image", {
+                    method: "POST",
+                    body: form,
+                }).then(res => res.json());
+
                 const body = {
                     name,
                     description,
@@ -781,7 +779,13 @@
                     stock,
                     ratings,
                     soldOut,
+                    images: [
+                        {
+                            ...responseImage.data
+                        }
+                    ]
                 };
+
                 const res = await fetch("/admin/products", {
                     method: "POST",
                     headers: {
@@ -824,10 +828,13 @@
                 $("#view #categoryId").val(product.categoryObj?.name || "");
                 $("#view #originalPrice").val(product.originalPrice);
                 $("#view #discountPrice").val(product.discountPrice);
+                $("#view #size").val(product.size);
+                $("#view #color").val(product.color);
                 $("#view #tags").val(product.tags);
                 $("#view #stock").val(product.stock);
                 $("#view #ratings").val(product.ratings);
                 $("#view #soldOut").val(product.soldOut);
+                $("#view #image").attr('src', product.images.length ? product.images[0].url : null);
                 $("#view #isDeleted").val(`${product.isDeleted}`);
                 $("#view #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
                 $("#view #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
@@ -858,11 +865,14 @@
                 }
                 const id = checkedItems[0].value;
                 const product = await fetch(`/admin/products/search/${id}`).then(res => res.json());
+                console.log(product);
                 $("#update #name").val(product.name);
                 $("#update #description").val(product.description);
                 $("#update #categoryId").val(product.categoryId);
                 $("#update #originalPrice").val(product.originalPrice);
                 $("#update #discountPrice").val(product.discountPrice);
+                $("#update #size").val(product.size);
+                $("#update #color").val(product.color);
                 $("#update #tags").val(product.tags);
                 $("#update #stock").val(product.stock);
                 $("#update #ratings").val(product.ratings);
@@ -893,13 +903,21 @@
                 const categoryId = $("#update #categoryId").val();
                 const originalPrice = $("#update #originalPrice").val();
                 const discountPrice = $("#update #discountPrice").val();
-                const size = $("#add #size").val();
-                const color = $("#add #color").val();
+                const size = $("#update #size").val();
+                const color = $("#update #color").val();
                 const tags = $("#update #tags").val();
                 const stock = $("#update #stock").val();
                 const ratings = $("#update #ratings").val();
                 const soldOut = $("#update #soldOut").val();
                 const isDeleted = $("#update #isDeleted").val();
+
+                const image = $("#update #image")[0].files[0];
+                const form = new FormData();
+                form.append("image", image);
+                const responseImage = await fetch("/admin/products/image", {
+                    method: "POST",
+                    body: form,
+                }).then(res => res.json());
                 const body = {
                     id,
                     name,
@@ -907,12 +925,20 @@
                     categoryId: categoryId == "" ? null : categoryId,
                     originalPrice,
                     discountPrice,
+                    size,
+                    color,
                     tags,
                     stock,
                     ratings,
                     soldOut,
-                    isDeleted
+                    isDeleted,
+                    images: [
+                        {
+                            ...responseImage.data
+                        }
+                    ]
                 };
+                
                 const res = await fetch(`/admin/products`, {
                     method: "PUT",
                     headers: {
