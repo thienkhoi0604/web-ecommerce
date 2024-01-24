@@ -252,7 +252,7 @@
                         <label for="name">File</label>
                         <input type="file"
                             accept="image/png, image/jpeg, image/jpg, image/heic"
-                            name="file" class="form-control" id="file">
+                            name="file" class="form-control" id="image">
                     </div>
                 </div>
             </div>
@@ -439,7 +439,7 @@
                                 <input type="text"  name="color" class="form-control" id="color"
                                     placeholder="Enter color">
                             </div>
-                            
+
                             <div class="form-group col-6">
                                 <label for="tags">Tags</label>
                                 <input type="text" name="tags" class="form-control" id="tags" placeholder="Enter tags">
@@ -499,7 +499,10 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="update-nav-3" role="tabpanel" aria-labelledby="update-nav-3-tab">
-                        //Insert images here
+                        <label for="name">File</label>
+                        <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/heic"
+                            name="file" class="form-control" id="image">
                     </div>
                 </div>
             </div>
@@ -838,6 +841,9 @@
                 $("#main-loading").removeClass("show");
             }
         });
+        $(".btn-view-cancel").click(function () {
+            $("#view").modal("hide");
+        });
         $(".btn-update").click(async function () {
             try {
                 $("#main-loading").addClass("show");
@@ -887,6 +893,8 @@
                 const categoryId = $("#update #categoryId").val();
                 const originalPrice = $("#update #originalPrice").val();
                 const discountPrice = $("#update #discountPrice").val();
+                const size = $("#add #size").val();
+                const color = $("#add #color").val();
                 const tags = $("#update #tags").val();
                 const stock = $("#update #stock").val();
                 const ratings = $("#update #ratings").val();

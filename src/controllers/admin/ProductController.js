@@ -14,13 +14,32 @@ const ProductController = {
         ]);
         res.render("admin/products", Response({ res, data: { users: results[0], categories: results[1] } }))
     },
-    async add(req, res, next) {
+    async image(req, res, next) {
         try {
             const _user = req.locals._user;
             const body = req.body;
             body.createdBy = _user?._id;
             console.log(body);
             // const product = await ProductModel.create(body);
+            res.json({
+                data: product.toObject(),
+                errorCode: RESPONSE_CODE.SUCCESS,
+                message: "Add product successfully!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
+    },
+    async add(req, res, next) {
+        try {
+            const _user = req.locals._user;
+            const body = req.body;
+            body.createdBy = _user?._id;
+            const product = await ProductModel.create(body);
             res.json({
                 data: product.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,
