@@ -19,7 +19,8 @@ const ProductController = {
             const _user = req.locals._user;
             const body = req.body;
             body.createdBy = _user?._id;
-            const product = await ProductModel.create(body);
+            console.log(body);
+            // const product = await ProductModel.create(body);
             res.json({
                 data: product.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,

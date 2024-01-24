@@ -559,6 +559,9 @@
                 $("#main-loading").removeClass("show");
             }
         });
+        $(".btn-view-cancel").click(function () {
+            $("#view").modal("hide");
+        });
         $(".btn-update").click(async function () {
             try {
                 $("#main-loading").addClass("show");
