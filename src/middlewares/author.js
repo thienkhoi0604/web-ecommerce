@@ -16,11 +16,11 @@ const author = (...userRoles) => {
                     return res.redirect("/auth/login");
                 }
                 const user = await UserModel.findById({ _id });
-                req.locals = req.locals || {};
-                req.locals._user = user.toObject();
+                res.locals = res.locals || {};
+                res.locals._user = user.toObject();
                 const haspPemission = userRoles.some(role => role == user.role);
                 if (haspPemission) {
-                    res.cookie("auth", jwt.sign(req.locals._user, process.env.SECRET_KEY, { expiresIn: 60 * 60 }));
+                    res.cookie("auth", jwt.sign(res.locals._user, process.env.SECRET_KEY, { expiresIn: 60 * 60 }));
                     next();
                 } else {
                     //may be call api to add auth to header

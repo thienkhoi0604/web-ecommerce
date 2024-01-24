@@ -1,3 +1,4 @@
+const CardModel = require("./CardModel")
 const CartModel = require("./CartModel")
 const CategoryModel = require("./CategoryModel")
 const OrderModel = require("./OrderModel")
@@ -13,5 +14,6 @@ module.exports = {
     OrderModel,
     PaymentModel,
     ShopModel,
-    CategoryModel
+    CategoryModel,
+    CardModel
 }

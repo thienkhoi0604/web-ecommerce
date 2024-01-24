@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 
 const CardModel = new Schema(
     {
-        _id: Schema.ObjectId,
+        _id: {
+            type: Schema.ObjectId,
+            auto: true,
+        },
         cardNumber: {
             type: String,
             required: true,
@@ -16,7 +19,11 @@ const CardModel = new Schema(
             type: Date,
             required: true,
         },
-        cvv: {
+        ccv: {
+            type: String,
+            required: true,
+        },
+        issuer: {
             type: String,
             required: true,
         },
@@ -44,9 +51,9 @@ const CardModel = new Schema(
         },
     },
     {
-        collection: 'cards',
+        collection: 'payment-cards',
         timestamps: true,
     }
 );
 
-module.exports = mongoose.model('cards', CardModel);
+module.exports = mongoose.model('payment-cards', CardModel);
