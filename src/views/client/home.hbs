@@ -53,8 +53,8 @@
                     <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0"><i
                             class="fas fa-eye text-primary mr-1"></i>View
                         Detail</a>
-                    <a href="" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                    <button id='btn-add-cart' class="btn btn-sm text-dark p-0" aria-details='{{this._id}}'>
+                        <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
                 </div>
             </div>
         </div>
@@ -83,3 +83,28 @@
     </div>
 </div>
 <!-- Vendor End -->
+
+<script>
+    $(document).ready(async function () {
+        $("#btn-add-cart").click(async function () {
+            try {
+            const productId = $("#btn-add-cart").attr('aria-details');
+
+            const res = await fetch("/cart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    alert(res.message)
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+
+            }
+        })
+    })
+</script>

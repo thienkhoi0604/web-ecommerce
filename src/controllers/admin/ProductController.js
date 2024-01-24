@@ -2,7 +2,7 @@ const { Response } = require("../../commons");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const { UserModel, ProductModel, CategoryModel } = require("../../models");
 const { cloudinary } = require('../../configs/coudinary');
-
+const moment = require('moment');
 
 const ProductController = {
     async index(req, res, next) {

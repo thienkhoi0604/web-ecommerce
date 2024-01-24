@@ -38,8 +38,7 @@ const ProductModel = new Schema(
       type: Number,
       required: [true, 'Please enter your product stock!'],
     },
-    images: [
-      {
+    images: {
         public_id: {
           type: String,
           required: true,
@@ -49,7 +48,6 @@ const ProductModel = new Schema(
           required: true,
         },
       },
-    ],
     reviews: [
       {
         user: {
