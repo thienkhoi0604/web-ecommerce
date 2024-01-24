@@ -4,12 +4,34 @@ const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
 
 const CartController = {
     async index(req, res, next) {
-        const _user = req.locals._user;
-        const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
-        carts.forEach((element) => {
-            console.log(element);
-        });
-        res.render('client/cart', Response({ res, data: { carts } }));
+        try {
+
+            const _user = req.locals._user;
+            const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
+    
+            if (!carts) {
+                return res.render('client/cart', Response({ res, data: { products: null } }));
+            }
+    
+            const productIds = carts.map((element) => element.productId)
+    
+            const products = await ProductModel.find({
+                '_id': { $in: productIds }
+            })
+    
+            const result = products.map((product) => {
+                const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
+                return {
+                    ...product.toObject(),
+                    quantity: cart?.number
+                }
+            })
+
+            res.render('client/cart', Response({ res, data: { carts, products: result } }));
+        } catch (e) {
+            console.log(e);
+            res.render('client/cart');
+        }
     },
     async add(req, res, next) {
         try {
