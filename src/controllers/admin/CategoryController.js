@@ -95,7 +95,6 @@ const CategoryController = {
         const { id } = req.params;
         const category = await CategoryModel.findById(id)
             .populate("parentObj")
-            .populate("childObj")
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")

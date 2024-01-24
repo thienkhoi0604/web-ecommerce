@@ -9,8 +9,8 @@ const Helpers = {
     ifCond: function (v1, v2, options) {
         return v1 == v2 ? options.fn(this) : options.inverse(this);
     },
+    plus: (a, b) => a + b,
 }
-
 module.exports = {
     Helpers
 }
