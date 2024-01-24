@@ -2,7 +2,7 @@ const CardRouter = require("./card");
 const PaymentRouter = require("./payment");
 
 const routes = (app) => {
-    app.use("/card", CardRouter);
+    app.use("/cards", CardRouter);
     app.use("/payment", PaymentRouter);
 }
 

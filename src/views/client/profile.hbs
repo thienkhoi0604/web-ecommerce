@@ -8,71 +8,47 @@
                             <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin"
                                 class="rounded-circle p-1 bg-primary" width="110">
                             <div class="mt-3">
-                                <h4>John Doe</h4>
-                                <p class="text-secondary mb-1">Full Stack Developer</p>
-                                <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
-                                <button class="btn btn-primary">Follow</button>
-                                <button class="btn btn-outline-primary">Message</button>
+                                <h4>{{_user.fullname}}</h4>
+                                <p class="mb-1">Active date: {{dateToDDMMYYHHmm _user.createdAt}}</p>
+                                <p class="text-muted font-size-sm">{{_user.phone}}</p>
+                                <a href="/products" class="btn btn-primary">Shopping</a>
+                                <a href="/cart" class="btn btn-outline-primary">Cart</a>
                             </div>
                         </div>
                         <hr class="my-4">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-globe me-2 icon-inline">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                                        <path
-                                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                                        </path>
-                                    </svg>Website</h6>
-                                <span class="text-secondary">https://bootdey.com</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-github me-2 icon-inline">
-                                        <path
-                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                                        </path>
-                                    </svg>Github</h6>
-                                <span class="text-secondary">bootdey</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-twitter me-2 icon-inline text-info">
-                                        <path
-                                            d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
-                                        </path>
-                                    </svg>Twitter</h6>
-                                <span class="text-secondary">@bootdey</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-instagram me-2 icon-inline text-danger">
-                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                                    </svg>Instagram</h6>
-                                <span class="text-secondary">bootdey</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="feather feather-facebook me-2 icon-inline text-primary">
-                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z">
-                                        </path>
-                                    </svg>Facebook</h6>
-                                <span class="text-secondary">bootdey</span>
-                            </li>
+                            <h5 style="display: flex; justify-content: center;" class="pb-4">
+                                CHANGE PASSWROD
+                            </h5>
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">Old</h6>
+                                </div>
+                                <div class="col-sm-8 text-secondary">
+                                    <input type="password" class="form-control" value=""
+                                        placeholder="Enter old password">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">New</h6>
+                                </div>
+                                <div class="col-sm-8 text-secondary">
+                                    <input type="password" class="form-control" value=""
+                                        placeholder="Enter new password">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">Repeat</h6>
+                                </div>
+                                <div class="col-sm-8 text-secondary">
+                                    <input type="password" class="form-control" value="" placeholder="Retype password">
+                                </div>
+                            </div>
+                            <div class="row mr-2" style="display: flex; justify-content: right;">
+                                <input type="button" class="btn btn-primary px-4" value="Save">
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -80,12 +56,13 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
+                        <h5 style="display: flex; justify-content: center; padding-bottom: 20px;">YOUR INFO</h5>
                         <div class="row mb-3">
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Full Name</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="John Doe">
+                                <input type="text" class="form-control" name="fullname" value="{{_user.fullname}}">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -93,7 +70,7 @@
                                 <h6 class="mb-0">Email</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="john@example.com">
+                                <input type="email" class="form-control" name="email" value="{{_user.email}}">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -101,23 +78,25 @@
                                 <h6 class="mb-0">Phone</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="(239) 816-9029">
+                                <input type="tel" class="form-control" name="phone" value="{{_user.phone}}">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Mobile</h6>
+                                <h6 class="mb-0">Adress</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="(320) 380-4539">
+                                <input type="text" class="form-control" name="address"
+                                    value="Nguyen Van Cu street, 5 district, Ho Chi Minh city">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Address</h6>
+                                <h6 class="mb-0">Lastest updated</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="Bay Area, San Francisco, CA">
+                                <input type="text" class="form-control" disabled
+                                    value="{{dateToDDMMYYHHmm user.updatedAt}}">
                             </div>
                         </div>
                         <div class="row">
@@ -132,31 +111,32 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="d-flex align-items-center mb-3">Project Status</h5>
-                                <p>Web Design</p>
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 80%"
-                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p>Website Markup</p>
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 72%"
-                                        aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p>One Page</p>
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 89%"
-                                        aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p>Mobile Template</p>
-                                <div class="progress mb-3" style="height: 5px">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 55%"
-                                        aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <p>Backend API</p>
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 66%"
-                                        aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                                <h5 class="d-flex align-items-center mb-3">YOUR CARDS</h5>
+                                <div class="card mb-4 mt-3">
+                                    <div class="ml-4 mb-1 mt-2">
+                                        <button type="button" class="btn btn-primary btn-search">Refresh</button>
+                                        <button type="button" class="btn btn-primary btn-add">Add</button>
+                                        <button type="button" class="btn btn-primary btn-view">View</button>
+                                        <button type="button" class="btn btn-primary btn-delete">Delete</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th><input class="checkAll" type="checkbox"></th>
+                                                    <th>Number</th>
+                                                    <th>Holder</th>
+                                                    <th>Created at</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="results">
+
+                                            </tbody>
+                                        </table>
+                                        <ul class="pagination" style="display: flex; justify-content: flex-end;">
+
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -166,3 +146,369 @@
         </div>
     </div>
 </div>
+<div id="add" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">ADD CARD</h5>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-6">
+                    <label for="cardNumber">Card number</label>
+                    <input type="text" name="cardNumber" class="form-control" id="cardNumber"
+                        placeholder="Enter card number">
+                </div>
+                <div class="form-group col-6">
+                    <label for="cardHolder">Card holder</label>
+                    <input type="text" name="cardHolder" class="form-control" id="cardHolder"
+                        placeholder="Enter card holder">
+                </div>
+                <div class="form-group col-6">
+                    <label for="expirationDate">Expiration date</label>
+                    <input type="text" name="expirationDate" class="form-control" id="expirationDate"
+                        placeholder="DD/MM/YYYY">
+                </div>
+                <div class="form-group col-6">
+                    <label for="ccv">CCV</label>
+                    <input type="text" name="ccv" class="form-control" id="ccv" placeholder="123">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-add-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-add-save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="view" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">VIEW CARD</h5>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-6">
+                    <label for="cardNumber">Card number</label>
+                    <input type="text" name="cardNumber" class="form-control" disabled id="cardNumber"
+                        placeholder="Enter card number">
+                </div>
+                <div class="form-group col-6">
+                    <label for="cardHolder">Card holder</label>
+                    <input type="text" name="cardHolder" class="form-control" disabled id="cardHolder"
+                        placeholder="Enter card holder">
+                </div>
+                <div class="form-group col-6">
+                    <label for="createdAt">Created at</label>
+                    <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
+                </div>
+                <div class="form-group col-6">
+                    <label for="createdBy">Created by</label>
+                    <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-view-cancel" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="update" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">EDIT CARD</h5>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-6">
+                    <label for="cardNumber">Card number</label>
+                    <input type="text" name="cardNumber" class="form-control" id="cardNumber"
+                        placeholder="Enter card number">
+                </div>
+                <div class="form-group col-6">
+                    <label for="cardHolder">Card holder</label>
+                    <input type="text" name="cardHolder" class="form-control" id="cardHolder"
+                        placeholder="Enter card holder">
+                </div>
+                <div class="form-group col-6">
+                    <label for="expirationDate">Expiration date</label>
+                    <input type="text" name="expirationDate" class="form-control" id="expirationDate"
+                        placeholder="Enter Expiration date">
+                </div>
+                <div class="form-group col-6">
+                    <label for="ccv">CCV</label>
+                    <input type="text" name="ccv" class="form-control" id="ccv" placeholder="Enter ccv">
+                </div>
+                <div class="form-group col-6">
+                    <label for="createdAt">Created at</label>
+                    <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
+                </div>
+                <div class="form-group col-6">
+                    <label for="createdBy">Created by</label>
+                    <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-update-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-update-save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">DELETE CARDS</h5>
+            </div>
+            <div class="modal-body row">
+                <p>Are you sure to delete these cards? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-delete-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-delete-save">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const search = async (query = {}) => {
+        let params = "";
+        for (let key in query) {
+            if (!!query[key]) {
+                params += `${key}=${query[key]}&`;
+            }
+        }
+        const pagination = await fetch(`/card/search?${params}`).then(res => res.json());
+        return pagination;
+    }
+    const updateTable = (cards) => {
+        const tbody = $("tbody.results");
+        tbody.empty();
+        cards.forEach(card => {
+            tbody.append(`
+                <tr>
+                    <td><input class="checkItem" value="${card._id}" type="checkbox"></td>
+                    <td>${card.cardNumber}</td>
+                    <td>${card.cardHolder}</td>
+                    <td>${!!card.createdAt ? moment(card.createdAt).format('DD/MM/YY HH:mm') : ""}</td>
+                    <td>${!!card.updatedAt ? moment(card.updatedAt).format('DD/MM/YY HH:mm') : ""}</td>
+                </tr>
+            `);
+        });
+    }
+    const updatePagination = (totalPage = 0, page = 1) => {
+        const paginationTag = $(".pagination");
+        paginationTag.empty();
+        if (page > 1) {
+            paginationTag.append(`<li class="page-item page-preview "><div class="page-link">Previous</div></li>`);
+        } else {
+            paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
+        }
+        for (let i = 1; i <= totalPage; i++) {
+            if (i == page) {
+                paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
+            } else {
+                paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
+            }
+        }
+        if (page < totalPage) {
+            paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
+        } else {
+            paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
+        }
+    }
+    const clearInputs = (parentId) => {
+        $(`#${parentId} input`).val("");
+        $(`#${parentId} select`).val("");
+    }
+
+    $(document).ready(async function () {
+        $("body").delegate("#datepicker", "focusin", function () {
+            $(this).datepicker();
+        });
+        $('input[name="expirationDate"]').daterangepicker({
+            autoUpdateInput: false,
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'DD/MM/YYYY',
+            }
+        });
+        $('input[name="expirationDate"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        });
+        $('input[name="expirationDate"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
+
+        const pagination = await search();
+        const { totalPage = 0, page = 1, data = [] } = pagination;
+        updateTable(data);
+        updatePagination(totalPage, page);
+
+        $(".checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+        $(".checkItem").click(function () {
+            const checkAll = $(".checkItem").toArray().every(item => item.checked);
+            $(".checkAll").prop('checked', checkAll);
+        });
+        $(".perPageItem").click(async function () {
+            const perPage = $(this).text();
+            $("#perPage").val(perPage);
+            searchAction();
+        });
+        $("#perPage").on("input", async function () {
+            const perPage = $(this).val();
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-next", async function () {
+            const currentPage = Number.parseInt($(".pagination .active").text()) || 1;
+            $(".pagination .active").removeClass("active");
+            $(`.pagination .page-item-number`)[currentPage].classList.add("active");
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-preview", async function () {
+            const currentPage = $(".pagination .active").text() || 2;
+            $(".pagination .active").removeClass("active");
+            $(`.pagination .page-item-number`)[currentPage - 2].classList.add("active");
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-item-number", async function () {
+            $(".pagination .active").removeClass("active");
+            $(this).addClass("active");
+            searchAction();
+        });
+        const searchAction = async function () {
+            try {
+                $("#main-loading").addClass("show");
+                const perPage = $("#perPage").val() || 5;
+                const currentPage = $(".pagination .active").text() || 1;
+                const query = {
+                    limit: perPage,
+                    page: currentPage
+                };
+                const pagination = await search(query);
+                const { totalPage = 0, page = 1, data = [] } = pagination;
+                updateTable(data);
+                updatePagination(totalPage, page);
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
+        };
+        $(".btn-search").click(searchAction);
+        $(".btn-add").click(function () {
+            $("#add").modal("show");
+        });
+        $(".btn-add-cancel").click(function () {
+            $("#add").modal("hide");
+        });
+        $(".btn-add-save").click(async function () {
+            try {
+                $("#main-loading").addClass("show");
+                const cardNumber = $("#add #cardNumber").val();
+                const cardHolder = $("#add #cardHolder").val();
+                const expirationDate = $("#add #expirationDate").val();
+                const ccv = $("#add #ccv").val();
+                const body = {
+                    cardNumber,
+                    cardHolder,
+                    expirationDate,
+                    ccv
+                };
+                const res = await fetch("/card", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    clearInputs("add");
+                    $("#add").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
+        });
+        $(".btn-view").click(async function () {
+            try {
+                $("#main-loading").addClass("show");
+                const checkedItems = $(".checkItem:checked").toArray();
+                if (checkedItems.length == 0) {
+                    alert("Please choose at least one item");
+                    return;
+                }
+                if (checkedItems.length > 1) {
+                    alert("Please choose only one item");
+                    return;
+                }
+                const id = checkedItems[0].value;
+                const card = await fetch(`/card/${id}`).then(res => res.json());
+                $("#view #cardNumber").val(card.cardNumber);
+                $("#view #cardHolder").val(card.cardHolder);
+                $("#view #createdAt").val(!!card.createdAt ? moment(card.createdAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #updatedAt").val(!!card.updatedAt ? moment(card.updatedAt).format('DD/MM/YY HH:mm') : "");
+                $("#view #createdBy").val(!!card.createdByObj ? `${card.createdByObj?.fullname}-${card.createdByObj?.email}` : "");
+                $("#view #updatedBy").val(!!card.updatedByObj ? `${card.updatedByObj?.fullname}-${card.updatedByObj?.email}` : "");
+                $("#view").modal("show");
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
+        });
+        $(".btn-delete").click(function () {
+            const checkedItems = $(".checkItem:checked").toArray();
+            if (checkedItems.length == 0) {
+                alert("Please choose at least one item");
+                return;
+            }
+            $("#delete").modal("show");
+        });
+        $(".btn-delete-cancel").click(function () {
+            $("#delete").modal("hide");
+        });
+        $(".btn-delete-save").click(async function () {
+            try {
+                const checkedItems = $(".checkItem:checked").toArray();
+                const ids = checkedItems.map(item => item.value);
+                const body = {
+                    ids
+                };
+                const res = await fetch(`/card`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    $("#delete").modal("hide");
+                    const pagination = await search();
+                    const { totalPage = 0, page = 1, data = [] } = pagination;
+                    updateTable(data);
+                    updatePagination(totalPage, page);
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
+        });
+    });
+</script>
