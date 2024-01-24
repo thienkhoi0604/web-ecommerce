@@ -779,11 +779,9 @@
                     stock,
                     ratings,
                     soldOut,
-                    images: [
-                        {
+                    images: {
                             ...responseImage.data
                         }
-                    ]
                 };
 
                 const res = await fetch("/admin/products", {
@@ -834,7 +832,7 @@
                 $("#view #stock").val(product.stock);
                 $("#view #ratings").val(product.ratings);
                 $("#view #soldOut").val(product.soldOut);
-                $("#view #image").attr('src', product.images.length ? product.images[0].url : null);
+                $("#view #image").attr('src', product.images ? product.images.url : null);
                 $("#view #isDeleted").val(`${product.isDeleted}`);
                 $("#view #createdAt").val(!!product.createdAt ? moment(product.createdAt).format('DD/MM/YY HH:mm') : "");
                 $("#view #updatedAt").val(!!product.updatedAt ? moment(product.updatedAt).format('DD/MM/YY HH:mm') : "");
@@ -932,11 +930,9 @@
                     ratings,
                     soldOut,
                     isDeleted,
-                    images: [
-                        {
+                    images: {
                             ...responseImage.data
                         }
-                    ]
                 };
                 
                 const res = await fetch(`/admin/products`, {
