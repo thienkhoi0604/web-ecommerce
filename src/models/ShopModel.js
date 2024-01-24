@@ -2,7 +2,10 @@ const { Schema, default: mongoose } = require('mongoose');
 
 const ShopModel = new Schema(
   {
-    _id: Schema.ObjectId,
+    _id: {
+      type: Schema.ObjectId,
+      auto: true,
+    },
     name: {
       type: String,
       required: [true, 'Please enter your shop name!'],

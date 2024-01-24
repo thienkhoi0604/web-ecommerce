@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const { Schema } = require("mongoose")
 
 const PaymentModel = new Schema({
-    _id: Schema.ObjectId,
+    _id: {
+        type: Schema.ObjectId,
+        auto: true,
+    },
     userId: {
         type: mongoose.ObjectId,
         ref: "user"

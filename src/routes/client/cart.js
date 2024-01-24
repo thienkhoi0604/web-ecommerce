@@ -5,6 +5,7 @@ const CartRouter = Router();
 
 CartRouter.get('/', CartController.index);
 CartRouter.get('/id', CartController.get);
+CartRouter.post('/', CartController.add);
 CartRouter.put('/', CartController.update);
 CartRouter.delete('/', CartController.delete);
 
