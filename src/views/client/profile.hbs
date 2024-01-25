@@ -355,15 +355,6 @@
             const checkAll = $(".checkItem").toArray().every(item => item.checked);
             $(".checkAll").prop('checked', checkAll);
         });
-        $(".perPageItem").click(async function () {
-            const perPage = $(this).text();
-            $("#perPage").val(perPage);
-            searchAction();
-        });
-        $("#perPage").on("input", async function () {
-            const perPage = $(this).val();
-            searchAction();
-        });
         $(".pagination").on("click", ".page-next", async function () {
             const currentPage = Number.parseInt($(".pagination .active").text()) || 1;
             $(".pagination .active").removeClass("active");

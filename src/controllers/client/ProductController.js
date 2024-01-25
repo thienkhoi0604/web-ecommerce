@@ -13,9 +13,23 @@ const ProductController = {
         const page = Number.parseInt(req.query.page) || 1;
         delete req.query.page;
         const limit = Number.parseInt(req.query.limit) || 9;
+        delete req.query.limit;
         const query = {
+            isDeleted: false,
             $or: [
             ]
+        }
+        const numberFields = [];
+        const equalFields = ["isDeleted", 'categoryId'];
+        for (let key in req.query) {
+            const value = req.query[key];
+            if (numberFields.includes(key) && !isNaN(value)) {
+                query.$or.push({ [key]: value })
+            } else if (equalFields.includes(key) && !!value) {
+                query.$or.push({ [key]: value })
+            } else if (!!value) {
+                query.$or.push({ [key]: new RegExp(req.query[key], "i") })
+            }
         }
         if (query.$or.length <= 0) {
             delete query.$or;

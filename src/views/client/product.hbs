@@ -114,7 +114,7 @@
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">All Color</label>
+                            <label class="custom-control-label" for="color-all">All Color</label>
                             <span class="badge border font-weight-normal">1000</span>
                         </div>
                         <div
@@ -202,16 +202,18 @@
             <div class="row pb-3">
                 <div class="col-12 pb-1">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <form action="/products/search" method="GET">
+                        <div action="" id="search" method="GET">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search by name" name="q">
+                                <input type="text" class="form-control" placeholder="Search by name" id="name"
+                                    name="name">
                                 <div class="input-group-append">
-                                    <button class="input-group-text bg-transparent text-primary" type="submit">
+                                    <button class="btn-search input-group-text bg-transparent text-primary"
+                                        type="button">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                         <div class="dropdown ml-4">
                             <button class="btn border dropdown-toggle" type="button" id="triggerId"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -225,49 +227,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="result-product row">
 
-                {{#each products}}
-                <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-                    <div class="card product-item border-0 mb-4">
-                        <div
-                            class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" src="{{this.images.url}}" alt="">
-                        </div>
-                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                            <h6 class="text-truncate mb-3">{{this.name}}</h6>
-                            <div class="d-flex justify-content-center">
-                                <h6>${{this.discountPrice}}</h6>
-                                <h6 class="text-muted ml-2"><del>${{this.originalPrice}}</del></h6>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0"><i
-                                    class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                            <a href="/cart" class="btn btn-sm text-dark p-0"><i
-                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                        </div>
-                    </div>
                 </div>
-                {{/each}}
 
                 <div class="col-12 pb-1">
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center mb-3">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
+
                         </ul>
                     </nav>
                 </div>
@@ -277,3 +244,133 @@
     </div>
 </div>
 <!-- Shop End -->
+
+<script>
+    const search = async (query = {}) => {
+        let params = "";
+        for (let key in query) {
+            if (!!query[key]) {
+                params += `${key}=${query[key]}&`;
+            }
+        }
+        const pagination = await fetch(`/products/search?${params}`).then(res => res.json());
+        return pagination;
+    }
+    const updateTable = (cards) => {
+        const tbody = $(".result-product");
+        tbody.empty();
+        cards.forEach(card => {
+            tbody.append(`
+                 <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                    <div class="card product-item border-0 mb-4">
+                        <div
+                            class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="${card.images.url}" alt="">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">${card.name}</h6>
+                            <div class="d-flex justify-content-center">
+                                <h6>$${card.discountPrice}</h6>
+                                <h6 class="text-muted ml-2"><del>$${card.originalPrice}</del></h6>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a href="/products/${card._id}" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                            <a href="/cart" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    }
+    const updatePagination = (totalPage = 0, page = 1) => {
+        const paginationTag = $(".pagination");
+        paginationTag.empty();
+        if (page > 1) {
+            paginationTag.append(`<li class="page-item page-preview "><div class="page-link">Previous</div></li>`);
+        } else {
+            paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
+        }
+        for (let i = 1; i <= totalPage; i++) {
+            if (i == page) {
+                paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
+            } else {
+                paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
+            }
+        }
+        if (page < totalPage) {
+            paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
+        } else {
+            paginationTag.append(`<li class="page-item page-next disabled"><div class="page-link" >Next</div></li>`);
+        }
+    }
+    const clearInputs = (parentId) => {
+        $(`#${parentId} input`).val("");
+        $(`#${parentId} select`).val("");
+    }
+    const searchAction = async function () {
+        try {
+            $("#main-loading").addClass("show");
+            const name = $("#search #name").val();
+            const perPage = $("#perPage").val() || 10;
+            const currentPage = $(".pagination .active").text() || 1;
+            const query = {
+                name,
+                limit: perPage,
+                page: currentPage
+            };
+            const pagination = await search(query);
+            const { totalPage = 0, page = 1, data = [] } = pagination;
+            updateTable(data);
+            updatePagination(totalPage, page);
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            $("#main-loading").removeClass("show");
+        }
+    };
+    $(document).ready(async function () {
+        const params = new URLSearchParams(window.location.search);
+        const pagination = await search({ name: params.get("q"), categoryId: params.get("categoryId") });
+        const { totalPage = 0, page = 1, data = [] } = pagination;
+        updateTable(data);
+        updatePagination(totalPage, page);
+
+        $(".checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+        $(".checkItem").click(function () {
+            const checkAll = $(".checkItem").toArray().every(item => item.checked);
+            $(".checkAll").prop('checked', checkAll);
+        });
+        $(".perPageItem").click(async function () {
+            const perPage = $(this).text();
+            $("#perPage").val(perPage);
+            searchAction();
+        });
+        $("#perPage").on("input", async function () {
+            const perPage = $(this).val();
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-next", async function () {
+            const currentPage = Number.parseInt($(".pagination .active").text()) || 1;
+            $(".pagination .active").removeClass("active");
+            $(`.pagination .page-item-number`)[currentPage].classList.add("active");
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-preview", async function () {
+            const currentPage = $(".pagination .active").text() || 2;
+            $(".pagination .active").removeClass("active");
+            $(`.pagination .page-item-number`)[currentPage - 2].classList.add("active");
+            searchAction();
+        });
+        $(".pagination").on("click", ".page-item-number", async function () {
+            $(".pagination .active").removeClass("active");
+            $(this).addClass("active");
+            searchAction();
+        });
+        $(".btn-search").click(searchAction);
+    })
+</script>
