@@ -2,6 +2,7 @@ const Product = require('../../models/ProductModel');
 const { Response } = require('../../commons');
 const ProductModel = require('../../models/ProductModel');
 const categoryService = require('../../services/categoryService');
+const { CategoryModel } = require('../../models');
 
 const ProductController = {
     async index(req, res, next) {
@@ -113,6 +114,8 @@ const ProductController = {
         delete req.query.page;
         const limit = Number.parseInt(req.query.limit) || 9;
         delete req.query.limit;
+        const sortBy = req.query.sortBy || "updatedAt";
+        delete req.query.sortBy;
         const query = {
             isDeleted: false,
             $or: [
@@ -134,15 +137,19 @@ const ProductController = {
             delete query.$or;
         }
         const results = await Promise.all([
-            ProductModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
-            ProductModel.find(query).countDocuments().lean()
+            ProductModel.find(query).skip((page - 1) * limit).limit(limit).sort({ [sortBy]: -1, createdAt: -1 }).lean(),
+            ProductModel.find(query).countDocuments().lean(),
+            !!req.query.categoryId ? CategoryModel.findOne({ _id: req.query.categoryId }).lean() : null,
         ]);
         const pagination = {
             page,
             limit,
             total: results[1],
             totalPage: Math.ceil(results[1] / limit),
-            data: results[0]
+            data: results[0],
+            extend: {
+                categoryObj: results[2]
+            }
         }
         res.json(pagination);
     },

@@ -12,10 +12,12 @@ const HomeController = {
         res.render("client/home", Response({ res, data: { home: true, products, categories, bestProducts } }));
     },
     async aboutUs(req, res, next) {
-        res.render("client/about-us", Response({ res, data: {} }));
+        const categories = await categoryService.getNestedAll();
+        res.render("client/about-us", Response({ res, data: { categories } }));
     },
     async contact(req, res, next) {
-        res.render("client/contact", Response({ res, data: {} }));
+        const categories = await categoryService.getNestedAll();
+        res.render("client/contact", Response({ res, data: { categories } }));
     },
 }
 
