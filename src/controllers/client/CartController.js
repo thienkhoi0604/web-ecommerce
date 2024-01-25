@@ -8,7 +8,7 @@ const CartController = {
         try {
             const _user = res.locals._user;
             const categories = await categoryService.getNestedAll();
-            const carts = await CartModel.find({ createdBy: _user?._id }).lean();
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false }).lean();
 
             if (!carts) {
                 return res.render('client/cart', Response({ res, data: { products: null, categories } }));
@@ -41,8 +41,14 @@ const CartController = {
             const { productId } = req.body;
 
             const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if (cartExist._id) {
-                cartExist.number += 1;
+            if (cartExist) {
+                if (cartExist.isDeleted) {
+                    cartExist.number = 1;
+                    cartExist.isDeleted = false;
+                    cartExist.deletedBy = null;
+                } else {
+                    cartExist.number += 1;
+                }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
@@ -73,7 +79,7 @@ const CartController = {
     async getAllByUser(req, res, next) {
         try {
             const _user = req.locals._user;
-            const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
+            const carts =  await CartModel.find({ createdBy: _user?._id, isDeleted: false }).lean();
     
             if (!carts) {
                 return res.json({
@@ -115,8 +121,8 @@ const CartController = {
             const _user = req.locals._user;
             const { productId, quantity } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
+            if(cartExist) {
                 cartExist.number = quantity;
 
                 if (quantity < 0) {
@@ -147,8 +153,8 @@ const CartController = {
             const _user = res.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if (cartExist._id) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
+            if (cartExist) {
                 cartExist.number += 1;
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
@@ -175,11 +181,11 @@ const CartController = {
             const _user = req.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
+            if(cartExist) {
                 cartExist.number -= 1;
-                if (cartExist.number < 0) {
-                    cartExist.number = 0;
+                if (cartExist.number <= 0) {
+                    cartExist.number = 1;
                 }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
@@ -202,7 +208,33 @@ const CartController = {
         }
     },
     async delete(req, res, next) {
+        try {
+            const _user = res.locals._user;
+            const { productId } = req.body;
 
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
+            if(cartExist) {
+                cartExist.isDeleted = true;
+                cartExist.deletedBy = _user?._id
+                const deletedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                return res.json({
+                    data: deletedCart,
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Delete product from cart successfully!"
+                });
+            }
+
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: "Delete product from cart fail!"
+            });
+        } catch (error) {
+            console.log(error);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: error.message
+            });
+        }
     },
 }
 
