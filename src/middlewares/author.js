@@ -16,6 +16,8 @@ const author = (...userRoles) => {
                     return res.redirect("/auth/login");
                 }
                 const user = await UserModel.findById({ _id });
+                req.locals = res.locals || {};
+                req.locals._user = user.toObject();
                 res.locals = res.locals || {};
                 res.locals._user = user.toObject();
                 const haspPemission = userRoles.some(role => role == user.role);

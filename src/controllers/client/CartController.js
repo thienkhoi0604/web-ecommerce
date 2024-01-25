@@ -69,7 +69,76 @@ const CartController = {
         }
     },
     async getAllByUser(req, res, next) {
+        try {
+            const _user = req.locals._user;
+            const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
+    
+            if (!carts) {
+                return res.json({
+                    errorCode: RESPONSE_CODE.ERROR,
+                    message: "Fetch carts failed!"
+                });
+            }
+    
+            const productIds = carts.map((element) => element.productId)
+    
+            const products = await ProductModel.find({
+                '_id': { $in: productIds }
+            })
+    
+            const result = products.map((product) => {
+                const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
+                return {
+                    ...product.toObject(),
+                    quantity: cart?.number,
+                    total: cart?.number * product.discountPrice,
+                }
+            })
 
+            res.json({
+                data: { carts, products: result },
+                errorCode: RESPONSE_CODE.SUCCESS,
+                message: "Get products by users successfully!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
+    },
+    async updateQuantity(req, res, next) {
+        try {
+            const _user = req.locals._user;
+            const { productId, quantity } = req.body;
+
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            if(cartExist._id) {
+                cartExist.number = quantity;
+
+                if (quantity < 0) {
+                    cartExist.number = 0;
+                }
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                return res.json({
+                    data: updatedCart,
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Update quantity product to cart successfully!"
+                });
+            }
+
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: "Update quantity product to cart fail!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
     },
     async updateQuantityAdd(req, res, next) {
         try {
@@ -90,6 +159,37 @@ const CartController = {
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: "Add product to cart fail!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
+    },
+    async updateQuantityMinus(req, res, next) {
+        try {
+            const _user = req.locals._user;
+            const { productId } = req.body;
+
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            if(cartExist._id) {
+                cartExist.number -= 1;
+                if (cartExist.number < 0) {
+                    cartExist.number = 0;
+                }
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                return res.json({
+                    data: updatedCart,
+                    errorCode: RESPONSE_CODE.SUCCESS,
+                    message: "Minus product to cart successfully!"
+                });
+            }
+
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: "Minus product to cart fail!"
             });
         } catch (e) {
             console.log(e);

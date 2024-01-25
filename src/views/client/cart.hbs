@@ -26,7 +26,7 @@
                         <th>Remove</th>
                     </tr>
                 </thead>
-                <tbody class="align-left">
+                <tbody class="align-left" id="list-products-cart">
                     {{#each products}}
                     <tr>
                         <td class="align-middle"><img src={{this.images.url}} alt=""
@@ -35,14 +35,14 @@
                         <td class="align-middle">
                             <div class="input-group quantity mx-auto" style="width: 100px;">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-primary btn-minus">
+                                    <button id={{this._id}} class="btn btn-sm btn-primary btn-minus">
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
                                 <input id={{this._id}} type="text" class="form-control form-control-sm bg-secondary text-center quantity-product"
                                     value={{this.quantity}}>
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-primary btn-plus">
+                                    <button id={{this._id}} class="btn btn-sm btn-primary btn-plus">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
@@ -70,19 +70,19 @@
                     <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3 pt-1">
+                    <div class="d-flex justify-content-between mb-3 pt-1" id='subtotal-product-price'>
                         <h6 class="font-weight-medium">Subtotal</h6>
-                        <h6 class="font-weight-medium">$150</h6>
+                        <h6 class="font-weight-medium"></h6>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" id='shiping-price'>
                         <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">$10</h6>
+                        <h6 class="font-weight-medium"></h6>
                     </div>
                 </div>
                 <div class="card-footer border-secondary bg-transparent">
-                    <div class="d-flex justify-content-between mt-2">
+                    <div class="d-flex justify-content-between mt-2" id='total-product-price'>
                         <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold">$160</h5>
+                        <h5 class="font-weight-bold"></h5>
                     </div>
                     <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                 </div>
@@ -93,13 +93,100 @@
 <!-- Cart End -->
 
 <script>
-    $(document).ready(async function () {
-        $(".quantity-product").blur(async function () {
+    const getAllByUser = async () => {
+        const response = await fetch(`/cart/all`).then(res => res.json());
+        if (response.errorCode == 0) {
+            return response;
+        }
+
+        return null;
+    }
+
+    const getTotalPrice = (products) => {
+        let result = 0;
+        products.forEach(product => {
+            result += product.total;
+        });
+
+        return result;
+    }
+
+    const renderProducts = (products) => {
+        const tbody = $("tbody#list-products-cart");
+        tbody.empty();
+        console.log(products);
+        products.forEach(product => {
+            tbody.append(`
+                <tr>
+                    <td class="align-middle"><img src="${product.images.url}" alt=""
+                            style="width: 50px; margin-right: 10px">${product.name}</td>
+                    <td class="align-middle">${product.discountPrice}</td>
+                    <td class="align-middle">
+                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                            <div class="input-group-btn">
+                                <button id="${product._id}" class="btn btn-sm btn-primary btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input id="${product._id}" type="text" class="form-control form-control-sm bg-secondary text-center quantity-product"
+                                value="${product.quantity}">
+                            <div class="input-group-btn">
+                                <button id="${product._id}" class="btn btn-sm btn-primary btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="align-middle">${product.total}</td>
+                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i
+                                class="fa fa-times"></i></button></td>
+                </tr>
+            `);
+        });
+
+        // render view
+        const subTotalPrice = getTotalPrice(products);
+        renderSubTotalPrice(subTotalPrice);
+        renderShipPrice();
+        renderTotalPrice(subTotalPrice);
+
+        //handle again
+        handleBtnPlusProduct();
+        handleBtnMinusProduct();
+        handleBlurInputQuantityProduct();
+        handleKeyPressInputQuantityProduct();
+    }
+
+    const renderSubTotalPrice = (subTotalPrice) => {
+        $("#subtotal-product-price").empty();
+        $(`
+        <h6 class="font-weight-medium">Subtotal</h6>
+        <h6 class="font-weight-medium">$${subTotalPrice}</h6>
+        `).appendTo("#subtotal-product-price");
+    }
+
+    const renderShipPrice = (shipPrice = 10) => {
+        $("#shiping-price").empty();
+        $(`
+        <h6 class="font-weight-medium">Shipping</h6>
+        <h6 class="font-weight-medium">$${shipPrice}</h6>
+        `).appendTo("#shiping-price");
+    }
+
+    const renderTotalPrice = (subTotalPrice, shipPrice = 10) => {
+        $("#total-product-price").empty();
+        $(`
+       <h5 class="font-weight-bold">Total</h5>
+        <h5 class="font-weight-bold">$${subTotalPrice + shipPrice}</h5>
+        `).appendTo("#total-product-price");
+    }
+
+    const handleBtnPlusProduct = () => {
+        $(".btn-plus").click(async function () {
             try {
-                console.log("blur");
                 const productId = this.id;
 
-                {{!-- const res = await fetch("/cart/quantity/add", {
+                const res = await fetch("/cart/quantity/add", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -107,13 +194,122 @@
                     body: JSON.stringify({ productId })
                 }).then(res => res.json());
                 if (res.errorCode == 0) {
-                    
+                    const response = await getAllByUser();
+
+                    if (response) {
+                        renderProducts(response.data.products);
+                    }
                 } else {
                     alert(res.message);
-                } --}}
+                }
             } catch (error) {
-
+                alert(error.message);
             }
         })
+    }
+
+    const handleBtnMinusProduct = () => {
+        $(".btn-minus").click(async function () {
+            try {
+                const productId = this.id;
+
+                const res = await fetch("/cart/quantity/minus", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    const response = await getAllByUser();
+
+                    if (response) {
+                        renderProducts(response.data.products);
+                    }
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        })
+    }
+
+    const handleBlurInputQuantityProduct = async (element) => {
+        $(".quantity-product").blur(async function () {
+            try {
+                const productId = this.id;
+                const quantity = this.value;
+
+                const res = await fetch("/cart/quantity", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId, quantity })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    const response = await getAllByUser();
+
+                    if (response) {
+                        renderProducts(response.data.products);
+                    }
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    }
+
+    const handleKeyPressInputQuantityProduct = async (element) => {
+        $(".quantity-product").on("keydown", async function (event) {
+            try {
+                if(event.which === 13) {
+                    const productId = this.id;
+                    const quantity = this.value;
+
+                    const res = await fetch("/cart/quantity", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ productId, quantity })
+                    }).then(res => res.json());
+                    if (res.errorCode == 0) {
+                        const response = await getAllByUser();
+
+                        if (response) {
+                            renderProducts(response.data.products);
+                        }
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    }
+
+    $(document).ready(async function () {
+        handleBtnPlusProduct();
+        handleBtnMinusProduct();
+        handleBlurInputQuantityProduct();
+        handleKeyPressInputQuantityProduct();
+
+        const response = await getAllByUser();
+        let products = null;
+
+        if (response) {
+            products = response.data.products;
+        }
+
+        // render view
+        const subTotalPrice = getTotalPrice(products);
+        renderSubTotalPrice(subTotalPrice);
+        renderShipPrice();
+        renderTotalPrice(subTotalPrice);
     })
 </script>
