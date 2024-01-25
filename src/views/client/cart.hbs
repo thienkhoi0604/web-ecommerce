@@ -49,7 +49,7 @@
                             </div>
                         </td>
                         <td class="align-middle">{{this.total}}</td>
-                        <td class="align-middle"><button class="btn btn-sm btn-primary"><i
+                        <td class="align-middle text-center"><button id={{this._id}} class="btn btn-sm btn-primary btn-delete"><i
                                     class="fa fa-times"></i></button></td>
                     </tr>
                     {{/each}}
@@ -92,14 +92,39 @@
 </div>
 <!-- Cart End -->
 
+<div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">DELETE PRODUCT FROM CART</h5>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure to delete this product? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-delete-cancel" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-delete-save">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const getAllByUser = async () => {
-        const response = await fetch(`/cart/all`).then(res => res.json());
-        if (response.errorCode == 0) {
-            return response;
-        }
+        try {
+            $("#main-loading").addClass("show");
 
-        return null;
+            const response = await fetch(`/cart/all`).then(res => res.json());
+            if (response.errorCode == 0) {
+                return response;
+            }
+
+            return null;
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            $("#main-loading").removeClass("show");
+        }
     }
 
     const getTotalPrice = (products) => {
@@ -114,7 +139,7 @@
     const renderProducts = (products) => {
         const tbody = $("tbody#list-products-cart");
         tbody.empty();
-        console.log(products);
+
         products.forEach(product => {
             tbody.append(`
                 <tr>
@@ -138,7 +163,7 @@
                         </div>
                     </td>
                     <td class="align-middle">${product.total}</td>
-                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i
+                    <td class="align-middle text-center"><button id="${product._id}"" class="btn btn-sm btn-primary btn-delete"><i
                                 class="fa fa-times"></i></button></td>
                 </tr>
             `);
@@ -155,6 +180,7 @@
         handleBtnMinusProduct();
         handleBlurInputQuantityProduct();
         handleKeyPressInputQuantityProduct();
+        handleDeleteProductFromCart();
     }
 
     const renderSubTotalPrice = (subTotalPrice) => {
@@ -184,6 +210,8 @@
     const handleBtnPlusProduct = () => {
         $(".btn-plus").click(async function () {
             try {
+                $("#main-loading").addClass("show");
+
                 const productId = this.id;
 
                 const res = await fetch("/cart/quantity/add", {
@@ -204,6 +232,8 @@
                 }
             } catch (error) {
                 alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         })
     }
@@ -211,6 +241,8 @@
     const handleBtnMinusProduct = () => {
         $(".btn-minus").click(async function () {
             try {
+                $("#main-loading").addClass("show");
+
                 const productId = this.id;
 
                 const res = await fetch("/cart/quantity/minus", {
@@ -231,6 +263,8 @@
                 }
             } catch (error) {
                 alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         })
     }
@@ -238,6 +272,8 @@
     const handleBlurInputQuantityProduct = async (element) => {
         $(".quantity-product").blur(async function () {
             try {
+                $("#main-loading").addClass("show");
+
                 const productId = this.id;
                 const quantity = this.value;
 
@@ -259,6 +295,8 @@
                 }
             } catch (error) {
                 alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
     }
@@ -267,6 +305,8 @@
         $(".quantity-product").on("keydown", async function (event) {
             try {
                 if(event.which === 13) {
+                    $("#main-loading").addClass("show");
+
                     const productId = this.id;
                     const quantity = this.value;
 
@@ -289,6 +329,52 @@
                 }
             } catch (error) {
                 alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
+            }
+        });
+    }
+
+    const handleDeleteProductFromCart = () => {
+        let elementClicked = null;
+
+        $(".btn-delete").click(function () {
+            $("#delete").modal("show");
+            elementClicked = this;
+        });
+
+        $(".btn-delete-cancel").click(function () {
+            $("#delete").modal("hide");
+            elementClicked = null;
+        });
+
+        $(".btn-delete-save").click(async function () {
+            try {
+                $("#main-loading").addClass("show");
+
+                const productId = elementClicked.id;
+                
+                const res = await fetch(`/cart`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    $("#delete").modal("hide");
+                    const response = await getAllByUser();
+
+                    if (response) {
+                        renderProducts(response.data.products);
+                    }
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                $("#main-loading").removeClass("show");
             }
         });
     }
@@ -298,6 +384,7 @@
         handleBtnMinusProduct();
         handleBlurInputQuantityProduct();
         handleKeyPressInputQuantityProduct();
+        handleDeleteProductFromCart();
 
         const response = await getAllByUser();
         let products = null;
