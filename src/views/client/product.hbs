@@ -27,37 +27,16 @@
                             <input type="checkbox" name="originalPrice" class="custom-control-input" checked
                                 id="price-all">
                             <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal">{{originalPriceCount}}</span>
                         </div>
+                        {{#each originalPrices}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-1">
-                            <label class="custom-control-label" for="price-1">&#60; $100</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-{{this._id}}">
+                            <label class="custom-control-label" for="price-{{this._id}}">${{this._id}}</label>
+                            <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-2">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-3">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-4">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-5">
-                            <label class="custom-control-label" for="price-5"> &#62; $500</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
+                        {{/each}}
                     </form>
                 </div>
                 <!-- Price End -->
@@ -70,37 +49,16 @@
                             <input type="checkbox" name="discountPrice" class="custom-control-input" checked
                                 id="dis-price-all">
                             <label class="custom-control-label" for="dis-price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal">{{discountPriceCount}}</span>
                         </div>
+                        {{#each discountPrices}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-1">
-                            <label class="custom-control-label" for="dis-price-1">&#60; $100</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-{{this._id}}">
+                            <label class="custom-control-label" for="dis-price-{{this._id}}">${{this._id}}</label>
+                            <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-2">
-                            <label class="custom-control-label" for="dis-price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-3">
-                            <label class="custom-control-label" for="dis-price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-4">
-                            <label class="custom-control-label" for="dis-price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-5">
-                            <label class="custom-control-label" for="dis-price-5"> &#62; $500</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
+                        {{/each}}
                     </form>
                 </div>
             </div>
@@ -115,37 +73,16 @@
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="color-all">
                             <label class="custom-control-label" for="color-all">All Color</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal">{{colorCount}}</span>
                         </div>
+                        {{#each colors}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-1">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <input type="checkbox" class="custom-control-input" id="color-{{this._id}}">
+                            <label class="custom-control-label" for="color-{{this._id}}">{{this._id}}</label>
+                            <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">White</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
+                        {{/each}}
                     </form>
                 </div>
                 <!-- Color End -->
@@ -158,37 +95,16 @@
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" class="custom-control-input" checked id="size-all">
                             <label class="custom-control-label" for="size-all">All Size</label>
-                            <span class="badge border font-weight-normal">1000</span>
+                            <span class="badge border font-weight-normal">{{sizeCount}}</span>
                         </div>
+                        {{#each sizes}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-1">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <input type="checkbox" class="custom-control-input" id="size-{{this._id}}">
+                            <label class="custom-control-label" for="size-{{this._id}}">{{this._id}}</label>
+                            <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-2">
-                            <label class="custom-control-label" for="size-2">S</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-3">
-                            <label class="custom-control-label" for="size-3">M</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div
-                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-4">
-                            <label class="custom-control-label" for="size-4">L</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="size-5">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
+                        {{/each}}
                     </form>
                 </div>
                 <!-- Size End -->
@@ -314,7 +230,7 @@
         try {
             $("#main-loading").addClass("show");
             const name = $("#search #name").val();
-            const perPage = $("#perPage").val() || 10;
+            const perPage = $("#perPage").val() || 9;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
                 name,

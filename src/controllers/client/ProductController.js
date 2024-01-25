@@ -5,9 +5,108 @@ const categoryService = require('../../services/categoryService');
 
 const ProductController = {
     async index(req, res, next) {
-        const products = await ProductModel.find({}).limit(9).lean();
-        const categories = await categoryService.getNestedAll();
-        res.render('client/product', Response({ res, data: { products, categories } }));
+        const results = await Promise.all([
+            await ProductModel.find({}).limit(9).lean(),
+            await categoryService.getNestedAll(),
+            await ProductModel.aggregate([
+                {
+                    $project: {
+                        elements: { $split: ["$color", ","] }
+                    }
+                },
+                {
+                    $unwind: "$elements"
+                },
+                {
+                    $group: {
+                        _id: "$elements",
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { count: -1 }
+                }
+            ]),
+            await ProductModel.aggregate([
+                {
+                    $project: {
+                        elements: { $split: ["$size", ","] }
+                    }
+                },
+                {
+                    $unwind: "$elements"
+                },
+                {
+                    $match: {
+                        elements: { $ne: "" }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$elements",
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { count: -1 }
+                },
+                {
+                    $limit: 5
+                }
+            ]),
+            await ProductModel.aggregate([
+                {
+                    $group: {
+                        _id: "$originalPrice",
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { count: -1 }
+                },
+                {
+                    $limit: 5
+                }
+            ]),
+            await ProductModel.aggregate([
+                {
+                    $group: {
+                        _id: "$discountPrice",
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { count: -1 }
+                },
+                {
+                    $limit: 5
+                }
+            ]),
+        ]);
+        let colors = results[2];
+        const colorCount = colors.reduce((a, b) => a + b.count, 0);
+        colors = colors.filter(i => !!i._id).slice(0, 5);
+        let sizes = results[3];
+        const sizeCount = sizes.reduce((a, b) => a + b.count, 0);
+        sizes = sizes.filter(i => !!i._id).slice(0, 5);
+        const discountPrices = results[5];
+        const discountPriceCount = discountPrices.reduce((a, b) => a + b.count, 0);
+        const originalPrices = results[4];
+        const originalPriceCount = originalPrices.reduce((a, b) => a + b.count, 0);
+        res.render('client/product', Response({
+            res, data: {
+                products: results[0],
+                categories: results[1],
+                colors,
+                sizes,
+                discountPrices,
+                originalPrices,
+                colorCount,
+                sizeCount,
+                discountPriceCount,
+                originalPriceCount
+            }
+        }));
     },
     async search(req, res, next) {
         const page = Number.parseInt(req.query.page) || 1;

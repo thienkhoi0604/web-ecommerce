@@ -10,6 +10,7 @@ const Helpers = {
         return v1 == v2 ? options.fn(this) : options.inverse(this);
     },
     plus: (a, b) => a + b,
+    split: (a) => !!a ? `${a}`?.split(",") : []
 }
 module.exports = {
     Helpers
