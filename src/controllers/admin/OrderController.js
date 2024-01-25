@@ -1,35 +1,15 @@
-const moment = require("moment");
 const { Response } = require("../../commons");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
-const UserModel = require("../../models/UserModel");
+const { OrderModel } = require("../../models");
 
-const UserController = {
+const OrderController = {
     async index(req, res, next) {
         const results = await Promise.all([
-            UserModel.find({ role: USER_ROLE.ADMIN })
+            OrderModel.find({})
                 .sort({ updatedAt: -1, createdAt: -1 })
                 .lean(),
         ]);
-        res.render("admin/users", Response({ res, data: { users: results[0] } }))
-    },
-    async add(req, res, next) {
-        try {
-            const _user = res.locals._user;
-            const body = req.body;
-            body.createdBy = _user?._id;
-            const user = await UserModel.create(body);
-            res.json({
-                data: user.toObject(),
-                errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Add user successfully!"
-            });
-        } catch (e) {
-            console.log(e);
-            res.json({
-                errorCode: RESPONSE_CODE.ERROR,
-                message: e.message
-            });
-        }
+        res.render("admin/order", Response({ res, data: { users: results[0] } }))
     },
     async search(req, res, next) {
         const page = Number.parseInt(req.query.page) || 1;
@@ -77,8 +57,8 @@ const UserController = {
             delete query.$or;
         }
         const results = await Promise.all([
-            UserModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
-            UserModel.find(query).countDocuments().lean()
+            OrderModel.find(query).skip((page - 1) * limit).limit(limit).sort({ updatedAt: -1, createdAt: -1 }).lean(),
+            OrderModel.find(query).countDocuments().lean()
         ]);
         const pagination = {
             page,
@@ -91,7 +71,7 @@ const UserController = {
     },
     async get(req, res, next) {
         const { id } = req.params;
-        const user = await UserModel.findById(id)
+        const user = await OrderModel.findById(id)
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")
@@ -102,22 +82,19 @@ const UserController = {
         try {
             const _user = res.locals._user;
             const body = req.body;
-            const updateFields = ["fullname", "phone", "role", "isDeleted"];
+            const updateFields = ["fullname", "phoneNumber", "isDeleted"];
             const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 acc[field] = value;
                 return acc;
             }, {});
-            if (!!body.password) {
-                updateUser.password = body.password;
-            }
             updateUser.updatedBy = _user?._id;
             const { id } = body;
-            const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
+            const updatedUser = await OrderModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
             res.json({
                 data: updatedUser,
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Update user successfully!"
+                message: "Update order successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -134,10 +111,10 @@ const UserController = {
             ids = [ids];
         }
         try {
-            const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            const resonse = await OrderModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
-                message: "Delete users successfully!"
+                message: "Delete ordersF successfully!"
             });
         } catch (e) {
             console.log(e);
@@ -149,4 +126,4 @@ const UserController = {
     }
 }
 
-module.exports = UserController;
+module.exports = OrderController;

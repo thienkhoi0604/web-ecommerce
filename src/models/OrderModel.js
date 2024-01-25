@@ -66,5 +66,22 @@ const OrderModel = new Schema(
     timestamps: true,
   }
 );
-
+OrderModel.virtual("createdByObj", {
+  ref: "users",
+  localField: "createdBy",
+  foreignField: "_id",
+  justOne: true
+});
+OrderModel.virtual("updatedByObj", {
+  ref: "users",
+  localField: "updatedBy",
+  foreignField: "_id",
+  justOne: true
+});
+OrderModel.virtual("deletedByObj", {
+  ref: "users",
+  localField: "deletedBy",
+  foreignField: "_id",
+  justOne: true
+});
 module.exports = mongoose.model('orders', OrderModel);

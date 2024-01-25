@@ -1,4 +1,4 @@
-const CartController = require("./CartController")
+const OrderController = require("./OrderController")
 const CategoryController = require("./CategoryController")
 const ErrorController = require("./ErrorController")
 const HomeController = require("./HomeController")
@@ -10,7 +10,7 @@ module.exports = {
     ProductController,
     CategoryController,
     HomeController,
-    CartController,
+    OrderController,
     StaticController,
     ErrorController,
     UserController

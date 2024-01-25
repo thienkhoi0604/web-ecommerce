@@ -305,12 +305,20 @@
         } else {
             paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
         }
-        for (let i = 1; i <= totalPage; i++) {
+        let start = page - 4 > 0 ? page - 4 : 1;
+        let end = page + 4 < totalPage ? page + 4 : totalPage;
+        if (start > 1) {
+            paginationTag.append(`<li class="page-item disabled"><div class="page-link" >...</div></li>`);
+        }
+        for (let i = start; i <= end; i++) {
             if (i == page) {
                 paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
             } else {
                 paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
             }
+        }
+        if (end < totalPage) {
+            paginationTag.append(`<li class="page-item disabled"><div class="page-link" >...</div></li>`);
         }
         if (page < totalPage) {
             paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
@@ -354,15 +362,6 @@
         $(".checkItem").click(function () {
             const checkAll = $(".checkItem").toArray().every(item => item.checked);
             $(".checkAll").prop('checked', checkAll);
-        });
-        $(".perPageItem").click(async function () {
-            const perPage = $(this).text();
-            $("#perPage").val(perPage);
-            searchAction();
-        });
-        $("#perPage").on("input", async function () {
-            const perPage = $(this).val();
-            searchAction();
         });
         $(".pagination").on("click", ".page-next", async function () {
             const currentPage = Number.parseInt($(".pagination .active").text()) || 1;

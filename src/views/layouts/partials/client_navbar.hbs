@@ -12,17 +12,17 @@
                     {{#each categories}}
                     {{#if this.childObjs}}
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i
+                        <a href="#" class="nav-link" data-toggle="dropdown">{{this.name}} <i
                                 class="fa fa-angle-down float-right mt-1"></i></a>
                         <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0"
                             style="background-color: rgb(255 255 255) !important; border: 1px solid #ccc !important;">
                             {{#each this.childObjs}}
-                            <a href="/products/?category={{this._id}}" class="dropdown-item">{{this.name}}</a>
+                            <a href="/products?categoryId={{this._id}}" class="dropdown-item">{{this.name}}</a>
                             {{/each}}
                         </div>
                     </div>
                     {{else}}
-                    <a href="/products/?category={{this._id}}" class="nav-item nav-link">{{this.name}}</a>
+                    <a href="/products?categoryId={{this._id}}" class="nav-item nav-link">{{this.name}}</a>
                     {{/if}}
                     {{/each}}
                 </div>
