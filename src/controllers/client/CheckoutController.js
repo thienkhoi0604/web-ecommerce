@@ -6,6 +6,11 @@ const CheckoutController = {
         const categories = await categoryService.getNestedAll();
         res.render('client/checkout', Response({ res, data: { categories } }));
     },
+    async info(req, res, next) {
+        
+    },
+    async card(req, res, next) {
+    },
 }
 
 module.exports = CheckoutController;

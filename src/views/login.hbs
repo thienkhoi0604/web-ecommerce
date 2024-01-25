@@ -1,105 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
+<link href="/public/client/css/main.css" rel="stylesheet">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
-</head>
-
-<body>
-    <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
-        <section style="background-color: hsl(0, 0%, 96%); padding-top: 50px;">
-            <div class="container-fluid h-custom">
-                <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="col-md-9 col-lg-6 col-xl-5">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                            class="img-fluid" alt="Sample image">
-                    </div>
-                    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                        <form method="POST" accept="auth/login">
-                            <div
-                                class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                                <p class="lead fw-normal mb-0 me-3">Sign in with</p>
-                                <a href="/auth/facebook" type="button" class="btn btn-primary btn-floating mx-1">
+<section style="margin-top: 100px; margin-bottom: 20px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-sm-offset-1">
+                <div class="login-form"><!--login form-->
+                    <h2>Login to your account</h2>
+                    <form id="signin">
+                        <input type="email" required placeholder="Email Address" />
+                        <input type="password" placeholder="Enter password" />
+                        <span style="display: flex; align-items: center;">
+                            <div>Or start with: </div>
+                            <div style="margin-left: 10px; margin-right: 10px;">
+                                <a href="/auth/facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-
-                                <a href="/auth/google" type="button" class="btn btn-primary btn-floating mx-1">
+                            </div>
+                            <div style="margin-left: 10px; margin-right: 10px;">
+                                <a href="/auth/google">
                                     <i class="fab fa-google"></i>
                                 </a>
                             </div>
-
-                            <div class="divider d-flex align-items-center my-4">
-                                <p class="text-center fw-bold mx-3 mb-0">Or</p>
-                            </div>
-
-                            <!-- Email input -->
-                            <div class="form-outline mb-4">
-                                <input name="email" required type="email" id="form3Example3"
-                                    class="form-control form-control-lg" placeholder="Enter a valid email address" />
-                                <label class="form-label" for="form3Example3">Email address</label>
-                            </div>
-
-                            <!-- Password input -->
-                            <div class="form-outline mb-3">
-                                <input name="password" required type="password" id="form3Example4"
-                                    class="form-control form-control-lg" placeholder="Enter password" />
-                                <label class="form-label" for="form3Example4">Password</label>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <!-- Checkbox -->
-                                <div class="form-check mb-0">
-                                    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                                    <label class="form-check-label" for="form2Example3">
-                                        Remember me
-                                    </label>
-                                </div>
-                                <a href="#!" class="text-body">Forgot password?</a>
-                            </div>
-
-                            <div class="text-center text-lg-start mt-4 pt-2">
-                                <button type="submit" class="btn btn-primary btn-lg"
-                                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                                <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/auth/register"
-                                        class="link-danger">Register</a></p>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
+                        </span>
+                        <button type="button" class="btn-signin btn bg-primary">Login</button>
+                    </form>
+                </div><!--/login form-->
             </div>
-            <div
-                class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-                <!-- Copyright -->
-                <div class="text-white mb-3 mb-md-0">
-                    Copyright © 2023. All rights reserved.
-                </div>
-                <!-- Copyright -->
-
-                <!-- Right -->
-                <div>
-                    <a href="/auth/facebook" class="text-white me-4">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="/auth/google" class="text-white me-4">
-                        <i class="fab fa-google"></i>
-                    </a>
-                </div>
-                <!-- Right -->
+            <div class="col-sm-1">
+                <h2 class="or bg-primary">OR</h2>
             </div>
-        </section>
+            <div class="col-sm-4">
+                <div class="signup-form"><!--sign up form-->
+                    <h2>New User Signup!</h2>
+                    <form id="signup">
+                        <input type="text" required placeholder="Fullname" />
+                        <input type="tel" required placeholder="Phone number" />
+                        <input type="email" required placeholder="Email Address" />
+                        <input type="password" required placeholder="Password" />
+                        <input type="password" required placeholder="Retype password" />
+                        <button type="button" class="btn-signup btn bg-primary">Signup</button>
+                    </form>
+                </div><!--/sign up form-->
+            </div>
+        </div>
     </div>
-    <!-- MDB -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-</body>
+</section>
 
-</html>
+<script>
+    $(document).ready(function () {
+        $(".btn-signin").click(async function () {
+            const email = $("#signin input[type='email']").val();
+            const password = $("#signin input[type='password']").val();
+            if (email.length == 0) {
+                alert("Email must not be empty");
+                return;
+            }
+            if (password.length == 0) {
+                alert("Password must not be empty");
+                return;
+            }
+            const body = {
+                email,
+                password,
+            };
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            }).then((res) => res.json());
+            if (response.errorCode == 0) {
+                const url = response.data;
+                window.location.href = url;
+            } else {
+                alert(res.message);
+            }
+        });
+        $(".btn-signup").click(async function () {
+            const fullname = $("#signup input[type='text']").val();
+            const phone = $("#signup input[type='tel']").val();
+            const email = $("#signup input[type='email']").val();
+            const password = $("#signup input[type='password']").val();
+            const retypePassword = $("#signup input[type='password']").val();
+            if (fullname.length == 0) {
+                alert("Fullname must not be empty");
+                return;
+            }
+            if (phone.length == 0) {
+                alert("Phone must not be empty");
+                return;
+            }
+            if (email.length == 0) {
+                alert("Email must not be empty");
+                return;
+            }
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters");
+                return;
+            }
+            if (password != retypePassword) {
+                alert("Password and retype password must be the same");
+                return;
+            }
+            const body = {
+                fullname,
+                phone,
+                email,
+                password
+            };
+            const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            }).then((res) => res.json());
+            if (response.errorCode == 0) {
+                alert("Register successfully, please login to continue!")
+            } else {
+                alert(response.message);
+            }
+        });
+    });
+</script>

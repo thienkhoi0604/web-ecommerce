@@ -3,13 +3,19 @@ const { Response } = require("../commons");
 const { RESPONSE_CODE, USER_ROLE } = require("../constants");
 const { authService } = require("../services");
 const passport = require('passport');
+const categoryService = require('../services/categoryService');
 
 const AuthController = {
-    login(req, res, next) {
+    async login(req, res, next) {
         try {
-            return res.render("login", Response({ res, data: { layout: false } }))
+            const categories = await categoryService.getNestedAll();
+            return res.render("login", Response({ res, data: { categories } }))
         } catch (error) {
-            next(error);
+            console.error(error);
+            return res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: error.message
+            });
         }
     },
     async doLogin(req, res, next) {
@@ -20,22 +26,38 @@ const AuthController = {
                 const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
                 if (data.user.role == USER_ROLE.ADMIN) {
-                    return res.redirect("/admin");
+                    return res.json({
+                        errorCode: RESPONSE_CODE.SUCCESS,
+                        data: "/admin",
+                        message: "Login successfully!"
+                    });
                 } else {
-                    return res.redirect("/");
+                    return res.json({
+                        errorCode: RESPONSE_CODE.SUCCESS,
+                        data: "/",
+                        message: "Login successfully!"
+                    });
                 }
             }
-            return res.render("login", Response({ res, data: { layout: false, ...data } }))
+            return res.json(data);
         } catch (e) {
             console.error(e);
-            return res.render("login", Response({ res, data: { layout: false, error: e.details } }))
+            return res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
         }
     },
-    register(req, res, next) {
+    async register(req, res, next) {
         try {
-            return res.render("register", Response({ res, data: { layout: false } }))
+            const categories = await categoryService.getNestedAll();
+            return res.render("login", Response({ res, data: { categories } }))
         } catch (error) {
-            next(error);
+            console.error(error);
+            return res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: error.message
+            });
         }
     },
     async doRegister(req, res, next) {
@@ -45,16 +67,14 @@ const AuthController = {
             if (data.error.code == RESPONSE_CODE.SUCCESS) {
                 const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
-                if (data.user.role == USER_ROLE.ADMIN) {
-                    return res.redirect("/admin");
-                } else {
-                    return res.redirect("/");
-                }
             }
-            return res.render("register", Response({ res, data: { layout: false, ...data } }))
+            return res.json(data);
         } catch (e) {
             console.error(e);
-            return res.render("register", Response({ res, data: { layout: false, error: e.details } }))
+            return res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
         }
     },
     async doLogout(req, res, next) {
@@ -62,7 +82,11 @@ const AuthController = {
             res.clearCookie("auth");
             res.redirect('/auth/login');
         } catch (error) {
-            next(error);
+            console.error(error);
+            return res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: error.message
+            });
         }
     },
     loginWithFb: passport.authenticate('facebook'),

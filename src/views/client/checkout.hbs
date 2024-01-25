@@ -32,31 +32,30 @@
                 <div class="row px-xl-5">
                     <div class="col-lg-8">
                         <div class="mb-4">
-                            <h4 class="font-weight-semi-bold mb-4">BILLING ADDRESS</h4>
-                            <div class="row">
+                            <h4 class="font-weight-semi-bold mb-4">RECEIVER ADDRESS</h4>
+                            <div id="info" class="row">
                                 <div class="col-md-6 form-group">
-                                    <label>First Name</label>
-                                    <input class="form-control" type="text" placeholder="John">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Last Name</label>
-                                    <input class="form-control" type="text" placeholder="Doe">
+                                    <label>Full name</label>
+                                    <input class="form-control" type="text" name="fullname" placeholder="John">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>E-mail</label>
-                                    <input class="form-control" type="text" placeholder="example@email.com">
+                                    <input class="form-control" type="email" name="email"
+                                        placeholder="example@email.com">
                                 </div>
                                 <div class="col-md-6 form-group">
-                                    <label>Mobile No</label>
-                                    <input class="form-control" type="text" placeholder="+123 456 789">
+                                    <label>Phone number</label>
+                                    <input class="form-control" type="tel" name="phoneNumber"
+                                        placeholder="+84827463529">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Address</label>
-                                    <input class="form-control" type="text" placeholder="123 Street">
+                                    <input class="form-control" type="text" name="address"
+                                        placeholder="Nguyen Van Cu street, 5 district, Ho Chi Minh city">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Note</label>
-                                    <input class="form-control" type="text" placeholder="123 Street">
+                                    <input class="form-control" type="text" name="note" placeholder="Please be careful">
                                 </div>
                             </div>
                         </div>
@@ -246,6 +245,20 @@
     $(document).ready(function () {
         var stepper = new Stepper($('.bs-stepper')[0])
         $(".to-payment-btn").click(function () {
+            const body = {
+                fullname: $("#info input[name='fullname']").val(),
+                email: $("#info input[name='email']").val(),
+                phoneNumber: $("#info input[name='phoneNumber']").val(),
+                address: $("#info input[name='address']").val(),
+                note: $("#info input[name='note']").val(),
+            }
+            const response = await fetch("/checkout/info", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            })
             stepper.next()
         })
         $(".to-review-btn").click(function () {
