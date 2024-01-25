@@ -118,7 +118,7 @@ const ProductController = {
             $or: [
             ]
         }
-        const numberFields = [];
+        const numberFields = ["originalPrice", "discountPrice"];
         const equalFields = ["isDeleted", 'categoryId'];
         for (let key in req.query) {
             const value = req.query[key];

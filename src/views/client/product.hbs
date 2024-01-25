@@ -24,15 +24,16 @@
                     <form>
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" checked
-                                id="price-all">
+                            <input type="radio" name="originalPrice" value="" class="filter-input custom-control-input"
+                                checked id="price-all">
                             <label class="custom-control-label" for="price-all">All Price</label>
                             <span class="badge border font-weight-normal">{{originalPriceCount}}</span>
                         </div>
                         {{#each originalPrices}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="originalPrice" class="custom-control-input" id="price-{{this._id}}">
+                            <input type="radio" name="originalPrice" class="filter-input custom-control-input"
+                                id="price-{{this._id}}">
                             <label class="custom-control-label" for="price-{{this._id}}">${{this._id}}</label>
                             <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
@@ -46,15 +47,16 @@
                     <form>
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" checked
-                                id="dis-price-all">
+                            <input type="radio" name="discountPrice" value="" class="filter-input custom-control-input"
+                                checked id="dis-price-all">
                             <label class="custom-control-label" for="dis-price-all">All Price</label>
                             <span class="badge border font-weight-normal">{{discountPriceCount}}</span>
                         </div>
                         {{#each discountPrices}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="discountPrice" class="custom-control-input" id="dis-price-{{this._id}}">
+                            <input type="radio" name="discountPrice" value="{{this._id}}"
+                                class="filter-input custom-control-input" id="dis-price-{{this._id}}">
                             <label class="custom-control-label" for="dis-price-{{this._id}}">${{this._id}}</label>
                             <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
@@ -71,14 +73,16 @@
                     <form>
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-all">
+                            <input type="radio" name="color" class="filter-input custom-control-input" value="" checked
+                                id="color-all">
                             <label class="custom-control-label" for="color-all">All Color</label>
                             <span class="badge border font-weight-normal">{{colorCount}}</span>
                         </div>
                         {{#each colors}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-{{this._id}}">
+                            <input type="radio" name="color" value="{{this._id}}"
+                                class="filter-input custom-control-input" id="color-{{this._id}}">
                             <label class="custom-control-label" for="color-{{this._id}}">{{this._id}}</label>
                             <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
@@ -93,14 +97,16 @@
                     <form>
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="size-all">
+                            <input type="radio" name="size" class="filter-input custom-control-input" checked value=""
+                                id="size-all">
                             <label class="custom-control-label" for="size-all">All Size</label>
                             <span class="badge border font-weight-normal">{{sizeCount}}</span>
                         </div>
                         {{#each sizes}}
                         <div
                             class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-{{this._id}}">
+                            <input type="radio" name="size" value="{{this._id}}"
+                                class="filter-input custom-control-input" id="size-{{this._id}}">
                             <label class="custom-control-label" for="size-{{this._id}}">{{this._id}}</label>
                             <span class="badge border font-weight-normal">{{this.count}}</span>
                         </div>
@@ -209,12 +215,20 @@
         } else {
             paginationTag.append(`<li class="page-item page-preview disabled"><div class="page-link">Previous</div></li>`);
         }
-        for (let i = 1; i <= totalPage; i++) {
+        let start = page - 4 > 0 ? page - 4 : 1;
+        let end = page + 4 < totalPage ? page + 4 : totalPage;
+        if (start > 1) {
+            paginationTag.append(`<li class="page-item disabled"><div class="page-link" >...</div></li>`);
+        }
+        for (let i = start; i <= end; i++) {
             if (i == page) {
                 paginationTag.append(`<li class="page-item page-item-number active"><div class="page-link" >${i}</div></li>`);
             } else {
                 paginationTag.append(`<li class="page-item page-item-number"><div class="page-link" >${i}</div></li>`);
             }
+        }
+        if (end < totalPage) {
+            paginationTag.append(`<li class="page-item disabled"><div class="page-link" >...</div></li>`);
         }
         if (page < totalPage) {
             paginationTag.append(`<li class="page-item page-next"><div class="page-link" >Next</div></li>`);
@@ -230,10 +244,18 @@
         try {
             $("#main-loading").addClass("show");
             const name = $("#search #name").val();
+            const color = $(".filter-input[name='color']:checked").val();
+            const size = $(".filter-input[name='size']:checked").val();
+            const originalPrice = $(".filter-input[name='originalPrice']:checked").val();
+            const discountPrice = $(".filter-input[name='discountPrice']:checked").val();
             const perPage = $("#perPage").val() || 9;
             const currentPage = $(".pagination .active").text() || 1;
             const query = {
                 name,
+                color,
+                size,
+                originalPrice,
+                discountPrice,
                 limit: perPage,
                 page: currentPage
             };
@@ -288,5 +310,6 @@
             searchAction();
         });
         $(".btn-search").click(searchAction);
+        $(".filter-input").click(searchAction);
     })
 </script>

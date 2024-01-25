@@ -1,23 +1,25 @@
 const { Response } = require("../../commons");
 const { CartModel, ProductModel } = require("../../models");
 const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
+const categoryService = require("../../services/categoryService");
 
 const CartController = {
     async index(req, res, next) {
         try {
-            const _user = req.locals._user;
-            const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
-    
+            const _user = res.locals._user;
+            const categories = await categoryService.getNestedAll();
+            const carts = await CartModel.find({ createdBy: _user?._id }).lean();
+
             if (!carts) {
-                return res.render('client/cart', Response({ res, data: { products: null } }));
+                return res.render('client/cart', Response({ res, data: { products: null, categories } }));
             }
-    
+
             const productIds = carts.map((element) => element.productId)
-    
+
             const products = await ProductModel.find({
                 '_id': { $in: productIds }
             })
-    
+
             const result = products.map((product) => {
                 const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
                 return {
@@ -27,7 +29,7 @@ const CartController = {
                 }
             })
 
-            res.render('client/cart', Response({ res, data: { carts, products: result } }));
+            res.render('client/cart', Response({ res, data: { carts, products: result, categories } }));
         } catch (e) {
             console.log(e);
             res.render('client/cart');
@@ -35,11 +37,11 @@ const CartController = {
     },
     async add(req, res, next) {
         try {
-            const _user = req.locals._user;
+            const _user = res.locals._user;
             const { productId } = req.body;
 
             const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            if (cartExist._id) {
                 cartExist.number += 1;
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
@@ -49,7 +51,7 @@ const CartController = {
                 });
             }
 
-            let params = {};          
+            let params = {};
             const product = await ProductModel.findById({ _id: productId });
             params.productId = product?._id;
             params.createdBy = _user?._id;
@@ -73,11 +75,11 @@ const CartController = {
     },
     async updateQuantityAdd(req, res, next) {
         try {
-            const _user = req.locals._user;
+            const _user = res.locals._user;
             const { productId } = req.body;
 
             const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            if (cartExist._id) {
                 cartExist.number += 1;
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
