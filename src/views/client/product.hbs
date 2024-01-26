@@ -330,8 +330,7 @@
             $(this).addClass("active");
             searchAction();
         });
-    })
-    $(document).ready(async function () {
+
         $(".btn-add-cart").click(async function () {
             try {
                 const productId = this.id;
@@ -354,6 +353,6 @@
             } catch (error) {
                 console.log(error);
             }
-        })
+        });
     })
 </script>
