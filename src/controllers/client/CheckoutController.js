@@ -119,6 +119,7 @@ const CheckoutController = {
             await CartModel.updateOne({ _id: item._id }, { orderId: order._id });
         }));
         order.cartIds = carts.map(item => item._id);
+        order.paidAt = new Date();
         await order.save();
         res.json({
             errorCode: RESPONSE_CODE.SUCCESS,

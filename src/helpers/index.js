@@ -12,6 +12,7 @@ const Helpers = {
     plus: (a, b) => a + b,
     split: (a) => !!a ? `${a}`?.split(",") : [],
     multiply: (a, b) => a * b || 0,
+    aOrb: (a, b) => !!a ? a : b,
 }
 module.exports = {
     Helpers
