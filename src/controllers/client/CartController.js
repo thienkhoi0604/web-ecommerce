@@ -180,7 +180,7 @@ const CartController = {
             const _user = req.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
             if (cartExist?._id) {
                 cartExist.number -= 1;
                 if (cartExist.number <= 0) {
