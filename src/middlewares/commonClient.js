@@ -3,7 +3,7 @@ const { categoryService } = require("../services");
 const jwt = require('jsonwebtoken');
 const commonClient = async (req, res, next) => {
     res.locals = res.locals || {};
-    const categories = categoryService.getNestedAll();
+    const categories = await categoryService.getNestedAll();
     res.locals.categories = categories;
     const token = req.cookies.auth || req.headers.auth;
     jwt.verify(token, process.env.SECRET_KEY, async (error, decode) => {

@@ -70,4 +70,10 @@ CartModel.virtual("orderObj", {
   foreignField: "_id",
   justOne: true
 });
+CartModel.virtual("productObj", {
+  ref: "products",
+  localField: "productId",
+  foreignField: "_id",
+  justOne: true
+});
 module.exports = mongoose.model('carts', CartModel);

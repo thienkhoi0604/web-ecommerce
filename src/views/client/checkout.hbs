@@ -36,26 +36,23 @@
                             <div id="info" class="row">
                                 <div class="col-md-6 form-group">
                                     <label>Full name</label>
-                                    <input class="form-control" type="text" name="fullname" placeholder="John">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>E-mail</label>
-                                    <input class="form-control" type="email" name="email"
-                                        placeholder="example@email.com">
+                                    <input class="form-control" type="text" value="{{order.fullname}}" name="fullname"
+                                        placeholder="John">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Phone number</label>
-                                    <input class="form-control" type="tel" name="phoneNumber"
-                                        placeholder="+84827463529">
+                                    <input class="form-control" type="tel" value="{{order.phoneNumber}}"
+                                        name="phoneNumber" placeholder="+84827463529">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Address</label>
-                                    <input class="form-control" type="text" name="address"
+                                    <input class="form-control" type="text" name="address" value="{{order.address}}"
                                         placeholder="Nguyen Van Cu street, 5 district, Ho Chi Minh city">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Note</label>
-                                    <input class="form-control" type="text" name="note" placeholder="Please be careful">
+                                    <input class="form-control" type="text" name="note" value="{{order.note}}"
+                                        placeholder="Please be careful">
                                 </div>
                             </div>
                         </div>
@@ -67,32 +64,17 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="font-weight-medium mb-3">Products</h5>
+                                {{#each carts}}
                                 <div class="d-flex justify-content-between">
-                                    <p>Colorful Stylish Shirt 1</p>
-                                    <p>$150</p>
+                                    <p>{{this.productObj.name}}</p>
+                                    <p>${{this.productObj.discountPrice}}x{{this.number}}</p>
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    <p>Colorful Stylish Shirt 2</p>
-                                    <p>$150</p>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <p>Colorful Stylish Shirt 3</p>
-                                    <p>$150</p>
-                                </div>
-                                <hr class="mt-0">
-                                <div class="d-flex justify-content-between mb-3 pt-1">
-                                    <h6 class="font-weight-medium">Subtotal</h6>
-                                    <h6 class="font-weight-medium">$150</h6>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <h6 class="font-weight-medium">Shipping</h6>
-                                    <h6 class="font-weight-medium">$10</h6>
-                                </div>
+                                {{/each}}
                             </div>
                             <div class="card-footer border-secondary bg-transparent">
                                 <div class="d-flex justify-content-between mt-2">
                                     <h5 class="font-weight-bold">Total</h5>
-                                    <h5 class="font-weight-bold">$160</h5>
+                                    <h5 class="font-weight-bold">${{total}}</h5>
                                 </div>
                             </div>
                             <div class="card-footer border-secondary bg-transparent">
@@ -112,24 +94,18 @@
                         <div class="card-header bg-secondary border-0">
                             <h4 class="font-weight-semi-bold m-0">CURRENT CARDS</h4>
                         </div>
-                        <div class="card-body">
-                            <h5 class="font-weight-medium mb-3">VIETINBAK</h5>
+                        <div class="card-body payment">
+                            {{#each cards}}
+                            <h5 class="font-weight-medium mb-3">{{this.issuer}}</h5>
                             <div class="d-flex justify-content-between" style="align-items: center;">
                                 <p>
-                                    <input type="radio" name="payment" id="directcheck"> 127269432178310
+                                    <input type="radio" name="card" value="{{this._id}}">
+                                    {{this.cardNumber}}
                                 </p>
                                 <p>-</p>
-                                <p>DUONG TAN TON</p>
+                                <p>{{this.cardHolder}}</p>
                             </div>
-
-                            <h5 class="font-weight-medium mb-3">VIETINBAK</h5>
-                            <div class="d-flex justify-content-between" style="align-items: center;">
-                                <p>
-                                    <input type="radio" name="payment" id="directcheck"> 127269432178310
-                                </p>
-                                <p>-</p>
-                                <p>DUONG TAN TON</p>
-                            </div>
+                            {{/each}}
                         </div>
                         <div class="card-footer border-secondary bg-transparent">
                             <button
@@ -140,26 +116,23 @@
                     <div class="col-lg-5">
                         <div class="mb-4">
                             <h4 class="font-weight-semi-bold mb-4">CARD PAYMENT</h4>
-                            <div class="row">
+                            <div class="row new-card">
                                 <div class="col-md-6 form-group">
                                     <label>Card ID</label>
-                                    <input class="form-control" type="text" placeholder="John">
+                                    <input class="form-control" type="text" name="cardNumber" placeholder="1234567">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Card Holder</label>
-                                    <input class="form-control" type="text" placeholder="Doe">
+                                    <input class="form-control" type="text" name="cardHolder" placeholder="Doe">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Expired date</label>
-                                    <input class="form-control" type="text" placeholder="example@email.com">
+                                    <input class="form-control" type="text" name="expirationDate"
+                                        placeholder="21/12/2026">
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Ccv</label>
-                                    <input class="form-control" type="text" placeholder="+123 456 789">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Issuer</label>
-                                    <input class="form-control" type="text" placeholder="123 Street">
+                                    <input class="form-control" type="text" name="ccv" placeholder="123">
                                 </div>
                             </div>
                             <button
@@ -173,65 +146,79 @@
             <div class="container-fluid pt-5">
                 <div class="row px-xl-5 row" style="justify-content: center;">
                     <div class="col-lg-8">
-                        <div class="mb-4">
-                            <h4 class="font-weight-semi-bold mb-4">BILLING ADDRESS</h4>
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label>First Name</label>
-                                    <input class="form-control" type="text" placeholder="John">
+                        <div class="row">
+                            <div class="mb-4">
+                                <h4 class="font-weight-semi-bold mb-4">RECEIVER ADDRESS</h4>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label>Full name</label>
+                                        <input class="form-control" disabled type="text" value="{{order.fullname}}"
+                                            placeholder="John">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Phone number</label>
+                                        <input class="form-control" disabled type="tel" value="{{order.phoneNumber}}"
+                                            placeholder="+84827463529">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Address</label>
+                                        <input class="form-control" disabled type="text" value="{{order.address}}"
+                                            placeholder="Nguyen Van Cu street, 5 district, Ho Chi Minh city">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label>Note</label>
+                                        <input class="form-control" disabled type="text" value="{{order.note}}"
+                                            placeholder="Please be careful">
+                                    </div>
                                 </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Last Name</label>
-                                    <input class="form-control" type="text" placeholder="Doe">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>E-mail</label>
-                                    <input class="form-control" type="text" placeholder="example@email.com">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Mobile No</label>
-                                    <input class="form-control" type="text" placeholder="+123 456 789">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Address</label>
-                                    <input class="form-control" type="text" placeholder="123 Street">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label>Note</label>
-                                    <input class="form-control" type="text" placeholder="123 Street">
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="card border-secondary mb-5">
+                                    <div class="card-header bg-secondary border-0">
+                                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="font-weight-medium mb-3">Products</h5>
+                                        {{#each carts}}
+                                        <div class="d-flex justify-content-between">
+                                            <p>{{this.productObj.name}}</p>
+                                            <p>${{this.productObj.discountPrice}}x{{this.number}}</p>
+                                        </div>
+                                        {{/each}}
+                                    </div>
+                                    <div class="card-footer border-secondary bg-transparent">
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <h5 class="font-weight-bold">Total</h5>
+                                            <h5 class="font-weight-bold">${{total}}</h5>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card border-secondary mb-5">
                         <div class="card-header bg-secondary border-0">
-                            <h4 class="font-weight-semi-bold m-0">CURRENT CARDS</h4>
+                            <h4 class="font-weight-semi-bold m-0">SELECTED CARD</h4>
                         </div>
-                        <div class="card-body">
-                            <h5 class="font-weight-medium mb-3">VIETINBAK</h5>
+                        <div class="card-body review">
+                            {{#each cards}}
+                            <h5 class="font-weight-medium mb-3">{{this.issuer}}</h5>
                             <div class="d-flex justify-content-between" style="align-items: center;">
                                 <p>
-                                    <input type="radio" name="payment" id="directcheck"> 127269432178310
+                                    <input type="radio" name="card" value="{{this._id}}">
+                                    {{this.cardNumber}}
                                 </p>
                                 <p>-</p>
-                                <p>DUONG TAN TON</p>
+                                <p>{{this.cardHolder}}</p>
                             </div>
-
-                            <h5 class="font-weight-medium mb-3">VIETINBAK</h5>
-                            <div class="d-flex justify-content-between" style="align-items: center;">
-                                <p>
-                                    <input type="radio" name="payment" id="directcheck"> 127269432178310
-                                </p>
-                                <p>-</p>
-                                <p>DUONG TAN TON</p>
-                            </div>
+                            {{/each}}
                         </div>
                         <div class="card-footer border-secondary bg-transparent">
                             <button
                                 class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 to-pay-btn">Pay</button>
 
                             <button
-                                class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 to-infomation-btn">Back</button>
+                                class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 to-back-btn">Back</button>
                             <button
                                 class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 to-cancel-btn">Cancel</button>
                         </div>
@@ -242,32 +229,213 @@
     </div>
 </div>
 <script>
+    let order = {{{ json order }}};
+    const updateCards = async () => {
+        const res = await fetch("/card/search").then(res => res.json())
+        $(".card-body").html("")
+        res.data.forEach(card => {
+            $(".card-body").append(`
+                <h5 class="font-weight-medium mb-3">${card.issuer}</h5>
+                <div class="d-flex justify-content-between" style="align-items: center;">
+                    <p>
+                        <input type="radio" value="${card._id}" name="card" id="directcheck">
+                        ${card.cardNumber}
+                    </p>
+                    <p>-</p>
+                    <p>${card.cardHolder}</p>
+                </div>
+                `)
+        })
+    }
     $(document).ready(function () {
-        var stepper = new Stepper($('.bs-stepper')[0])
-        $(".to-payment-btn").click(async function () {
-            const body = {
-                fullname: $("#info input[name='fullname']").val(),
-                email: $("#info input[name='email']").val(),
-                phoneNumber: $("#info input[name='phoneNumber']").val(),
-                address: $("#info input[name='address']").val(),
-                note: $("#info input[name='note']").val(),
+        $("body").delegate("#datepicker", "focusin", function () {
+            $(this).datepicker();
+        });
+        $('input[name="expirationDate"]').daterangepicker({
+            autoUpdateInput: false,
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'DD/MM/YYYY',
             }
-            stepper.next()
-        })
-        $(".to-review-btn").click(function () {
-            stepper.next()
-        })
-        $(".to-cancel-btn").click(function () {
+        });
+        $('input[name="expirationDate"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        });
+        $('input[name="expirationDate"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        });
 
+        var stepper = new Stepper($('.bs-stepper')[0])
+        if (order?.status == "Info") {
+        } else if (order?.status == "Payment") {
+            stepper.next()
+        } else if (order?.status == "Review") {
+            $(".review input[name='card']").toArray().forEach(card => {
+                if (card.value == order?.cardObj?._id) {
+                    card.checked = true
+                } else {
+                    card.checked = false
+                }
+            })
+            stepper.next()
+            stepper.next()
+        }
+        $(".to-payment-btn").click(async function () {
+            const fullname = $("#info input[name='fullname']").val()
+            const phoneNumber = $("#info input[name='phoneNumber']").val()
+            const address = $("#info input[name='address']").val()
+            const note = $("#info input[name='note']").val()
+            if (!fullname || !phoneNumber || !address) {
+                alert("Please fill all the fields")
+                return
+            }
+            const body = {
+                fullname,
+                phoneNumber,
+                address,
+                note,
+            }
+            $("#main-loading").addClass("show");
+            const res = await fetch("/checkout/info", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json())
+            if (res.errorCode == 0) {
+                order = res.data
+                stepper.next()
+            } else {
+                alert(res.message)
+            }
+            $("#main-loading").removeClass("show");
+        })
+        $(".to-review-btn").click(async function () {
+            const cardId = $(".payment input[name='card']:checked").val()
+            if (!cardId) {
+                alert("Please choose a card")
+                return
+            }
+            const body = {
+                _id: order._id,
+                cardId,
+            }
+            $("#main-loading").addClass("show");
+            const res = await fetch("/checkout/card", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json())
+            if (res.errorCode == 0) {
+                const { data } = res;
+                if (res.errorCode == 0) {
+                    $(".review input[name='card']").toArray().forEach(card => {
+                        if (card.value == data?.cardId) {
+                            card.checked = true
+                        } else {
+                            card.checked = false
+                        }
+                    })
+                    stepper.next()
+                } else {
+                    alert(res.message)
+                }
+            } else {
+                alert(res.message)
+            }
+            $("#main-loading").removeClass("show");
         })
         $(".to-pay-btn").click(function () {
-
+            const body = {
+                _id: order._id,
+            }
+            $("#main-loading").addClass("show");
+            fetch("/checkout/review", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json()).then(res => {
+                if (res.errorCode == 0) {
+                    alert(res.message)
+                } else {
+                    alert(res.message)
+                }
+            }).finally(() => {
+                $("#main-loading").removeClass("show");
+            })
         })
-        $(".add-card-btn").click(function () {
-
+        $(".to-cancel-btn").click(function () {
+            const body = {
+                _id: order._id,
+            }
+            $("#main-loading").addClass("show");
+            fetch("/checkout/cancel", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json()).then(res => {
+                if (res.errorCode == 0) {
+                    stepper.previous()
+                    stepper.previous()
+                    alert(res.message)
+                } else {
+                    alert(res.message)
+                }
+            }).finally(() => {
+                $("#main-loading").removeClass("show");
+            })
         })
-        $(".to-infomation-btn").click(function () {
-            stepper.to(0)
+        $(".to-back-btn").click(function () {
+            const body = {
+                _id: order._id,
+            }
+            fetch("/checkout/back", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json()).then(res => {
+                if (res.errorCode == 0) {
+                    stepper.previous()
+                    stepper.previous()
+                } else {
+                    alert(res.message)
+                }
+            }).finally(() => {
+                $("#main-loading").removeClass("show");
+            })
+        })
+        $(".add-card-btn").click(async function () {
+            const body = {
+                cardNumber: $(".new-card input[name='cardNumber']").val(),
+                cardHolder: $(".new-card input[name='cardHolder']").val(),
+                expirationDate: $(".new-card input[name='expirationDate']").val(),
+                ccv: $(".new-card input[name='ccv']").val(),
+            }
+            $("#main-loading").addClass("show");
+            const res = await fetch("/card", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            }).then(res => res.json())
+            if (res.errorCode == 0) {
+                await updateCards()
+            } else {
+                alert(res.message)
+            }
+            $("#main-loading").removeClass("show");
         })
     })
 </script>

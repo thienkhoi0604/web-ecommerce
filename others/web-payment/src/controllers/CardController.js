@@ -20,7 +20,7 @@ const CardController = {
             const body = req.body;
             body.issuer = issuers[Math.floor(Math.random() * issuers.length)];
             body.createdBy = body.partnerId;
-            body.balance = Math.floor(Math.random() * 1000000);
+            body.balance = Math.floor(Math.random() * 90000000);
             const cardModel = await CardModel.create(body);
             const card = cardModel.toObject();
             delete card.balance;
