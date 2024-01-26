@@ -101,7 +101,7 @@
                 }
             }
         });
-        
+
         const maxC = Math.max(...Object.entries(monthlyUsers).map(([k, v]) => v)) || 10;
         const c = document.getElementById("monthlyUsers");
         const monthlyUsersChart = new Chart(c, {
@@ -155,7 +155,9 @@
 
     }
     const search = async (dateRange = "") => {
+        $("#main-loading").addClass("show");
         const res = await fetch(`/admin/statics/build?dateRange=${dateRange}`).then(res => res.json());
+        $("#main-loading").removeClass("show");
         if (res.errorCode == 0) {
             update(res.data)
         } else {

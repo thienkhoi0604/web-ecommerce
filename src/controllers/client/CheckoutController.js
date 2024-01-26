@@ -15,7 +15,7 @@ const CheckoutController = {
         })
             .populate('cardObj')
             .lean();
-        const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, cartId: null }).populate('productObj').lean();
+        const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).populate('productObj').lean();
         const cards = await CardModel.find({ isDeleted: false }).limit(5).sort({ updatedAt: -1, createdAt: -1 }).lean();
         const total = carts.reduce((total, item) => total + (item?.number * item?.productObj?.discountPrice || 0), 0);
         res.render('client/checkout', Response({ res, data: { order, carts, total, cards } }));
@@ -88,7 +88,7 @@ const CheckoutController = {
         const _user = res.locals._user;
         const { _id } = req.body;
         const order = await OrderModel.findById(_id).populate('cardObj');
-        const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, cartId: null }).populate('productObj').lean();
+        const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).populate('productObj').lean();
         const total = carts.reduce((total, item) => total + (item?.number * item?.productObj?.discountPrice || 0), 0);
         const url = `${process.env.PAYMENT_SERVICE_URL}/payment/pay`;
         const response = await fetch(url, {
