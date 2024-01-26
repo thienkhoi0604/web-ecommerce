@@ -39,14 +39,16 @@
                 </div>
             </form>
         </div>
+        {{#if logged}}
         <div class="col-lg-3 col-6 text-right">
             <a href="/cart" class="btn border">
                 <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">10</span>
+                <span class="badge">{{cartCount}}</span>
             </a>
             <a href="/profile" class="btn border">
                 <i class="fas fa-user text-primary"></i>
             </a>
         </div>
+        {{/if}}
     </div>
 </div>

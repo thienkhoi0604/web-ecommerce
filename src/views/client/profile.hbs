@@ -487,6 +487,7 @@
                 const body = {
                     ids
                 };
+                $("#main-loading").addClass("show");
                 const res = await fetch(`/card`, {
                     method: "DELETE",
                     headers: {

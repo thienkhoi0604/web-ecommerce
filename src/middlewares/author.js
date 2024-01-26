@@ -5,14 +5,29 @@ const { RESPONSE_CODE } = require('../constants');
 const author = (...userRoles) => {
     return (req, res, next) => {
         const token = req.cookies.auth || req.headers.auth;
+        const restful = req.headers["content-type"]?.toLocaleLowerCase() == "application/json";
         jwt.verify(token, process.env.SECRET_KEY, async (error, decode) => {
             if (!decode || Object.keys(decode)?.length <= 0) {
+                if (restful) {
+                    return res.json({
+                        errorCode: RESPONSE_CODE.REDIRECT,
+                        data: "/auth/login",
+                        message: "Token is invalid."
+                    });
+                }
                 res.clearCookie("auth");
                 return res.redirect("/auth/login");
             } else {
                 const { _id, exp, iat } = decode;
                 const expired = moment.unix(exp).isAfter(moment());
                 if (!expired) {
+                    if (restful) {
+                        return res.json({
+                            erroCode: RESPONSE_CODE.REDIRECT,
+                            data: "/auth/login",
+                            message: "Token is expired."
+                        });
+                    }
                     return res.redirect("/auth/login");
                 }
                 const user = await UserModel.findById({ _id });
@@ -30,10 +45,9 @@ const author = (...userRoles) => {
                         return res.redirect("/auth/login");
                     } else {
                         return res.json({
-                            error: {
-                                code: RESPONSE_CODE.NO_PERMISSION,
-                                message: "Your accout must have permisstion to do this action."
-                            }
+                            errorCode: RESPONSE_CODE.REDIRECT,
+                            data: "/auth/login",
+                            message: "Your accout must have permisstion to do this action."
                         });
                     }
                 }

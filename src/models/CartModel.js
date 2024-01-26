@@ -12,29 +12,33 @@ const CartModel = new Schema(
       ref: 'user',
     },
     productId: {
-        type: mongoose.ObjectId,
-        ref: 'products',
+      type: mongoose.ObjectId,
+      ref: 'products',
     },
     number: {
       type: Number,
       default: 1,
     },
+    orderId: {
+      type: mongoose.ObjectId,
+      ref: 'orders',
+    },
     createdBy: {
-      type: String,
+      type: mongoose.ObjectId,
       required: true,
     },
     updatedBy: {
-      type: String,
+      type: mongoose.ObjectId,
     },
     deletedBy: {
-      type: String,
+      type: mongoose.ObjectId,
     },
     deletedAt: {
       type: Date,
     },
     isDeleted: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false
     },
   },
   {
@@ -42,7 +46,6 @@ const CartModel = new Schema(
     timestamps: true,
   }
 );
-
 CartModel.virtual("createdByObj", {
   ref: "users",
   localField: "createdBy",
@@ -61,5 +64,16 @@ CartModel.virtual("deletedByObj", {
   foreignField: "_id",
   justOne: true
 });
-
+CartModel.virtual("orderObj", {
+  ref: "orders",
+  localField: "orderId",
+  foreignField: "_id",
+  justOne: true
+});
+CartModel.virtual("productObj", {
+  ref: "products",
+  localField: "productId",
+  foreignField: "_id",
+  justOne: true
+});
 module.exports = mongoose.model('carts', CartModel);

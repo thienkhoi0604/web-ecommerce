@@ -29,8 +29,10 @@
                 <tbody class="align-left" id="list-products-cart">
                     {{#each products}}
                     <tr>
-                        <td class="align-middle"><img src={{this.images.url}} alt=""
-                                style="width: 50px; margin-right: 10px">{{this.name}}</td>
+                        <td class="align-middle">
+                            <img src={{this.images.url}} alt="" style="width: 50px; margin-right: 10px">
+                            <a href="/products/{{this._id}}">{{this.name}}</a>
+                        </td>
                         <td class="align-middle">{{this.discountPrice}}</td>
                         <td class="align-middle">
                             <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -39,7 +41,8 @@
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
-                                <input id={{this._id}} type="text" class="form-control form-control-sm bg-secondary text-center quantity-product"
+                                <input id={{this._id}} type="text"
+                                    class="form-control form-control-sm bg-secondary text-center quantity-product"
                                     value={{this.quantity}}>
                                 <div class="input-group-btn">
                                     <button id={{this._id}} class="btn btn-sm btn-primary btn-plus">
@@ -49,8 +52,11 @@
                             </div>
                         </td>
                         <td class="align-middle">{{this.total}}</td>
-                        <td class="align-middle text-center"><button id={{this._id}} class="btn btn-sm btn-primary btn-delete"><i
-                                    class="fa fa-times"></i></button></td>
+                        <td class="align-middle">
+                            <button id="{{this.cartId}}" class="btn btn-sm btn-primary btn-delete-cart btn-delete">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -84,7 +90,7 @@
                         <h5 class="font-weight-bold">Total</h5>
                         <h5 class="font-weight-bold"></h5>
                     </div>
-                    <button class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                    <a href="/checkout" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</a>
                 </div>
             </div>
         </div>
@@ -143,8 +149,10 @@
         products.forEach(product => {
             tbody.append(`
                 <tr>
-                    <td class="align-middle"><img src="${product.images.url}" alt=""
-                            style="width: 50px; margin-right: 10px">${product.name}</td>
+                    <td class="align-middle">
+                        <img src="${product.images.url}" alt="" style="width: 50px; margin-right: 10px">
+                        <a href="/products/${product._id}">${product.name}</a>
+                    </td>
                     <td class="align-middle">${product.discountPrice}</td>
                     <td class="align-middle">
                         <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -163,8 +171,11 @@
                         </div>
                     </td>
                     <td class="align-middle">${product.total}</td>
-                    <td class="align-middle text-center"><button id="${product._id}"" class="btn btn-sm btn-primary btn-delete"><i
-                                class="fa fa-times"></i></button></td>
+                    <td class="align-middle">
+                        <button id="${product.cartId}" class="btn-delete-cart btn-delete btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td>
                 </tr>
             `);
         });
@@ -304,9 +315,7 @@
     const handleKeyPressInputQuantityProduct = async (element) => {
         $(".quantity-product").on("keydown", async function (event) {
             try {
-                if(event.which === 13) {
-                    $("#main-loading").addClass("show");
-
+                if (event.which === 13) {
                     const productId = this.id;
                     const quantity = this.value;
 
@@ -352,14 +361,14 @@
             try {
                 $("#main-loading").addClass("show");
 
-                const productId = elementClicked.id;
-                
+                const productId = elementClicked?.id;
+
                 const res = await fetch(`/cart`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ productId })
+                    body: JSON.stringify({ ids: [productId] })
                 }).then(res => res.json());
                 if (res.errorCode == 0) {
                     $("#delete").modal("hide");

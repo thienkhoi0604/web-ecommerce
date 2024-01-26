@@ -200,10 +200,14 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="/products/${card._id}" class="btn btn-sm text-dark p-0"><i
-                                    class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                            <a href="/cart" class="btn btn-sm text-dark p-0"><i
-                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                            <a href="/products/${card._id}" class="btn btn-sm text-dark p-0">
+                                <i class="fas fa-eye text-primary mr-1"></i>
+                                View Detail
+                            </a>
+                            <button id="${card._id}" class="btn-add-cart btn btn-sm text-dark p-0">
+                                <i class="fas fa-shopping-cart text-primary mr-1"></i>
+                                Add To Cart
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -325,6 +329,30 @@
             $(".sort-by .active").removeClass("active");
             $(this).addClass("active");
             searchAction();
+        });
+
+        $(".btn-add-cart").click(async function () {
+            try {
+                const productId = this.id;
+                const res = await fetch("/cart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    alert(res.message)
+                } else if (res.errorCode == 7) {
+                    alert(res.message)
+                    const url = res.data;
+                    window.location.href = url;
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         });
     })
 </script>

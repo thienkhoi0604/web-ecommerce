@@ -10,7 +10,8 @@ const Helpers = {
         return v1 == v2 ? options.fn(this) : options.inverse(this);
     },
     plus: (a, b) => a + b,
-    split: (a) => !!a ? `${a}`?.split(",") : []
+    split: (a) => !!a ? `${a}`?.split(",") : [],
+    multiply: (a, b) => a * b || 0,
 }
 module.exports = {
     Helpers

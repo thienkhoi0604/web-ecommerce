@@ -22,7 +22,7 @@ const AuthController = {
         try {
             const user = req.body;
             const data = await authService.doLogin(user);
-            if (data.error.code == RESPONSE_CODE.SUCCESS) {
+            if (data.errorCode == RESPONSE_CODE.SUCCESS) {
                 const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
                 if (data.user.role == USER_ROLE.ADMIN) {
@@ -64,7 +64,7 @@ const AuthController = {
         try {
             const user = req.body;
             const data = await authService.doRegister(user);
-            if (data.error.code == RESPONSE_CODE.SUCCESS) {
+            if (data.errorCode == RESPONSE_CODE.SUCCESS) {
                 const auth = jwt.sign(data.user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
                 res.cookie("auth", auth);
             }

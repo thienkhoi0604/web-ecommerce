@@ -8,7 +8,7 @@ const CartController = {
         try {
             const _user = res.locals._user;
             const categories = await categoryService.getNestedAll();
-            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false }).lean();
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).lean();
 
             if (!carts) {
                 return res.render('client/cart', Response({ res, data: { products: null, categories } }));
@@ -26,6 +26,7 @@ const CartController = {
                     ...product.toObject(),
                     quantity: cart?.number,
                     total: cart?.number * product.discountPrice,
+                    cartId: cart?._id
                 }
             })
 
@@ -38,18 +39,12 @@ const CartController = {
     async add(req, res, next) {
         try {
             const _user = res.locals._user;
-            const { productId } = req.body;
+            const { productId, quantity = 1 } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if (cartExist) {
-                if (cartExist.isDeleted) {
-                    cartExist.number = 1;
-                    cartExist.isDeleted = false;
-                    cartExist.deletedBy = null;
-                } else {
-                    cartExist.number += 1;
-                }
-                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
+                cartExist.number += Number.parseInt(quantity);
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -61,7 +56,7 @@ const CartController = {
             const product = await ProductModel.findById({ _id: productId });
             params.productId = product?._id;
             params.createdBy = _user?._id;
-
+            params.number = Number.parseInt(quantity);
             const cart = await CartModel.create(params);
             res.json({
                 data: cart.toObject(),
@@ -79,27 +74,28 @@ const CartController = {
     async getAllByUser(req, res, next) {
         try {
             const _user = req.locals._user;
-            const carts =  await CartModel.find({ createdBy: _user?._id, isDeleted: false }).lean();
-    
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).lean();
+
             if (!carts) {
                 return res.json({
                     errorCode: RESPONSE_CODE.ERROR,
                     message: "Fetch carts failed!"
                 });
             }
-    
+
             const productIds = carts.map((element) => element.productId)
-    
+
             const products = await ProductModel.find({
                 '_id': { $in: productIds }
             })
-    
+
             const result = products.map((product) => {
                 const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
                 return {
                     ...product.toObject(),
                     quantity: cart?.number,
                     total: cart?.number * product.discountPrice,
+                    cartId: cart?._id
                 }
             })
 
@@ -119,16 +115,19 @@ const CartController = {
     async updateQuantity(req, res, next) {
         try {
             const _user = req.locals._user;
-            const { productId, quantity } = req.body;
+            const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
-            if(cartExist) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
                 cartExist.number = quantity;
 
-                if (quantity < 0) {
-                    cartExist.number = 0;
+                if (quantity <= 0) {
+                    return res.json({
+                        errorCode: RESPONSE_CODE.ERROR,
+                        message: "Can not update quantity product to cart! (min = 0)"
+                    });
                 }
-                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -153,10 +152,10 @@ const CartController = {
             const _user = res.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
-            if (cartExist) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
                 cartExist.number += 1;
-                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -181,13 +180,16 @@ const CartController = {
             const _user = req.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
-            if(cartExist) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
                 cartExist.number -= 1;
                 if (cartExist.number <= 0) {
-                    cartExist.number = 1;
+                    return res.json({
+                        errorCode: RESPONSE_CODE.ERROR,
+                        message: "Can not minus product to cart! (min = 0)"
+                    });
                 }
-                const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
+                const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -209,30 +211,22 @@ const CartController = {
     },
     async delete(req, res, next) {
         try {
-            const _user = res.locals._user;
-            const { productId } = req.body;
-
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false });
-            if(cartExist) {
-                cartExist.isDeleted = true;
-                cartExist.deletedBy = _user?._id
-                const deletedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
-                return res.json({
-                    data: deletedCart,
-                    errorCode: RESPONSE_CODE.SUCCESS,
-                    message: "Delete product from cart successfully!"
-                });
+            const _user = req.locals._user;
+            let { ids } = req.body;
+            if (typeof ids === 'string') {
+                ids = [ids];
             }
-
+            const resonse = await CartModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            console.log(resonse);
             res.json({
-                errorCode: RESPONSE_CODE.ERROR,
-                message: "Delete product from cart fail!"
+                errorCode: RESPONSE_CODE.SUCCESS,
+                message: "Delete carts successfully!"
             });
-        } catch (error) {
-            console.log(error);
+        } catch (e) {
+            console.log(e);
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
-                message: error.message
+                message: e.message
             });
         }
     },

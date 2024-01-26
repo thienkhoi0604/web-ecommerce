@@ -73,16 +73,17 @@
                             <i class="fa fa-minus"></i>
                         </button>
                     </div>
-                    <input type="text" class="form-control bg-secondary text-center" value="1">
+                    <input type="text" class="form-control bg-secondary text-center quantity-add-cart {{product._id}}"
+                        value="1">
                     <div class="input-group-btn">
                         <button class="btn btn-primary btn-plus">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>
                 </div>
-                <a href="/cart" class="btn btn-primary px-3">
+                <button id="{{product._id}}" class="btn-add-cart btn btn-primary px-3">
                     <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
-                </a>
+                </button>
             </div>
             <div class="d-flex pt-2">
                 <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
@@ -165,11 +166,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h4 class="mb-4">1 review for "{{product.name}}"</h4>
+                            {{#each product.reviews}}
                             <div class="media mb-4">
-                                <img src="{{product.reviews.images}}" alt="Image" class="img-fluid mr-3 mt-1"
-                                    style="width: 45px;">
+                                <img src="{{this.images}}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                 <div class="media-body">
-                                    <h6>{{product.reviews.user}}<small> - <i>01 Jan 2045</i></small></h6>
+                                    <h6>{{this.user}}<small> - <i>01 Jan 2045</i></small></h6>
                                     <div class="text-primary mb-2">
                                         <i class="fas fa-star"></i>
                                         <i class="fas fa-star"></i>
@@ -177,9 +178,10 @@
                                         <i class="fas fa-star-half-alt"></i>
                                         <i class="far fa-star"></i>
                                     </div>
-                                    <p>{{product.reviews.comment}}</p>
+                                    <p>{{this.comment}}</p>
                                 </div>
                             </div>
+                            {{/each}}
                         </div>
                         <div class="col-md-6">
                             <h4 class="mb-4">Leave a review</h4>
@@ -245,8 +247,10 @@
                         <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-eye text-primary mr-1"></i>View
                             Detail</a>
-                        <a href="#" class="btn btn-sm text-dark p-0"><i
-                                class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                        <button id="{{this._id}}" class="btn-add-cart btn btn-sm text-dark p-0">
+                            <i class="fas fa-shopping-cart text-primary mr-1"></i>
+                            Add To Cart
+                        </button>
                     </div>
                 </div>
                 {{/each}}
@@ -255,3 +259,30 @@
     </div>
 </div>
 <!-- Products End -->
+<script>
+    $(document).ready(async function () {
+        $(".btn-add-cart").click(async function () {
+            try {
+                const productId = this.id;
+                const quantity = $(".quantity-add-cart").val();
+                const res = await fetch("/cart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ productId, quantity })
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    alert(res.message)
+                } else if (res.errorCode == 7) {
+                    alert(res.message)
+                    window.location.href = "/auth/login";
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+
+            }
+        })
+    })
+</script>
