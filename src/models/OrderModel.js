@@ -12,10 +12,10 @@ const OrderModel = new Schema(
       ref: 'user',
       required: true,
     },
-    products: [
+    cartIds: [
       {
         type: mongoose.ObjectId,
-        ref: 'products',
+        required: true,
       },
     ],
     totalPrice: {
@@ -24,17 +24,27 @@ const OrderModel = new Schema(
     },
     status: {
       type: String,
-      default: 'Not Process',
-      enum: ['Not Process', 'Processing', 'Delivering', 'Shipped', 'Cancel'],
+      default: 'Info',
+      enum: ['Info', 'Payment', 'Review', 'Proccess', 'Delivering', 'Shipped', 'Cancel'],
     },
-    shippingAddress: {
+    fullname: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    address: {
       type: Object,
       required: true,
     },
-    paymentId: {
+    note: {
+      type: String,
+    },
+    cardId: {
       type: mongoose.ObjectId,
-      ref: 'payments',
-      required: true,
+      ref: 'cards',
     },
     paidAt: {
       type: Date,
@@ -81,6 +91,18 @@ OrderModel.virtual("updatedByObj", {
 OrderModel.virtual("deletedByObj", {
   ref: "users",
   localField: "deletedBy",
+  foreignField: "_id",
+  justOne: true
+});
+OrderModel.virtual("cartObjs", {
+  ref: "carts",
+  localField: "cartIds",
+  foreignField: "_id",
+  justOne: false
+});
+OrderModel.virtual("cardObj", {
+  ref: "cards",
+  localField: "cardId",
   foreignField: "_id",
   justOne: true
 });

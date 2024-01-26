@@ -53,7 +53,7 @@
                         </td>
                         <td class="align-middle">{{this.total}}</td>
                         <td class="align-middle">
-                            <button id="{{this.cartId}}" class="btn btn-sm btn-primary btn-delete-cart">
+                            <button id="{{this.cartId}}" class="btn btn-sm btn-primary btn-delete-cart btn-delete">
                                 <i class="fa fa-times"></i>
                             </button>
                         </td>
@@ -171,8 +171,11 @@
                         </div>
                     </td>
                     <td class="align-middle">${product.total}</td>
-                    <td class="align-middle"><button class="btn btn-sm btn-primary"><i
-                                class="fa fa-times"></i></button></td>
+                    <td class="align-middle">
+                        <button id="${product.cartId}" class="btn-delete-cart btn-delete btn btn-sm btn-primary">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td>
                 </tr>
             `);
         });
@@ -312,7 +315,7 @@
     const handleKeyPressInputQuantityProduct = async (element) => {
         $(".quantity-product").on("keydown", async function (event) {
             try {
-                if(event.which === 13) {
+                if (event.which === 13) {
                     const productId = this.id;
                     const quantity = this.value;
 
@@ -358,14 +361,14 @@
             try {
                 $("#main-loading").addClass("show");
 
-                const productId = elementClicked.id;
-                
+                const productId = elementClicked?.id;
+
                 const res = await fetch(`/cart`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ productId })
+                    body: JSON.stringify({ ids: [productId] })
                 }).then(res => res.json());
                 if (res.errorCode == 0) {
                     $("#delete").modal("hide");
@@ -404,27 +407,5 @@
         renderSubTotalPrice(subTotalPrice);
         renderShipPrice();
         renderTotalPrice(subTotalPrice);
-        $(".btn-delete-cart").click(async function () {
-            try {
-                const productId = this.id;
-                const res = await fetch("/cart", {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ ids: [productId] })
-                }).then(res => res.json());
-                if (res.errorCode == 0) {
-                    const response = await getAllByUser();
-                    if (response) {
-                        renderProducts(response.data.products);
-                    }
-                } else {
-                    alert(res.message);
-                }
-            } catch (error) {
-                alert(error.message);
-            }
-        })
     })
 </script>

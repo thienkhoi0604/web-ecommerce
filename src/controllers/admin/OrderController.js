@@ -44,7 +44,7 @@ const OrderController = {
             })
             delete req.query.updatedAt;
         }
-        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "role"];
+        const equalFields = ["isDeleted", "createdBy", "updatedBy", "deletedBy", "status", "totalPrice"];
         for (let key in req.query) {
             const value = req.query[key];
             if (equalFields.includes(key) && !!value) {
