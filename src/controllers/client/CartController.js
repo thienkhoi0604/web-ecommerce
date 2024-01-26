@@ -8,7 +8,7 @@ const CartController = {
         try {
             const _user = res.locals._user;
             const categories = await categoryService.getNestedAll();
-            const carts = await CartModel.find({ createdBy: _user?._id }).lean();
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).lean();
 
             if (!carts) {
                 return res.render('client/cart', Response({ res, data: { products: null, categories } }));
@@ -26,6 +26,7 @@ const CartController = {
                     ...product.toObject(),
                     quantity: cart?.number,
                     total: cart?.number * product.discountPrice,
+                    cartId: cart?._id
                 }
             })
 
@@ -38,11 +39,11 @@ const CartController = {
     async add(req, res, next) {
         try {
             const _user = res.locals._user;
-            const { productId } = req.body;
+            const { productId, quantity = 1 } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if (cartExist._id) {
-                cartExist.number += 1;
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId, number: quantity, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
+                cartExist.number += Number.parseInt(quantity);
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
                     data: updatedCart,
@@ -73,27 +74,28 @@ const CartController = {
     async getAllByUser(req, res, next) {
         try {
             const _user = req.locals._user;
-            const carts =  await CartModel.find({ createdBy: _user?._id }).lean();
-    
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).lean();
+
             if (!carts) {
                 return res.json({
                     errorCode: RESPONSE_CODE.ERROR,
                     message: "Fetch carts failed!"
                 });
             }
-    
+
             const productIds = carts.map((element) => element.productId)
-    
+
             const products = await ProductModel.find({
                 '_id': { $in: productIds }
             })
-    
+
             const result = products.map((product) => {
                 const cart = carts.find((cart) => cart.productId.toString() === product._id.toString())
                 return {
                     ...product.toObject(),
                     quantity: cart?.number,
                     total: cart?.number * product.discountPrice,
+                    cartId: cart?._id
                 }
             })
 
@@ -113,14 +115,18 @@ const CartController = {
     async updateQuantity(req, res, next) {
         try {
             const _user = req.locals._user;
-            const { productId, quantity } = req.body;
+            const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist?._id) {
+                const quantity = Number.parseInt(req.body.quantity);
                 cartExist.number = quantity;
 
-                if (quantity < 0) {
-                    cartExist.number = 0;
+                if (quantity <= 0) {
+                    return res.json({
+                        errorCode: RESPONSE_CODE.ERROR,
+                        message: "Can not update quantity product to cart! (min = 0)"
+                    });
                 }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
@@ -147,7 +153,7 @@ const CartController = {
             const _user = res.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
             if (cartExist._id) {
                 cartExist.number += 1;
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
@@ -175,11 +181,14 @@ const CartController = {
             const _user = req.locals._user;
             const { productId } = req.body;
 
-            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId });
-            if(cartExist._id) {
+            const cartExist = await CartModel.findOne({ createdBy: _user?._id, productId: productId, isDeleted: false, orderId: null });
+            if (cartExist._id) {
                 cartExist.number -= 1;
-                if (cartExist.number < 0) {
-                    cartExist.number = 0;
+                if (cartExist.number <= 0) {
+                    return res.json({
+                        errorCode: RESPONSE_CODE.ERROR,
+                        message: "Can not minus product to cart! (min = 0)"
+                    });
                 }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist._id, cartExist, { new: false }).lean();
                 return res.json({
@@ -202,7 +211,25 @@ const CartController = {
         }
     },
     async delete(req, res, next) {
-
+        try {
+            const _user = req.locals._user;
+            let { ids } = req.body;
+            if (typeof ids === 'string') {
+                ids = [ids];
+            }
+            const resonse = await CartModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            console.log(resonse);
+            res.json({
+                errorCode: RESPONSE_CODE.SUCCESS,
+                message: "Delete carts successfully!"
+            });
+        } catch (e) {
+            console.log(e);
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: e.message
+            });
+        }
     },
 }
 
