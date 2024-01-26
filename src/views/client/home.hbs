@@ -50,11 +50,14 @@
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between bg-light border">
-                    <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>View
-                        Detail</a>
+                    <a href="/products/{{this._id}}" class="btn btn-sm text-dark p-0">
+                        <i class="fas fa-eye text-primary mr-1"></i>
+                        ViewDetail
+                    </a>
                     <button id={{this._id}} class="btn btn-sm text-dark p-0 btn-add-cart" aria-details='{{this._id}}'>
-                        <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
+                        <i class="fas fa-shopping-cart text-primary mr-1"></i>
+                        Add To Cart
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,12 +88,17 @@
 <!-- Vendor End -->
 
 <script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
     $(document).ready(async function () {
         $(".btn-add-cart").click(async function () {
             try {
-            const productId = this.id;
+                const productId = this.id;
 
-            const res = await fetch("/cart", {
+                const res = await fetch("/cart", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -99,6 +107,9 @@
                 }).then(res => res.json());
                 if (res.errorCode == 0) {
                     alert(res.message)
+                } else if (res.errorCode == 7) {
+                    alert(res.message)
+                    window.location.href = "/auth/login";
                 } else {
                     alert(res.message);
                 }

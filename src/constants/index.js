@@ -10,6 +10,7 @@ const RESPONSE_CODE = {
     INVALID_CARD: 4,
     INVALID_TOKEN: 5,
     NO_ENGOUH_MONEY: 6,
+    REDIRECT: 7,
 }
 
 const USER_ROLE = {

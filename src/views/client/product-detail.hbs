@@ -73,7 +73,8 @@
                             <i class="fa fa-minus"></i>
                         </button>
                     </div>
-                    <input type="text" class="form-control bg-secondary text-center quantity-add-cart {{product._id}}" value="1">
+                    <input type="text" class="form-control bg-secondary text-center quantity-add-cart {{product._id}}"
+                        value="1">
                     <div class="input-group-btn">
                         <button class="btn btn-primary btn-plus">
                             <i class="fa fa-plus"></i>
@@ -273,6 +274,9 @@
                 }).then(res => res.json());
                 if (res.errorCode == 0) {
                     alert(res.message)
+                } else if (res.errorCode == 7) {
+                    alert(res.message)
+                    window.location.href = "/auth/login";
                 } else {
                     alert(res.message);
                 }
