@@ -10,11 +10,14 @@ services:
         dockerfile: Dockerfile
       restart: always
       ports:
-        - "${PORT}:${PORT}"
+        - "443:${HTTPS_PORT}"
+        - "80:${PORT}"
       volumes:
         - /opt/web-ecommerce/logs:/logs
       networks:
         - web-ecommerce
+      environment:
+        - PAYMENT_SERVICE_URL=http://web-payment:8880
 
 networks:
   web-ecommerce:
