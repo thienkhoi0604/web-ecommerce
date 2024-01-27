@@ -170,6 +170,9 @@ const ProductController = {
             ];
             const updateProduct = updateFields.reduce((acc, field) => {
                 const value = body[field];
+                if (field === "images" && !value) {
+                    return acc;
+                }
                 acc[field] = value;
                 return acc;
             }, {});
