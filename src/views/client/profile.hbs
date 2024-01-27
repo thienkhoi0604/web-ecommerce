@@ -25,7 +25,7 @@
                                     <h6 class="mb-0">Old</h6>
                                 </div>
                                 <div class="col-sm-8 text-secondary">
-                                    <input type="password" class="form-control" value=""
+                                    <input type="password" class="form-control" name="password" value=""
                                         placeholder="Enter old password">
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                     <h6 class="mb-0">New</h6>
                                 </div>
                                 <div class="col-sm-8 text-secondary">
-                                    <input type="password" class="form-control" value=""
+                                    <input type="password" class="form-control" value="" name="newPassword"
                                         placeholder="Enter new password">
                                 </div>
                             </div>
@@ -43,11 +43,12 @@
                                     <h6 class="mb-0">Repeat</h6>
                                 </div>
                                 <div class="col-sm-8 text-secondary">
-                                    <input type="password" class="form-control" value="" placeholder="Retype password">
+                                    <input type="password" class="form-control" value="" name="rePassowrdF"
+                                        placeholder="Retype password">
                                 </div>
                             </div>
                             <div class="row mr-2" style="display: flex; justify-content: right;">
-                                <input type="button" class="btn btn-primary px-4" value="Save">
+                                <input type="button" class="btn btn-primary px-4 btn-update-password" value="Save">
                             </div>
                         </ul>
                     </div>
@@ -83,7 +84,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Adress</h6>
+                                <h6 class="mb-0">Address</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
                                 <input type="text" class="form-control" name="address"
@@ -102,7 +103,7 @@
                         <div class="row">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="button" class="btn btn-primary px-4" value="Save Changes">
+                                <input type="button" class="btn btn-primary px-4 btn-update-profile" value="Save Changes">
                             </div>
                         </div>
                     </div>
@@ -510,5 +511,82 @@
                 $("#main-loading").removeClass("show");
             }
         });
+        $(".btn-update-password").click(async () => {
+            try {
+                const password = $("input[name='password']").val();
+                const newPassword = $("input[name='newPassword']").val();
+                const rePassowrdF = $("input[name='rePassowrdF']").val();
+                if (password.length == 0) {
+                    alert("Password must not be empty");
+                    return;
+                }
+                if (newPassword.length < 6) {
+                    alert("Password must be at least 6 characters");
+                    return;
+                }
+                if (newPassword != rePassowrdF) {
+                    alert("Password and retype password must be the same");
+                    return;
+                }
+                const body = {
+                    password,
+                    newPassword
+                };
+                const res = await fetch("/profile/update-password", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    alert("Update password successfully");
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        })
+        $(".btn-update-profile").click(async () => {
+            try {
+                const fullname = $("input[name='fullname']").val();
+                const email = $("input[name='email']").val();
+                const phone = $("input[name='phone']").val();
+                const address = $("input[name='address']").val();
+                if (fullname.length == 0) {
+                    alert("Fullname must not be empty");
+                    return;
+                }
+                if (phone.length == 0) {
+                    alert("Phone must not be empty");
+                    return;
+                }
+                if (email.length == 0) {
+                    alert("Email must not be empty");
+                    return;
+                }
+                const body = {
+                    fullname,
+                    email,
+                    phone,
+                    address
+                };
+                const res = await fetch("/profile", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+                if (res.errorCode == 0) {
+                    alert("Update profile successfully");
+                } else {
+                    alert(res.message);
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        })
     });
 </script>

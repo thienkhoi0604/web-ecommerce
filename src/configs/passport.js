@@ -9,16 +9,21 @@ passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     callbackURL: 'http://localhost:8080/auth/facebook/callback',
-    profileFields: ['id', 'displayName'],
+    profileFields: ['id', 'displayName', 'email'],
 }, async (accessToken, refreshToken, profile, done) => {
     const user = {
         id: profile.id,
         fullname: profile.displayName,
-        email: profile.id,
-        password: null,
-        source: 'facebook'
+        email: profile?.emails?.[0]?.value,
+        password: "123456",
+        source: 'facebook',
     };
-    const existedUser = await UserModel.findOne({ id: user.id });
+    const existedUser = await UserModel.findOne({
+        $or: [
+            { id: user.id },
+            { email: profile?.emails?.[0]?.value },
+        ]
+    }).lean();
     if (existedUser !== null) {
         return done(null, existedUser);
     }
@@ -30,20 +35,26 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRECT,
     callbackURL: 'http://localhost:8080/auth/google/callback',
-}, async (token, tokenSecret, profile, done) => {
+    passReqToCallback: true
+}, async (request, accessToken, refreshToken, profile, done) => {
     const user = {
         id: profile.id,
         fullname: profile.displayName,
-        email: profile.id,
-        password: null,
+        email: profile?.emails?.[0]?.value,
+        password: "123456",
         source: 'google',
     };
-    const existedUser = await UserModel.findOne({ id: user.id });
+    const existedUser = await UserModel.findOne({
+        $or: [
+            { id: user.id },
+            { email: profile?.emails?.[0]?.value }, F
+        ]
+    }).lean();
     if (existedUser !== null) {
         return done(null, existedUser);
     }
     const newUser = await UserModel.create(user);
-    return done(null, newUser);
+    return done(null, newUser.toObject());
 }));
 
 passport.serializeUser((user, done) => {

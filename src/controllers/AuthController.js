@@ -105,8 +105,8 @@ const AuthController = {
     },
     loginWithGg: passport.authenticate('google', {
         scope: [
-            'profile',
-            'email'
+            'email',
+            'profile'
         ],
     }),
     async doLoginWithGg(req, res, next) {

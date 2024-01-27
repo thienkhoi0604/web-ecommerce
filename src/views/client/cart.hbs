@@ -150,7 +150,7 @@
             tbody.append(`
                 <tr>
                     <td class="align-middle">
-                        <img src="${product.images.url}" alt="" style="width: 50px; margin-right: 10px">
+                        <img src="${product?.images?.url}" alt="" style="width: 50px; margin-right: 10px">
                         <a href="/products/${product._id}">${product.name}</a>
                     </td>
                     <td class="align-middle">${product.discountPrice}</td>

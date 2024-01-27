@@ -20,22 +20,22 @@ const ProductController = {
         try {
             if (!req.file) {
                 res.status(400).json({
-                  msg: "No files were uploaded. Try uploading an image",
+                    msg: "No files were uploaded. Try uploading an image",
                 });
                 return;
-              }
-            
-              const uploadFile = req.file;
-            
-              const result = await cloudinary.uploader.upload(uploadFile.path, {
+            }
+
+            const uploadFile = req.file;
+
+            const result = await cloudinary.uploader.upload(uploadFile.path, {
                 public_id: uploadFile.name,
                 resource_type: "auto",
                 folder: "ecommerce",
                 use_filename: true,
                 unique_filename: false,
-              });
-            
-              if (result.url) {
+            });
+
+            if (result.url) {
                 res.json({
                     data: {
                         public_id: result.public_id,
@@ -44,13 +44,13 @@ const ProductController = {
                     errorCode: RESPONSE_CODE.SUCCESS,
                     message: "Add image successfully!"
                 });
-              } else {
+            } else {
                 res.json({
                     errorCode: RESPONSE_CODE.ERROR,
                     message: "Add image failed!"
                 });
-              }
-            
+            }
+
         } catch (e) {
             console.log(e);
             res.json({
