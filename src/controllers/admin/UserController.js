@@ -181,7 +181,7 @@ const UserController = {
                 message: e.message
             });
         }
-    }
+    },
 }
 
 module.exports = UserController;
