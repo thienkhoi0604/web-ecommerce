@@ -25,8 +25,8 @@ const UserModel = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please enter your password'],
-      minLength: [4, 'Password should be greater than 4 characters'],
+      // required: [true, 'Please enter your password'],
+      // minLength: [4, 'Password should be greater than 4 characters'],
     },
     paymentId: {
       type: mongoose.ObjectId,
