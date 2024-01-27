@@ -1,3 +1,4 @@
+const { logger } = require("../configs");
 const { RESPONSE_CODE } = require("../constants");
 const { CardModel } = require("../models");
 
@@ -14,14 +15,38 @@ const PaymentController = {
                 ccv
             });
             if (!card) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Card is invalid",
+                    })
+                })
                 return res.json({
                     errorCode: RESPONSE_CODE.INVALID_CARD,
                     message: "Card is invalid!"
                 });
             }
-            console.log(card.toJSON());
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Before pay!",
+                    card,
+                })
+            })
             const { balance } = card;
             if (balance < amount) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Not enough money!",
+                    })
+                })
                 return res.json({
                     errorCode: RESPONSE_CODE.NO_ENGOUH_MONEY,
                     message: "Not enough money!"
@@ -30,13 +55,29 @@ const PaymentController = {
             const newBalance = balance - amount;
             card.balance = newBalance;
             const newCard = await card.save();
-            console.log(newCard.toJSON());
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After pay!",
+                    newCard,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Pay successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -45,7 +86,6 @@ const PaymentController = {
     },
     topup: async (req, res, next) => {
         try {
-            console.log(req.body);
             const body = req.body;
             const { cardNumber, cardHolder, expirationDate, ccv, amount } = body;
             const card = await CardModel.findOne({
@@ -55,23 +95,55 @@ const PaymentController = {
                 ccv
             });
             if (!card) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Card is invalid",
+                    })
+                })
                 return res.json({
                     errorCode: RESPONSE_CODE.INVALID_CARD,
                     message: "Card is invalid!"
                 });
             }
-            console.log(card.toJSON());
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Before topup!",
+                    card,
+                })
+            })
             const { balance } = card;
             const newBalance = balance + amount;
             card.balance = newBalance;
             const newCard = await card.save();
-            console.log(newCard.toJSON());
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After topup!",
+                    newCard,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Topup successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message

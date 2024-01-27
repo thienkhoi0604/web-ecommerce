@@ -1,4 +1,5 @@
 const { Response } = require("../../commons");
+const { logger } = require("../../configs");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const { OrderModel } = require("../../models");
 
@@ -96,14 +97,41 @@ const OrderController = {
             }, {});
             updateUser.updatedBy = _user?._id;
             const { id } = body;
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Before update order!",
+                    updateUser,
+                    id,
+                })
+            })
             const updatedUser = await OrderModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After update order!",
+                    updatedUser,
+                })
+            })
             res.json({
                 data: updatedUser,
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Update order successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -118,12 +146,28 @@ const OrderController = {
         }
         try {
             const resonse = await OrderModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    resonse,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete ordersF successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message

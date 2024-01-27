@@ -2,6 +2,7 @@ const moment = require("moment");
 const { Response } = require("../../commons");
 const { LAYOUT, USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const UserModel = require("../../models/UserModel");
+const { logger } = require("../../configs");
 
 const UserController = {
     async index(req, res, next) {
@@ -114,13 +115,30 @@ const UserController = {
             updateUser.updatedBy = _user?._id;
             const { id } = body;
             const updatedUser = await UserModel.findByIdAndUpdate(id, updateUser, { new: false }).lean();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Update user successfully!",
+                    updatedUser
+                })
+            })
             res.json({
                 data: updatedUser,
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Update user successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Update user error!",
+                    error: e.message
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -135,12 +153,29 @@ const UserController = {
         }
         try {
             const resonse = await UserModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Delete users successfully!",
+                    resonse
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete users successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Delete user error!",
+                    error: e.message
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message

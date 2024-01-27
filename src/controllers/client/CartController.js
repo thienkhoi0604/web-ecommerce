@@ -2,6 +2,7 @@ const { Response } = require("../../commons");
 const { CartModel, ProductModel } = require("../../models");
 const { USER_ROLE, RESPONSE_CODE } = require("../../constants");
 const categoryService = require("../../services/categoryService");
+const { logger } = require("../../configs");
 
 const CartController = {
     async index(req, res, next) {
@@ -45,6 +46,14 @@ const CartController = {
             if (cartExist?._id) {
                 cartExist.number += Number.parseInt(quantity);
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Add product to exist cart successfully!",
+                    })
+                })
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -58,13 +67,29 @@ const CartController = {
             params.createdBy = _user?._id;
             params.number = Number.parseInt(quantity);
             const cart = await CartModel.create(params);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Add product to new cart successfully!",
+                })
+            })
             res.json({
                 data: cart.toObject(),
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Add product to cart successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -77,6 +102,14 @@ const CartController = {
             const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).lean();
 
             if (!carts) {
+                logger.log({
+                    level: 'error',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Fetch carts failed!",
+                    })
+                })
                 return res.json({
                     errorCode: RESPONSE_CODE.ERROR,
                     message: "Fetch carts failed!"
@@ -105,7 +138,15 @@ const CartController = {
                 message: "Get products by users successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -128,19 +169,42 @@ const CartController = {
                     });
                 }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Update quantity product to cart successfully!",
+                    })
+                })
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
                     message: "Update quantity product to cart successfully!"
                 });
             }
-
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Update quantity product to cart fail!",
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: "Update quantity product to cart fail!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -156,19 +220,42 @@ const CartController = {
             if (cartExist?._id) {
                 cartExist.number += 1;
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Add product to cart successfully!",
+                    })
+                })
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
                     message: "Add product to cart successfully!"
                 });
             }
-
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Add product to cart fail!",
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: "Add product to cart fail!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -184,25 +271,56 @@ const CartController = {
             if (cartExist?._id) {
                 cartExist.number -= 1;
                 if (cartExist.number <= 0) {
+                    logger.log({
+                        level: 'error',
+                        message: JSON.stringify({
+                            path: req.path,
+                            body: req.body,
+                            message: "Can not minus product to cart! (min = 0)",
+                        })
+                    })
                     return res.json({
                         errorCode: RESPONSE_CODE.ERROR,
                         message: "Can not minus product to cart! (min = 0)"
                     });
                 }
                 const updatedCart = await CartModel.findByIdAndUpdate(cartExist?._id, cartExist, { new: false }).lean();
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Minus product to cart successfully!",
+                    })
+                })
                 return res.json({
                     data: updatedCart,
                     errorCode: RESPONSE_CODE.SUCCESS,
                     message: "Minus product to cart successfully!"
                 });
             }
-
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Minus product to cart fail!",
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: "Minus product to cart fail!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -217,13 +335,28 @@ const CartController = {
                 ids = [ids];
             }
             const resonse = await CartModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
-            console.log(resonse);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Delete carts successfully!",
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete carts successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
