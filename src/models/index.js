@@ -4,7 +4,7 @@ const CategoryModel = require("./CategoryModel")
 const OrderModel = require("./OrderModel")
 const ProductModel = require("./ProductModel")
 const UserModel = require("./UserModel")
-const ShopModel = require("./shopModel")
+const ShopModel = require("./ShopModel")
 
 module.exports = {
     UserModel,
