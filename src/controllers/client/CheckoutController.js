@@ -1,4 +1,5 @@
 const { Response } = require("../../commons");
+const { logger } = require("../../configs");
 const { RESPONSE_CODE } = require("../../constants");
 const { OrderModel, CardModel, CartModel, ProductModel } = require("../../models");
 const categoryService = require("../../services/categoryService");
@@ -28,6 +29,14 @@ const CheckoutController = {
                 .populate('productObj')
                 .lean();
             if (carts.length === 0) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Cart is empty!",
+                    })
+                })
                 return res.json({
                     errorCode: RESPONSE_CODE.ERROR,
                     message: "Cart is empty!"
@@ -41,6 +50,15 @@ const CheckoutController = {
                 }
             }).lean();
             if (existOrder) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Checkout successfully!",
+                        existOrder
+                    })
+                })
                 return res.json({
                     data: existOrder,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -52,13 +70,30 @@ const CheckoutController = {
             body.createdBy = _user._id;
             body.status = "Payment";
             const order = await OrderModel.create(body);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Checkout successfully!",
+                    order
+                })
+            })
             res.json({
                 data: order,
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Checkout successfully!"
             });
         } catch (error) {
-            console.log(error);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: error.message,
@@ -69,7 +104,15 @@ const CheckoutController = {
         try {
             const { _id, cardId } = req.body;
             const response = await OrderModel.findOneAndUpdate({ _id }, { cardId, status: "Review" }, { new: false });
-            console.log(response);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After update order!",
+                    response,
+                })
+            })
             res.json({
                 data: {
                     cardId
@@ -78,6 +121,15 @@ const CheckoutController = {
                 message: "Checkout successfully!"
             });
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: error.message,
@@ -85,46 +137,80 @@ const CheckoutController = {
         }
     },
     async review(req, res, next) {
-        const _user = res.locals._user;
-        const { _id } = req.body;
-        const order = await OrderModel.findById(_id).populate('cardObj');
-        const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).populate('productObj').lean();
-        const total = carts.reduce((total, item) => total + (item?.number * item?.productObj?.discountPrice || 0), 0);
-        const url = `${process.env.PAYMENT_SERVICE_URL}/payment/pay`;
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${process.env.PAYMENT_SERVICE_SECRET}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                cardNumber: order?.cardObj?.cardNumber,
-                cardHolder: order?.cardObj?.cardHolder,
-                expirationDate: order?.cardObj?.expirationDate,
-                ccv: order?.cardObj?.ccv,
-                amount: total
+        try {
+            const _user = res.locals._user;
+            const { _id } = req.body;
+            const order = await OrderModel.findById(_id).populate('cardObj');
+            const carts = await CartModel.find({ createdBy: _user?._id, isDeleted: false, orderId: null }).populate('productObj').lean();
+            const total = carts.reduce((total, item) => total + (item?.number * item?.productObj?.discountPrice || 0), 0);
+            const url = `${process.env.PAYMENT_SERVICE_URL}/payment/pay`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${process.env.PAYMENT_SERVICE_SECRET}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    cardNumber: order?.cardObj?.cardNumber,
+                    cardHolder: order?.cardObj?.cardHolder,
+                    expirationDate: order?.cardObj?.expirationDate,
+                    ccv: order?.cardObj?.ccv,
+                    amount: total
+                })
+            }).then(res => res.json());
+            if (response.errorCode !== RESPONSE_CODE.SUCCESS) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Checkout error!",
+                        response
+                    })
+                })
+                return res.json({
+                    errorCode: response.errorCode,
+                    message: response.message
+                });
+            }
+            order.status = "Proccess";
+            await Promise.all(carts.map(async (item) => {
+                const product = await ProductModel.findById(item.productObj._id).lean();
+                product.quantity = product.quantity - item.number;
+                await ProductModel.updateOne({ _id: item.productObj._id }, { quantity: product.quantity });
+                await CartModel.updateOne({ _id: item._id }, { orderId: order._id });
+            }));
+            order.cartIds = carts.map(item => item._id);
+            order.paidAt = new Date();
+            await order.save();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Checkout successfully!",
+                    response
+                })
             })
-        }).then(res => res.json());
-        if (response.errorCode !== RESPONSE_CODE.SUCCESS) {
-            return res.json({
-                errorCode: response.errorCode,
-                message: response.message
+            res.json({
+                errorCode: RESPONSE_CODE.SUCCESS,
+                message: "Checkout successfully!"
+            });
+        } catch (error) {
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
+            res.json({
+                errorCode: RESPONSE_CODE.ERROR,
+                message: error.message,
             });
         }
-        order.status = "Proccess";
-        await Promise.all(carts.map(async (item) => {
-            const product = await ProductModel.findById(item.productObj._id).lean();
-            product.quantity = product.quantity - item.number;
-            await ProductModel.updateOne({ _id: item.productObj._id }, { quantity: product.quantity });
-            await CartModel.updateOne({ _id: item._id }, { orderId: order._id });
-        }));
-        order.cartIds = carts.map(item => item._id);
-        order.paidAt = new Date();
-        await order.save();
-        res.json({
-            errorCode: RESPONSE_CODE.SUCCESS,
-            message: "Checkout successfully!"
-        });
     },
     async currentOrder(req, res, next) {
         try {
@@ -150,6 +236,15 @@ const CheckoutController = {
                 data: { order, carts, total }
             });
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: error.message,
@@ -160,12 +255,29 @@ const CheckoutController = {
         try {
             const { _id } = req.body;
             const response = await OrderModel.updateOne({ _id }, { status: "Cancel" });
-            console.log(response);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Cancel successfully!",
+                    response
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Cancel successfully!"
             });
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: error.message,
@@ -176,12 +288,29 @@ const CheckoutController = {
         try {
             const { _id } = req.body;
             const response = await OrderModel.updateOne({ _id }, { status: "Info" });
-            console.log(response);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Back successfully!",
+                    response
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Back successfully!"
             });
         } catch (error) {
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: error.message,
+                    stack: error.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: error.message,

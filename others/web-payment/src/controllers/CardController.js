@@ -1,3 +1,4 @@
+const { logger } = require("../configs");
 const { RESPONSE_CODE } = require("../constants");
 const { CardModel } = require("../models");
 
@@ -10,7 +11,16 @@ const CardController = {
             if (existCard) {
                 delete existCard.balance;
                 delete existCard.createdBy;
-                delete existCard._id;   
+                delete existCard._id;
+                logger.log({
+                    level: 'error',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Card already exist!",
+                        existCard
+                    })
+                })
                 return res.json({
                     data: existCard,
                     errorCode: RESPONSE_CODE.SUCCESS,
@@ -23,6 +33,15 @@ const CardController = {
             body.balance = Math.floor(Math.random() * 90000000);
             const cardModel = await CardModel.create(body);
             const card = cardModel.toObject();
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "New card created!",
+                    card
+                })
+            })
             delete card.balance;
             delete card.createdBy;
             delete card._id;
@@ -32,7 +51,15 @@ const CardController = {
                 message: "Add card successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
