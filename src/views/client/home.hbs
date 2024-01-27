@@ -78,7 +78,9 @@
             <div class="owl-carousel vendor-carousel">
                 {{#each bestProducts}}
                 <div class="vendor-item border p-4">
-                    <img src="{{this.images.url}}" alt="">
+                    <a href="/products/{{this._id}}">
+                        <img src="{{this.images.url}}" alt="">
+                    </a>
                 </div>
                 {{/each}}
             </div>

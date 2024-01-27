@@ -7,7 +7,7 @@ const categoryService = require("../../services/categoryService");
 const HomeController = {
     async index(req, res, next) {
         const products = await ProductModel.find({}).limit(8).lean();
-        const bestProducts = await ProductModel.find({}).limit(8).lean();
+        const bestProducts = await ProductModel.find({}).sort({ soldOut: -1 }).limit(8).lean();
         const categories = await categoryService.getNestedAll();
         res.render("client/home", Response({ res, data: { home: true, products, categories, bestProducts } }));
     },
