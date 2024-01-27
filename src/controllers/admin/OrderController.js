@@ -71,18 +71,24 @@ const OrderController = {
     },
     async get(req, res, next) {
         const { id } = req.params;
-        const user = await OrderModel.findById(id)
+        const order = await OrderModel.findById(id)
             .populate("createdByObj")
             .populate("updatedByObj")
             .populate("deletedByObj")
+            .populate({
+                path: "cartObjs",
+                populate: {
+                    path: "productObj"
+                }
+            })
             .lean();
-        res.json(user);
+        res.json(order);
     },
     async update(req, res, next) {
         try {
             const _user = res.locals._user;
             const body = req.body;
-            const updateFields = ["fullname", "phoneNumber", "isDeleted"];
+            const updateFields = ["fullname", "phoneNumber", "isDeleted", "status", "totalPrice", "address"];
             const updateUser = updateFields.reduce((acc, field) => {
                 const value = body[field];
                 acc[field] = value;

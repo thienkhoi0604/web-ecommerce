@@ -132,60 +132,85 @@
 <div id="view" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="flex-direction: column; align-items: flex-start;">
                 <h5 class="modal-title" id="exampleModalLongTitle">VIEW ORDER</h5>
+                <nav style="margin-bottom: -17px; margin-top: 12px;">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="add-nav-1-tab" data-bs-toggle="tab"
+                            data-bs-target="#add-nav-1" type="button" role="tab" aria-controls="add-nav-1"
+                            aria-selected="true">Information</button>
+                        <button class="nav-link" id="add-nav-2-tab" data-bs-toggle="tab" data-bs-target="#add-nav-2"
+                            type="button" role="tab" aria-controls="add-nav-2" aria-selected="false">Products</button>
+                    </div>
+                </nav>
             </div>
-            <div class="modal-body row">
-                <div class="form-group col-6">
-                    <label for="name">Fullname</label>
-                    <input type="text" disabled name="fullname" class="form-control" id="fullname">
+            <div class="modal-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="add-nav-1" role="tabpanel"
+                        aria-labelledby="add-nav-1-tab">
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label for="name">Fullname</label>
+                                <input type="text" disabled name="fullname" class="form-control" id="fullname">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="phoneNumber">Phone</label>
+                                <input type="text" disabled name="phoneNumber" class="form-control" id="phoneNumber">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="address">Address</label>
+                                <input type="text" disabled name="address" class="form-control" id="address">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="totalPrice">Total price</label>
+                                <input type="number" disabled name="totalPrice" class="form-control" id="totalPrice">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="status">Status</label>
+                                <input type="text" disabled name="status" class="form-control" id="status">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="password">Is deleted</label>
+                                <select disabled id="isDeleted" name="isDeleted" class="form-select">
+                                    <option value="false">False</option>
+                                    <option value="true">True</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="createdAt">Created at</label>
+                                <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="updatedAt">Updated at</label>
+                                <input type="text" disabled name="updatedAt" class="form-control" id="updatedAt">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="createdBy">Created by</label>
+                                <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="updatedBy">Updated by</label>
+                                <input type="text" disabled name="updatedBy" class="form-control" id="updatedBy">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="deletedBy">Deleted by</label>
+                                <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="add-nav-2" role="tabpanel" aria-labelledby="add-nav-2-tab">
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="product s">Products</label>
+                                <div type="text" class="form-control" id="products" rows="8"
+                                    placeholder="Enter products"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group col-6">
-                    <label for="phoneNumber">Phone</label>
-                    <input type="text" disabled name="phoneNumber" class="form-control" id="phoneNumber">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-view-cancel" data-dismiss="modal">Cancel</button>
                 </div>
-                <div class="form-group col-6">
-                    <label for="address">Address</label>
-                    <input type="text" disabled name="address" class="form-control" id="address">
-                </div>
-                <div class="form-group col-6">
-                    <label for="totalPrice">Total price</label>
-                    <input type="number" disabled name="totalPrice" class="form-control" id="totalPrice">
-                </div>
-                <div class="form-group col-6">
-                    <label for="status">Status</label>
-                    <input type="text" disabled name="status" class="form-control" id="status">
-                </div>
-                <div class="form-group col-6">
-                    <label for="password">Is deleted</label>
-                    <select disabled id="isDeleted" name="isDeleted" class="form-select">
-                        <option value="false">False</option>
-                        <option value="true">True</option>
-                    </select>
-                </div>
-                <div class="form-group col-6">
-                    <label for="createdAt">Created at</label>
-                    <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
-                </div>
-                <div class="form-group col-6">
-                    <label for="updatedAt">Updated at</label>
-                    <input type="text" disabled name="updatedAt" class="form-control" id="updatedAt">
-                </div>
-                <div class="form-group col-6">
-                    <label for="createdBy">Created by</label>
-                    <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
-                </div>
-                <div class="form-group col-6">
-                    <label for="updatedBy">Updated by</label>
-                    <input type="text" disabled name="updatedBy" class="form-control" id="updatedBy">
-                </div>
-                <div class="form-group col-6">
-                    <label for="deletedBy">Deleted by</label>
-                    <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-view-cancel" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -193,67 +218,95 @@
 <div id="update" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="flex-direction: column; align-items: flex-start;">
                 <h5 class="modal-title" id="exampleModalLongTitle">EDIT ORDER</h5>
+                <nav style="margin-bottom: -17px; margin-top: 12px;">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="update-nav-1-tab" data-bs-toggle="tab"
+                            data-bs-target="#update-nav-1" type="button" role="tab" aria-controls="update-nav-1"
+                            aria-selected="true">Information</button>
+                        <button class="nav-link" id="update-nav-2-tab" data-bs-toggle="tab"
+                            data-bs-target="#update-nav-2" type="button" role="tab" aria-controls="update-nav-2"
+                            aria-selected="false">Products</button>
+                    </div>
+                </nav>
             </div>
-            <div class="modal-body row">
-                <div class="form-group col-6">
-                    <label for="name">Fullname</label>
-                    <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Enter fullname">
-                </div>
-                <div class="form-group col-6">
-                    <label for="phoneNumber">Phone</label>
-                    <input type="text" name="phoneNumber" class="form-control" id="phoneNumber"
-                        placeholder="Enter phone">
-                </div>
-                <div class="form-group col-6">
-                    <label for="address">Addres</label>
-                    <input type="text" name="address" class="form-control" id="address" placeholder="Enter address">
-                </div>
-                <div class="form-group col-6">
-                    <label for="totalPrice">Total price</label>
-                    <input type="number" name="totalPrice" class="form-control" id="totalPrice"
-                        placeholder="Enter total price">
-                </div>
-                <div class="form-group col-6">
-                    <label for="status">Status</label>
-                    <select id="status" name="status" class="form-select">
-                        <option selected value="">All</option>
-                        <option value="Info">Info</option>
-                        <option value="Payment">Payment</option>
-                        <option value="Review">Review</option>
-                        <option value="Proccess">Proccess</option>
-                        <option value="Delivering">Delivering</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Cancel">Cancel</option>
-                    </select>
-                </div>
-                <div class="form-group col-6">
-                    <label for="password">Is deleted</label>
-                    <select id="isDeleted" name="isDeleted" class="form-select">
-                        <option value="false">False</option>
-                        <option value="true">True</option>
-                    </select>
-                </div>
-                <div class="form-group col-6">
-                    <label for="createdAt">Created at</label>
-                    <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
-                </div>
-                <div class="form-group col-6">
-                    <label for="updatedAt">Updated at</label>
-                    <input type="text" disabled name="updatedAt" class="form-control" id="updatedAt">
-                </div>
-                <div class="form-group col-6">
-                    <label for="createdBy">Created by</label>
-                    <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
-                </div>
-                <div class="form-group col-6">
-                    <label for="updatedBy">Updated by</label>
-                    <input type="text" disabled name="updatedBy" class="form-control" id="updatedBy">
-                </div>
-                <div class="form-group col-6">
-                    <label for="deletedBy">Deleted by</label>
-                    <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
+            <div class="modal-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="update-nav-1" role="tabpanel"
+                        aria-labelledby="update-nav-1-tab">
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label for="name">Fullname</label>
+                                <input type="text" name="fullname" class="form-control" id="fullname"
+                                    placeholder="Enter fullname">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="phoneNumber">Phone</label>
+                                <input type="text" name="phoneNumber" class="form-control" id="phoneNumber"
+                                    placeholder="Enter phone">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="address">Addres</label>
+                                <input type="text" name="address" class="form-control" id="address"
+                                    placeholder="Enter address">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="totalPrice">Total price</label>
+                                <input type="number" name="totalPrice" class="form-control" id="totalPrice"
+                                    placeholder="Enter total price">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="status">Status</label>
+                                <select id="status" name="status" class="form-select">
+                                    <option selected value="">All</option>
+                                    <option value="Info">Info</option>
+                                    <option value="Payment">Payment</option>
+                                    <option value="Review">Review</option>
+                                    <option value="Proccess">Proccess</option>
+                                    <option value="Delivering">Delivering</option>
+                                    <option value="Shipped">Shipped</option>
+                                    <option value="Cancel">Cancel</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="password">Is deleted</label>
+                                <select id="isDeleted" name="isDeleted" class="form-select">
+                                    <option value="false">False</option>
+                                    <option value="true">True</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="createdAt">Created at</label>
+                                <input type="text" disabled name="createdAt" class="form-control" id="createdAt">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="updatedAt">Updated at</label>
+                                <input type="text" disabled name="updatedAt" class="form-control" id="updatedAt">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="createdBy">Created by</label>
+                                <input type="text" disabled name="createdBy" class="form-control" id="createdBy">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="updatedBy">Updated by</label>
+                                <input type="text" disabled name="updatedBy" class="form-control" id="updatedBy">
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="deletedBy">Deleted by</label>
+                                <input type="text" disabled name="deletedBy" class="form-control" id="deletedBy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="update-nav-2" role="tabpanel" aria-labelledby="update-nav-2-tab">
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="products">Products</label>
+                                <div type="text" class="form-control" id="products" rows="8"
+                                    placeholder="Enter products"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -490,12 +543,17 @@
                 }
                 const id = checkedItems[0].value;
                 const order = await fetch(`/admin/orders/search/${id}`).then(res => res.json());
+                const products =
+                    `<ul>` + (order?.cartObjs || []).reduce((acc, cur) => {
+                        return acc + `<li>${cur.productObj?.name || "?F"} - ${cur.number || "?"}x${cur?.productObj?.discountPrice || "?"} - <a target="_blank" href="/products/${cur?.productObj?._id}">view<a></li>`;
+                    }, "") + `</ul>`;
                 $("#view #fullname").val(order.fullname);
                 $("#view #phoneNumber").val(order.phoneNumber);
                 $("#view #address").val(order.address);
                 $("#view #totalPrice").val(order.totalPrice);
                 $("#view #status").val(order.status);
                 $("#view #isDeleted").val(`${order.isDeleted}`);
+                $("#view #products").html(`${products}`);
                 $("#view #createdAt").val(!!order.createdAt ? moment(order.createdAt).format('DD/MM/YY HH:mm') : "");
                 $("#view #updatedAt").val(!!order.updatedAt ? moment(order.updatedAt).format('DD/MM/YY HH:mm') : "");
                 $("#view #createdBy").val(!!order.createdByObj ? `${order.createdByObj?.fullname}-${order.createdByObj?.email}` : "");
@@ -521,12 +579,17 @@
                 }
                 const id = checkedItems[0].value;
                 const order = await fetch(`/admin/orders/search/${id}`).then(res => res.json());
+                const products =
+                    `<ul>` + (order?.cartObjs || []).reduce((acc, cur) => {
+                        return acc + `<li>${cur.productObj?.name || "?F"} - ${cur.number || "?"}x${cur?.productObj?.discountPrice || "?"} - <a target="_blank" href="/products/${cur?.productObj?._id}">view<a></li>`;
+                    }, "") + `</ul>`;
                 $("#update #fullname").val(order.fullname);
                 $("#update #phoneNumber").val(order.phoneNumber);
                 $("#update #address").val(order.address);
                 $("#update #totalPrice").val(order.totalPrice);
                 $("#update #status").val(order.status);
                 $("#update #isDeleted").val(`${order.isDeleted}`);
+                $("#update #products").html(`${products}`);
                 $("#update #createdAt").val(!!order.createdAt ? moment(order.createdAt).format('DD/MM/YY HH:mm') : "");
                 $("#update #updatedAt").val(!!order.updatedAt ? moment(order.updatedAt).format('DD/MM/YY HH:mm') : "");
                 $("#update #createdBy").val(!!order.createdByObj ? `${order.createdByObj?.fullname}-${order.createdByObj?.email}` : "");
@@ -548,16 +611,18 @@
                 const checkedItems = $(".checkItem:checked").toArray();
                 const id = checkedItems[0].value;
                 const fullname = $("#update #fullname").val();
-                const phone = $("#update #phone").val();
-                const role = $("#update #role").val();
-                const password = $("#update #password").val();
+                const phoneNumber = $("#update #phoneNumber").val();
+                const address = $("#update #address").val();
+                const totalPrice = $("#update #totalPrice").val();
+                const status = $("#update #status").val();
                 const isDeleted = $("#update #isDeleted").val();
                 const body = {
                     id,
                     fullname,
-                    phone,
-                    role,
-                    password,
+                    phoneNumber,
+                    address,
+                    totalPrice,
+                    status,
                     isDeleted
                 };
                 const res = await fetch(`/admin/orders`, {
