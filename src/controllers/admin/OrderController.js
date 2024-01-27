@@ -78,10 +78,7 @@ const OrderController = {
             .populate({
                 path: "cartObjs",
                 populate: {
-                    path: "productObj",
-                    populate: {
-                        path: "createdByObj"
-                    }
+                    path: "productObj"
                 }
             })
             .lean();
