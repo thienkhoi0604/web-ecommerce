@@ -28,7 +28,7 @@ passport.use(new FacebookStrategy({
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRECT,
     callbackURL: 'http://localhost:8080/auth/google/callback',
 }, async (token, tokenSecret, profile, done) => {
     const user = {

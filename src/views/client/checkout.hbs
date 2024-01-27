@@ -427,6 +427,7 @@
                 expirationDate: $(".new-card input[name='expirationDate']").val(),
                 ccv: $(".new-card input[name='ccv']").val(),
             }
+            console.log("body", body);
             $("#main-loading").addClass("show");
             const res = await fetch("/card", {
                 method: "POST",
