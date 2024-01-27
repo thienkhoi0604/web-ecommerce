@@ -1,4 +1,5 @@
 const { Response } = require("../../commons");
+const { logger } = require("../../configs");
 const { LAYOUT, RESPONSE_CODE } = require("../../constants");
 const { CardModel } = require("../../models");
 
@@ -31,6 +32,14 @@ const CardController = {
             const _user = res.locals._user;
             const { cardNumber, cardHolder, expirationDate, ccv } = req.body;
             const url = `${process.env.PAYMENT_SERVICE_URL}/cards`;
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Before call payment service!",
+                })
+            })
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -45,6 +54,15 @@ const CardController = {
                     partnerId: process.env.PAYMENT_SERVICE_PARTNER_ID
                 })
             }).then(res => res.json());
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After call payment service!",
+                    response
+                })
+            })
             if (response.errorCode !== RESPONSE_CODE.SUCCESS) {
                 return res.json({
                     errorCode: response.errorCode,
@@ -55,13 +73,29 @@ const CardController = {
             card.createdBy = _user._id;
             card.userId = _user._id;
             const newCard = await CardModel.create(card);
-            console.log(newCard);
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "After create card!",
+                    newCard,
+                })
+            })
             return res.json({
                 errorCode: response.errorCode,
                 message: response.message
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: e.message,
+                    stack: e.stack,
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
@@ -82,12 +116,29 @@ const CardController = {
         }
         try {
             const resonse = await CardModel.updateMany({ _id: { $in: ids } }, { isDeleted: true, deletedBy: _user?._id }).lean();
+            logger.log({
+                level: 'info',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Delete cards successfully!",
+                    resonse
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.SUCCESS,
                 message: "Delete cards successfully!"
             });
         } catch (e) {
-            console.log(e);
+            logger.log({
+                level: 'error',
+                message: JSON.stringify({
+                    path: req.path,
+                    body: req.body,
+                    message: "Delete card error!",
+                    error: e.message
+                })
+            })
             res.json({
                 errorCode: RESPONSE_CODE.ERROR,
                 message: e.message
