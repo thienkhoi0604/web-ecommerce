@@ -31,8 +31,6 @@ const author = (...userRoles) => {
                     return res.redirect("/auth/login");
                 }
                 const user = await UserModel.findById({ _id });
-                req.locals = res.locals || {};
-                req.locals._user = user.toObject();
                 res.locals = res.locals || {};
                 res.locals._user = user.toObject();
                 const haspPemission = userRoles.some(role => role == user.role);
@@ -41,14 +39,14 @@ const author = (...userRoles) => {
                     next();
                 } else {
                     //may be call api to add auth to header
-                    if (!!req.cookies.auth) {
-                        return res.redirect("/auth/login");
-                    } else {
+                    if (restful) {
                         return res.json({
                             errorCode: RESPONSE_CODE.REDIRECT,
                             data: "/auth/login",
                             message: "Your accout must have permisstion to do this action."
                         });
+                    } else {
+                        return res.redirect("/auth/login");
                     }
                 }
             }

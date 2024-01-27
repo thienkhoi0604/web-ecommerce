@@ -18,6 +18,9 @@ const UserModel = new Schema(
       type: String,
       require: [true, 'Please enter your phone!'],
     },
+    address: {
+      type: String,
+    },
     email: {
       type: String,
       required: [true, 'Please enter your email!'],
@@ -68,6 +71,18 @@ UserModel.pre('save', function (next) {
     : this.password;
   next();
 });
+UserModel.pre('findOneAndUpdate', function (next) {
+  if (!!this._update.password) {
+    this._update.password = BcryptUtil.hash(this._update.password);
+  }
+  next();
+});
+UserModel.pre('updateOne', function (next) {
+  if (!!this._update.password) {
+    this._update.password = BcryptUtil.hash(this._update.password);
+  }
+  next();
+});
 UserModel.virtual("createdByObj", {
   ref: "users",
   localField: "createdBy",
@@ -90,5 +105,6 @@ UserModel.virtual("deletedByObj", {
 UserModel.methods.comparePassword = function (enteredPassword) {
   return BcryptUtil.compare(enteredPassword, this.password);
 };
+
 
 module.exports = mongoose.model('users', UserModel);

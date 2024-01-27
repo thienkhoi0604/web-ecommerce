@@ -42,6 +42,23 @@ const CheckoutController = {
                     message: "Cart is empty!"
                 });
             }
+            const errors = carts.filter(item => item?.productObj?.stock < item?.number).map(item => {
+                return `${item?.productObj?.name} is out of stock! only ${item?.productObj?.stock} left!`;
+            }) || []
+            if (errors.length > 0) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Out of stock!",
+                    })
+                })
+                return res.json({
+                    errorCode: RESPONSE_CODE.ERROR,
+                    message: errors.join("\n")
+                });
+            }
             const existOrder = await OrderModel.findOne({
                 createdBy: _user?._id,
                 isDeleted: false,
@@ -173,11 +190,29 @@ const CheckoutController = {
                     message: response.message
                 });
             }
+            const errors = carts.filter(item => item?.productObj?.stock < item?.number).map(item => {
+                return `${item?.productObj?.name} is out of stock! only ${item?.productObj?.stock} left!`;
+            }) || []
+            if (errors.length > 0) {
+                logger.log({
+                    level: 'info',
+                    message: JSON.stringify({
+                        path: req.path,
+                        body: req.body,
+                        message: "Out of stock!",
+                    })
+                })
+                return res.json({
+                    errorCode: RESPONSE_CODE.ERROR,
+                    message: errors.join("\n")
+                });
+            }
             order.status = "Proccess";
             await Promise.all(carts.map(async (item) => {
                 const product = await ProductModel.findById(item.productObj._id).lean();
-                product.quantity = product.quantity - item.number;
-                await ProductModel.updateOne({ _id: item.productObj._id }, { quantity: product.quantity });
+                product.quantity += - item.number;
+                product.soldOut += item.number;
+                await ProductModel.updateOne({ _id: item.productObj._id }, { stock: product.quantity, soldOut: product.soldOut });
                 await CartModel.updateOne({ _id: item._id }, { orderId: order._id });
             }));
             order.cartIds = carts.map(item => item._id);
