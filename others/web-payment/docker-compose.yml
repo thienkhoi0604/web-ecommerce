@@ -14,9 +14,9 @@ services:
       volumes:
         - /opt/web-payment/logs:/logs
       networks:
-        - web-payment
+        - web
 
 networks:
-  web-payment:
+  web:
     driver: bridge
 

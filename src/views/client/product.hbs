@@ -250,6 +250,8 @@
     const searchAction = async function () {
         try {
             $("#main-loading").addClass("show");
+            const params = new URLSearchParams(window.location.search);
+            const categoryId = params.get("categoryId");
             const name = $("#search #name").val();
             const color = $(".filter-input[name='color']:checked").val();
             const size = $(".filter-input[name='size']:checked").val();
@@ -263,6 +265,7 @@
                 color,
                 size,
                 originalPrice,
+                categoryId,
                 discountPrice,
                 sortBy: {
                     [sortBy]: -1

@@ -15,11 +15,11 @@ services:
       volumes:
         - /opt/web-ecommerce/logs:/logs
       networks:
-        - web-ecommerce
+        - web-payment_web
       environment:
         - PAYMENT_SERVICE_URL=http://web-payment:8880
 
 networks:
-  web-ecommerce:
-    driver: bridge
+  web-payment_web:
+    external: true
 
